@@ -364,3 +364,4 @@ document.getElementById("usuario").addEventListener('click', function() {
         detallesFiltro.classList.remove('show');
     }
 });
+

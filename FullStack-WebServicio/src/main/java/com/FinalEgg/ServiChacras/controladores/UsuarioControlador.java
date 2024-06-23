@@ -2,6 +2,8 @@ package com.FinalEgg.ServiChacras.controladores;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.ui.ModelMap;
 import jakarta.servlet.http.HttpSession;
@@ -38,24 +40,26 @@ public class UsuarioControlador {
             if (barrio == null) {
                 if (idServicio == null) {
                     if (nombreUsuario != null) { proveedores = proveedorServicio.getPorNombreCompleto(nombreUsuario); }
-                    else { proveedores = proveedorServicio.listarProveedores();}
+                    else if (nombreUsuario == null || nombreUsuario.isEmpty()) { proveedores = proveedorServicio.listarProveedores();}
 
                 } else {
                     if (nombreUsuario != null) { proveedores = proveedorServicio.getPorServicioYNombre(nombreUsuario, idServicio); }
-                    else { proveedores = proveedorServicio.getPorServicio(idServicio); }
+                    else if (nombreUsuario == null || nombreUsuario.isEmpty()) { proveedores = proveedorServicio.getPorServicio(idServicio); }
                 }
 
             } else {
 
                 if (idServicio == null) {
                     if (nombreUsuario != null) { proveedores = proveedorServicio.getPorBarrioYNombre(nombreUsuario, barrio); }
-                    else { proveedores = proveedorServicio.getPorBarrio(barrio); }
+                    else if (nombreUsuario == null || nombreUsuario.isEmpty()) { proveedores = proveedorServicio.getPorBarrio(barrio); }
 
                 } else {
                     if (nombreUsuario != null) { proveedores = proveedorServicio.getPorServicioBarrioYNombre(idServicio, nombreUsuario, barrio); }
-                    else { proveedores = proveedorServicio.getPorServicioYBarrio(idServicio, barrio); }
+                    else if (nombreUsuario == null || nombreUsuario.isEmpty()) { proveedores = proveedorServicio.getPorServicioYBarrio(idServicio, barrio); }
                 }
             }
+
+            proveedores = proveedores.stream().filter(Objects::nonNull).collect(Collectors.toList());
 
             modelo.addAttribute("proveedores", proveedores);
         }
@@ -69,7 +73,7 @@ public class UsuarioControlador {
             if (barrio == null) {
                 if (idPedido == null) {
                     if (nombreUsuario != null) { clientes = clienteServicio.getPorNombreCompleto(nombreUsuario); }
-
+                    
                 } else { 
                     clientes.add(clienteServicio.getPorPedido(idPedido));
                     pedidoHay = true; 
@@ -88,9 +92,12 @@ public class UsuarioControlador {
             }
 
             if (clientes.isEmpty()) { vacio = true; }
+            else {
+                clientes = clientes.stream().filter(Objects::nonNull).collect(Collectors.toList());
+                modelo.addAttribute("clientes", clientes);
+            }
 
-            modelo.addAttribute("pedidoHay", pedidoHay);
-            modelo.addAttribute("clientes", clientes);
+            modelo.addAttribute("pedidoHay", pedidoHay);            
             modelo.addAttribute("vacio", vacio);
         }
 
