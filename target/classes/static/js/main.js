@@ -19,50 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
     toggleTipoServicio();
 });
 
-document.getElementById("usuario").addEventListener('click', function () {
-    let detallesUsuario = document.getElementById('detalles-usuario');
-    let listItems = document.querySelectorAll('#detalles-usuario .list-group-item');
 
-    // Calcular la altura total de los elementos de la lista con un margen adicional
-    let totalHeight = 0;
-    listItems.forEach(item => {
-        totalHeight += item.clientHeight;
-    });
-
-    // Agregar un margen adicional para asegurar que todos los elementos se muestren completamente
-    totalHeight += 8; // Puedes ajustar este valor según sea necesario
-
-    if (detallesUsuario.style.height == '0px') {
-        detallesUsuario.style.height = totalHeight + 'px';
-        notificationPopup.classList.add('show');
-    } else {
-        detallesUsuario.style.height = '0';
-        notificationPopup.classList.remove('show');
-    }
-});
-
-document.getElementById("campana").addEventListener('click', function () {
-    let notificationPopup = document.getElementById('notification');
-    let listItems = document.querySelectorAll('#notification .list-group-item');
-
-    // Calcular la altura total de los elementos de la lista con un margen adicional
-    let totalHeight = 0;
-    listItems.forEach(item => {
-        totalHeight += item.clientHeight;
-    });
-
-    // Agregar un margen adicional para asegurar que todos los elementos se muestren completamente
-    totalHeight += 12; // Puedes ajustar este valor según sea necesario
-
-    if (notificationPopup.style.height == '0px') {
-        notificationPopup.style.height = totalHeight + 'px';
-        notificationPopup.classList.add('show');
-        document.querySelector('#campana .notification-bell .notification-count').textContent = "0";
-    } else {
-        notificationPopup.style.height = '0';
-        notificationPopup.classList.remove('show');
-    }
-});
 
 let primeraVez = true;
 
@@ -283,6 +240,51 @@ document.getElementById('formulario-reporte').addEventListener('submit', functio
     // Luego de enviar el formulario, puedes cerrar el modal:
     document.getElementById('report-form-overlay').style.display = 'none';
     document.getElementById('report-form').style.display = 'none';
+});
+
+document.getElementById("usuario").addEventListener('click', function () {
+    let detallesUsuario = document.getElementById('detalles-usuario');
+    let listItems = document.querySelectorAll('#detalles-usuario .list-group-item');
+
+    // Calcular la altura total de los elementos de la lista con un margen adicional
+    let totalHeight = 0;
+    listItems.forEach(item => {
+        totalHeight += item.clientHeight;
+    });
+
+    // Agregar un margen adicional para asegurar que todos los elementos se muestren completamente
+    totalHeight += 8; // Puedes ajustar este valor según sea necesario
+
+    if (detallesUsuario.style.height == '0px') {
+        detallesUsuario.style.height = totalHeight + 'px';
+        notificationPopup.classList.add('show');
+    } else {
+        detallesUsuario.style.height = '0';
+        notificationPopup.classList.remove('show');
+    }
+});
+
+document.getElementById("campana").addEventListener('click', function () {
+    let notificationPopup = document.getElementById('notification');
+    let listItems = document.querySelectorAll('#notification .list-group-item');
+
+    // Calcular la altura total de los elementos de la lista con un margen adicional
+    let totalHeight = 0;
+    listItems.forEach(item => {
+        totalHeight += item.clientHeight;
+    });
+
+    // Agregar un margen adicional para asegurar que todos los elementos se muestren completamente
+    totalHeight += 12; // Puedes ajustar este valor según sea necesario
+
+    if (notificationPopup.style.height == '0px') {
+        notificationPopup.style.height = totalHeight + 'px';
+        notificationPopup.classList.add('show');
+        document.querySelector('#campana .notification-bell .notification-count').textContent = "0";
+    } else {
+        notificationPopup.style.height = '0';
+        notificationPopup.classList.remove('show');
+    }
 });
 
 

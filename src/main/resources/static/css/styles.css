@@ -1,31 +1,38 @@
 body {
     font-family: Arial, sans-serif;
-    background-image: url('/img/fondo-pagina-o-mantenimiento.jpg'); 
-    background-size: cover; 
-    background-position: center;
-    position: relative;
-    width: 100%;
-    height: 100%;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    background-image: url('/img/fondoweb2.png'); /* Ruta de tu imagen de fondo */
+    background-size: cover; /* Ajusta el tamaño para cubrir todo el fondo */
+    background-position: center; /* Centra la imagen */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    height: 100%; /* Ajusta la altura del fondo al tamaño de la ventana */
+    margin: 0; /* Elimina los márgenes predeterminados */
+    display: flex; /* Usa flexbox para alinear contenido */
+    flex-direction: column; /* Dirección de los elementos */
+    justify-content: space-between; /* Alinea los elementos verticalmente */
 }
 
-body::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
+.carousel-item {
+    border: 2px solid #ccc; /* Color y grosor del borde */
+    border-radius: 8px; /* Borde redondeado para suavizar esquinas */
+    overflow: hidden; /* Para evitar que el borde afecte el tamaño del contenido */
+}
+
+.carousel-image {
+    opacity: 0.9; /* Ajusta el valor de opacidad según lo necesites (0 = completamente transparente, 1 = completamente visible) */
+}
+
+#footer {
+    position: fixed;
     bottom: 0;
-    background-color: rgba(153, 153, 153, 0.5); /* Ajusta la transparencia con el valor alpha (0.5 en este caso) */
-    z-index: -1; /* Coloca la superposición detrás del contenido */
+     width: 100%;
 }
 
 
-h1 {
-    color: #2c3e50;
+
+
+
+h1, h2, h3, h4, h5, p {
+    color: #ccc;
 }
 
 .navbar {
