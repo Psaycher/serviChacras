@@ -22,7 +22,7 @@
             <div class="col-md-6">
                 <div class="card" id="cardRegistro">
                     <div class="card-header text-center">
-                        <h3>Registrate en nuestra página!</h3>
+                        <h3>¡Registrate en ServiChacras!</h3>
                     </div>
 
                     <div th:replace="~{/fragments/divError :: div}"> </div>
@@ -54,11 +54,15 @@
                                 <input type="password" class="form-control" id="password2" name="password2" placeholder="Repita su contraseña"
                                     th:value="${password2}">
                             </div>
+                            
                             <div class="form-group">
                                 <label for="barrio">Barrio:</label>
-                                <input type="text" class="form-control" id="barrio" name="barrio" placeholder="Ingrese su barrio"
-                                    th:value="${barrio}">
+                                <select class="form-control" id="barrio" name="barrio">
+                                    <option value="">Seleccione su barrio</option>
+                                    <option th:each="barrio : ${barrios}" th:value="${barrio}" th:text="${barrio}"></option>
+                                </select>
                             </div>
+                            
                             <div class="form-group">
                                 <label for="direccion">Dirección:</label>
                                 <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Ingrese su dirección"

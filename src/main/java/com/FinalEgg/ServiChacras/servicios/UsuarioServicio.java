@@ -53,9 +53,9 @@ public class UsuarioServicio implements UserDetailsService {
         usuario.setPassword(new BCryptPasswordEncoder().encode(password));
 
         switch (barrio) {
-            case 1 -> { usuario.setBarrio(Barrio.BARRIO1_Ruta2km69); }
-            case 2 -> { usuario.setBarrio(Barrio.BARRIO2_Ruta2km75); }
-            case 3 -> { usuario.setBarrio(Barrio.BARRIO3_Ruta13km86); }
+            case 1 -> { usuario.setBarrio(Barrio.BARRIO_1); }
+            case 2 -> { usuario.setBarrio(Barrio.BARRIO_2); }
+            case 3 -> { usuario.setBarrio(Barrio.BARRIO_3); }
             default -> { usuario.setBarrio(Barrio.FORANEO); }
         }
 
@@ -129,9 +129,9 @@ public class UsuarioServicio implements UserDetailsService {
 
             if (barrio != null) {
                 switch (barrio) {
-                    case 1 -> { usuario.setBarrio(Barrio.BARRIO1_Ruta2km69); }
-                    case 2 -> { usuario.setBarrio(Barrio.BARRIO2_Ruta2km75); }
-                    case 3 -> { usuario.setBarrio(Barrio.BARRIO3_Ruta13km86); }
+                    case 1 -> { usuario.setBarrio(Barrio.BARRIO_1); }
+                    case 2 -> { usuario.setBarrio(Barrio.BARRIO_2); }
+                    case 3 -> { usuario.setBarrio(Barrio.BARRIO_3); }
                     default -> { usuario.setBarrio(Barrio.FORANEO); }
                 }
             } else { usuario.setBarrio(Barrio.FORANEO); }
