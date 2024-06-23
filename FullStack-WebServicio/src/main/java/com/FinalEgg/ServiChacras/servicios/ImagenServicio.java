@@ -60,6 +60,9 @@ public class ImagenServicio {
         return null;
     }
 
+    @Transactional
+    public void ImagenMensaje(String id) { imagenRepositorio.deleteById(id); }
+
     @Transactional(readOnly = true)
     public List<Imagen> obtenerTodasLasTarjetas() { return imagenRepositorio.findAll(); }
 

@@ -70,10 +70,13 @@ public class ProveedorServicio {
         });
     }
 
+    @Transactional
+    public void deletearProveedor(String id) { proveedorRepositorio.deleteById(id); }
+
     @Transactional(readOnly = true)
     public Proveedor getOne(String id) { return proveedorRepositorio.getOne(id); }
 
-     @Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public String idUsuario(String idUsuario) { return proveedorRepositorio.idUsuario(idUsuario); }
 
     @Transactional(readOnly = true)

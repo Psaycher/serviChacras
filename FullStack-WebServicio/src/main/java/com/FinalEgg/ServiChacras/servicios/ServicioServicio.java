@@ -38,6 +38,9 @@ public class ServicioServicio {
         });
     }
 
+    @Transactional
+    public void deletearServicio(String id) { servicioRepositorio.deleteById(id); }
+
     @Transactional(readOnly = true)
     public Servicio getOne(String id) { return servicioRepositorio.getOne(id); }
 

@@ -110,6 +110,9 @@ public class NotificacionServicio {
             notificacionRepositorio.save(notificacion);
         }
     }
+
+    @Transactional
+    public void deletearNotificacion(String id) { notificacionRepositorio.deleteById(id); }
     
     @Transactional(readOnly = true)
     public Notificacion getOne(String id) { return notificacionRepositorio.getOne(id); }
@@ -120,7 +123,7 @@ public class NotificacionServicio {
     @Transactional(readOnly = true)
     public List<Notificacion> listarPorPago(String idPago) { return notificacionRepositorio.listarPorPago(idPago); }
 
-     @Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public List<Notificacion> getPorPagoVisto(String idPago) { return notificacionRepositorio.getPorPagoVisto(idPago);}
 
     @Transactional(readOnly = true)

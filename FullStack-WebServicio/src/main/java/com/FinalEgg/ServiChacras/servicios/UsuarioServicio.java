@@ -208,6 +208,9 @@ public class UsuarioServicio implements UserDetailsService {
         }
     }
 
+    @Transactional
+    public void deletearUsuario(String id) { usuarioRepositorio.deleteById(id); }
+
     @Transactional(readOnly = true)
     public Usuario getOne(String id) { return usuarioRepositorio.getOne(id); }
 

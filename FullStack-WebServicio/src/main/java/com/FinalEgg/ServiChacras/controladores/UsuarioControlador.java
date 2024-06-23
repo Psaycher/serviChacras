@@ -64,30 +64,36 @@ public class UsuarioControlador {
             modelo.addAttribute("proveedores", proveedores);
         }
 
-        if (rolSession != null && rolSession.equals("Proveedor")) {
+        if (rolSession != null && rolSession.equals("PROVEEDOR")) {
             List<Cliente> clientes = new ArrayList<>();
             System.out.println("entro en condicional del session:" + rolSession);
+            String idProveedor = proveedorServicio.idUsuario(logueado.getId());
             boolean pedidoHay = false;
             boolean vacio = false;            
 
             if (barrio == null) {
                 if (idPedido == null) {
-                    if (nombreUsuario != null) { clientes = clienteServicio.getPorNombreCompleto(nombreUsuario); }
+                    if (nombreUsuario != null) { clientes = clienteServicio.getPorNombreCompartido(nombreUsuario, idProveedor); }
+                    else { clientes = clienteServicio.getPorPedidoCompartido(idProveedor); }
                     
                 } else { 
-                    clientes.add(clienteServicio.getPorPedido(idPedido));
                     pedidoHay = true; 
+
+                    if (nombreUsuario != null) { clientes = clienteServicio.getPorPedidoYNombre(nombreUsuario, idPedido); }
+                    else { clientes.add(clienteServicio.getPorPedido(idPedido)); }
                 }
 
             } else {
 
                 if (idPedido == null) {
-                    if (nombreUsuario != null) { clientes = clienteServicio.getPorBarrioYNombre(nombreUsuario, barrio); }
-                    else { clientes = clienteServicio.getPorBarrio(barrio); }
+                    if (nombreUsuario != null) { clientes = clienteServicio.getPorBarrioYNombreCompartido(nombreUsuario, barrio, idProveedor); }
+                    else { clientes = clienteServicio.getPorBarrioCompartido(barrio, idProveedor); }
 
                 } else { 
-                    clientes.add(clienteServicio.getPorPedido(idPedido));
-                    pedidoHay = true; 
+                    pedidoHay = true;
+
+                    if (nombreUsuario != null) { clientes = clienteServicio.getPorPedidoBarrioYNombre(nombreUsuario, idPedido, barrio); }
+                    else { clientes = clienteServicio.getPorPedidoYBarrio(idPedido, barrio); }
                 }
             }
 
@@ -97,6 +103,7 @@ public class UsuarioControlador {
                 modelo.addAttribute("clientes", clientes);
             }
 
+            System.out.println("clientes está vacio: "+ vacio);
             modelo.addAttribute("pedidoHay", pedidoHay);            
             modelo.addAttribute("vacio", vacio);
         }

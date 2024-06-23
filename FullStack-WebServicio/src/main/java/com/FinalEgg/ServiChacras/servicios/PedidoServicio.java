@@ -122,7 +122,6 @@ public class PedidoServicio {
         } else { throw new MiExcepcion("El pedido con id " + idPedido + " no existe."); }
     }
 
-
     @Transactional
     public void cancelarPedido(String id) { 
         Optional<Pedido> respuesta = pedidoRepositorio.findById(id);
@@ -132,6 +131,9 @@ public class PedidoServicio {
             pedido.setAlta(false); 
         }
     }
+
+    @Transactional
+    public void deletearPedido(String id) { pedidoRepositorio.deleteById(id); }
 
     @Transactional(readOnly = true)
     public Pedido getOne(String id) { return pedidoRepositorio.getOne(id); }

@@ -58,6 +58,9 @@ public class MensajeServicio {
         }
     }
 
+    @Transactional
+    public void deletearMensaje(String id) { mensajeRepositorio.deleteById(id); }
+
     @Transactional(readOnly = true)
     public Mensaje getOne(String id) { return mensajeRepositorio.getOne(id); }
 

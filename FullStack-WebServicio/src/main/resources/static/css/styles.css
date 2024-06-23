@@ -35,6 +35,12 @@ h1 {
     width: 100%;
 }
 
+nav #usuario p {
+    margin: 8px 0px 8px;
+    font-weight: bold;
+    color: #cccccc;
+}
+
 .container {
     padding-top: 100px;
 }

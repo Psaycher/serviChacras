@@ -43,6 +43,9 @@ public class ClienteServicio {
         });
     }
 
+    @Transactional
+    public void ClienteMensaje(String id) { clienteRepositorio.deleteById(id); }
+
     @Transactional(readOnly = true)
     public Cliente getOne(String id) { return clienteRepositorio.getOne(id); }
 
@@ -53,7 +56,13 @@ public class ClienteServicio {
     public List<Cliente> getPorBarrio(String barrio) { return clienteRepositorio.getPorBarrio(barrio); }
 
     @Transactional(readOnly = true)
+    public List<Cliente> getPorBarrioCompartido(String barrio, String idProveedor) { return clienteRepositorio.getPorBarrioCompartido(barrio, idProveedor); }
+
+    @Transactional(readOnly = true)
     public List<Cliente> getPorNombreCompleto(String nombreUsuario) { return clienteRepositorio.getPorNombreCompleto(nombreUsuario); }
+
+    @Transactional(readOnly = true)
+    public List<Cliente> getPorNombreCompartido(String nombreUsuario, String idProveedor) { return clienteRepositorio.getPorNombreCompartido(nombreUsuario, idProveedor); }
 
     @Transactional(readOnly = true)
     public List<Cliente> getPorDireccion(String barrio, String direccion) { return clienteRepositorio.getPorDireccion(barrio, direccion); }
@@ -62,11 +71,23 @@ public class ClienteServicio {
     public Cliente getPorPedido(String id) { return clienteRepositorio.getPorPedido(id); }
 
     @Transactional(readOnly = true)
-    public List<Cliente> getPorPedidoCompartidos(String idProveedor) { return clienteRepositorio.getPorPedidoCompartidos(idProveedor); }
+    public List<Cliente> getPorPedidoYNombre(String nombreUsuario, String idPedido) { return clienteRepositorio.getPorPedidoYNombre(nombreUsuario, idPedido); }
+
+    @Transactional(readOnly = true)
+    public List<Cliente> getPorPedidoCompartido(String idProveedor) { return clienteRepositorio.getPorPedidoCompartido(idProveedor); }
 
     @Transactional(readOnly = true)
     public List<Object> getComentarios(String id) { return clienteRepositorio.getComentarios(id); }
 
     @Transactional(readOnly = true)
     public List<Cliente> getPorBarrioYNombre(String nombreUsuario, String barrio) { return clienteRepositorio.getPorBarrioYNombre(nombreUsuario, barrio); }
+
+    @Transactional(readOnly = true)
+    public List<Cliente> getPorBarrioYNombreCompartido( String nombreUsuario, String barrio, String idProveedor) { return clienteRepositorio.getPorBarrioYNombreCompartido(nombreUsuario, barrio, idProveedor); }
+
+    @Transactional(readOnly = true)
+    public List<Cliente> getPorPedidoYBarrio(String idPedido, String barrio) { return clienteRepositorio.getPorPedidoYBarrio(idPedido, barrio); }
+
+    @Transactional(readOnly = true)
+    public List<Cliente> getPorPedidoBarrioYNombre(String nombreUsuario, String idPedido, String barrio) { return clienteRepositorio.getPorPedidoBarrioYNombre(nombreUsuario, idPedido, barrio); }
 }

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> 
-    
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
     <head th:replace="~{/fragments/head :: head}"></head>
 
     <body>
@@ -48,7 +48,7 @@
                                 <td th:text="${proveedor.usuario.telefono}"></td>
         
                                 <td>
-                                    <a th:href= "@{/usuario/solicitar_servicio/__${proveedor.id}__}"><i class="fas fa-feather-alt">Solicitar Servicio</i></a>
+                                    <a th:href= "@{/servicio/solicitar/__${proveedor.id}__}"><i class="fas fa-feather-alt">Solicitar Servicio</i></a>
                                 </td>
                             </tr>    
                         </tbody>
@@ -86,7 +86,7 @@
                             <tr>
                                 <td th:text="${cliente.usuario.nombre} + ' ' + ${cliente.usuario.apellido}"></td>
                                 <td th:if="${pedidoHay == true}" th:text="${cliente.pedido.servicio.nombre}"></td>
-                                <td th:text="${cliente.prompromPuntuacion}"></td>
+                                <td th:text="${cliente.promPuntuacion}"></td>
                                 <td th:text="${cliente.usuario.barrio}"></td>
                                 <td th:text="${cliente.usuario.telefono}"></td>
         
@@ -98,19 +98,25 @@
                     </table>
                 </div>
     
-                <div class="col-md-6" id="contenedorError" th:if="${vacio == true}">
-                    <section class="py-5 text-center container">
-                        <div class="contenedortitulo">
-                            <a class="navbar-brand">No hay Clientes relacionados con Usted.</a>
-                        </div>
-    
-                        <div class="row py-lg-5">
-                            <div class="col-lg-6 col-md-8 mx-auto">
-                                <a th:href="@{/inicio}" class="btn btn-primary my-2">Volver</a>
+                <div class="header row justify-content-center">
+                    <div class="col-md-6" id="contenedorError" th:if="${vacio == true}">
+                        <section class="py-5 text-center container">
+                            <div class="contenedortitulo">
+                                <a class="navbar-brand">No hay coincidencias.</a>
                             </div>
-                        </div>    
-                    </section>
-                </div>
+
+                            <div class="contenedorMsj">
+                                <p>No se encontraron Clientes con pedidos Vigentes o relacionados con usted.</p>
+                            </div>
+        
+                            <div class="row py-lg-5">
+                                <div class="col-lg-6 col-md-8 mx-auto">
+                                    <a th:href="@{/inicio}" class="btn btn-primary my-2">Volver</a>
+                                </div>
+                            </div>    
+                        </section>
+                    </div>
+                </div>                
             </div>            
 
             <!-- Este es el elemento de fondo transparente para cerrar el formulario 
@@ -328,6 +334,12 @@
                     <a th:href="@{/inicio}" class="btn btn-primary my-2">Volver</a>
                 </div>
             </div> -->
+            
+            <div class="row py-lg-5">
+                <div class="col-lg-6 col-md-8 mx-auto">
+                    <a th:href="@{/inicio}" class="btn btn-primary my-2">Volver</a>
+                </div>
+            </div>
         </div>
 
         <footer th:replace= "~{/fragments/footer :: footer}"></footer>

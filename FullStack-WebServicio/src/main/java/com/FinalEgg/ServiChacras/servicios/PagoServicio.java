@@ -63,6 +63,9 @@ public class PagoServicio {
         });
     }
 
+    @Transactional
+    public void deletearPago(String id) { pagoRepositorio.deleteById(id); }
+
     @Transactional(readOnly = true)
     public Pago getOne(String id) { return pagoRepositorio.getOne(id); }
 
