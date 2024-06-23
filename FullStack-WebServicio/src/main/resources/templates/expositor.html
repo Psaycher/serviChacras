@@ -1,18 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Contacta a un Proveedor - Chacras de Coria</title>
-        <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet" />
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-        <link rel="stylesheet" href="/css/styles.css">
-        <link rel="stylesheet" href="/css/error.css">
-        <link rel="stylesheet" href="/css/footer.css">
-        <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY"></script>
-    </head>
+    
+    <head th:replace="~{/fragments/head :: head}"></head>
 
     <body>
         <!-- Navegador -->
@@ -124,41 +113,42 @@
                 </div>
             </div>            
 
-            <!-- Este es el elemento de fondo transparente para cerrar el formulario -->
-            <div id="overlay" onclick="closeForm()"></div>
+            <!-- Este es el elemento de fondo transparente para cerrar el formulario 
+            <div id="overlay" onclick="closeForm()">
 
-            <!-- Este es el formulario principal -->
-            <div id="serviceForm">
-                <div class="form-header">
-                    <div class="form-title">Da más detalles de tu pedido</div>
-                    <span class="close-btn" onclick="closeForm()">&times;</span>
-                </div>
-                <form id="serviceFormInner" onsubmit="return validateForm()">
+                Este es el formulario principal
+                <div id="serviceForm">
                     <div class="form-header">
                         <div class="form-title">Da más detalles de tu pedido</div>
                         <span class="close-btn" onclick="closeForm()">&times;</span>
                     </div>
-                    <div class="form-section">
-                        <div class="form-subtitle">¿Qué días deseas que trabaje?</div>
-                        <label><input type="checkbox" name="day[]" value="lunes"> Lunes</label><br>
-                        <label><input type="checkbox" name="day[]" value="martes"> Martes</label><br>
-                        <label><input type="checkbox" name="day[]" value="miércoles"> Miércoles</label><br>
-                        <label><input type="checkbox" name="day[]" value="jueves"> Jueves</label><br>
-                        <label><input type="checkbox" name="day[]" value="viernes"> Viernes</label><br>
-                        <div id="dayError" class="error-message"></div>
-                    </div>
-                    <div class="form-section">
-                        <div class="form-subtitle">¿En qué horarios del día?</div>
-                        <label>Hora de inicio: <input type="time" name="start_time" required></label><br>
-                        <label>Hora de fin: <input type="time" name="end_time" required></label><br>
-                    </div>
-                    <div class="form-section">
-                        <div class="form-subtitle">Más detalles:</div>
-                        <textarea name="details" rows="4" placeholder="Detalles adicionales..." required></textarea>
-                        <div id="detailsError" class="error-message"></div>
-                    </div>
-                    <button type="submit">Solicitar servicio</button>
-                </form>
+                    <form id="serviceFormInner" onsubmit="return validateForm()">
+                        <div class="form-header">
+                            <div class="form-title">Da más detalles de tu pedido</div>
+                            <span class="close-btn" onclick="closeForm()">&times;</span>
+                        </div>
+                        <div class="form-section">
+                            <div class="form-subtitle">¿Qué días deseas que trabaje?</div>
+                            <label><input type="checkbox" name="day[]" value="lunes"> Lunes</label><br>
+                            <label><input type="checkbox" name="day[]" value="martes"> Martes</label><br>
+                            <label><input type="checkbox" name="day[]" value="miércoles"> Miércoles</label><br>
+                            <label><input type="checkbox" name="day[]" value="jueves"> Jueves</label><br>
+                            <label><input type="checkbox" name="day[]" value="viernes"> Viernes</label><br>
+                            <div id="dayError" class="error-message"></div>
+                        </div>
+                        <div class="form-section">
+                            <div class="form-subtitle">¿En qué horarios del día?</div>
+                            <label>Hora de inicio: <input type="time" name="start_time" required></label><br>
+                            <label>Hora de fin: <input type="time" name="end_time" required></label><br>
+                        </div>
+                        <div class="form-section">
+                            <div class="form-subtitle">Más detalles:</div>
+                            <textarea name="details" rows="4" placeholder="Detalles adicionales..." required></textarea>
+                            <div id="detailsError" class="error-message"></div>
+                        </div>
+                        <button type="submit">Solicitar servicio</button>
+                    </form>
+                </div>
             </div>
 
             <div class="mensaje-container">
@@ -189,7 +179,7 @@
                     <div class="mensaje destinatario">
                         <div class="texto">¡Hola! Estoy bien, ¿y tú?</div>
                     </div>
-                    <!-- Más mensajes aquí -->
+                    Más mensajes aquí
                 </div>
                 <div id="preview-container" class="preview-container"></div>
                 <div class="mensaje-form">
@@ -259,11 +249,11 @@
                     <div class="mensaje destinatario">
                         <div class="texto">¡Hola! Estoy bien, ¿y tú?</div>
                     </div>
-                    <!-- Más mensajes aquí -->
+                    Más mensajes aquí
                 </div>
             </div>
 
-            <div id="preview-container" class="preview-container"></div>
+            <div id="preview-container" class="preview-container">
                 <div class="mensaje-form">
                     <label for="file-upload" class="upload-label">📎</label>
                     <input id="file-upload" type="file" accept="image/*" multiple>
@@ -337,7 +327,7 @@
                 <div class="col-lg-6 col-md-8 mx-auto">
                     <a th:href="@{/inicio}" class="btn btn-primary my-2">Volver</a>
                 </div>
-            </div>
+            </div> -->
         </div>
 
         <footer th:replace= "~{/fragments/footer :: footer}"></footer>

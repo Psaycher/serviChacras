@@ -180,7 +180,6 @@ public class PortalControlador {
 
          return "inicio-varios.html"; 
       }
-
       return "inicio.html";
    }
 
@@ -190,10 +189,6 @@ public class PortalControlador {
    public String inivarios( ModelMap modelo, HttpSession session, @RequestParam(required = false, defaultValue = "") String rolSession,
                            @RequestParam(required = false, defaultValue = "") String accionAdmin) {
       Usuario logueado = (Usuario) session.getAttribute("usuariosession");
-
-      System.out.println("Rol del usuario logueado: " + logueado.getRol());
-      System.out.println("Entro el controlador y este es el rolSession: " + rolSession);
-      System.out.println("Esta es la accion elegida por el admin: " + accionAdmin);
 
       if ("ADMIN".equalsIgnoreCase(String.valueOf(logueado.getRol()))) {
 
@@ -206,9 +201,15 @@ public class PortalControlador {
          }
       }
 
-      if (rolSession.equals("CLIENTE")) { return "inicio-cliente.html"; }
+      if (rolSession.equals("CLIENTE")) {
+         modelo.addAttribute("rolSession", rolSession);
+         return "inicio-cliente.html";
+      }
 
-      if (rolSession.equals("PROVEEDOR")) { return "inicio-proveedor.html"; }
+      if (rolSession.equals("PROVEEDOR")) {
+         modelo.addAttribute("rolSession", rolSession);
+         return "inicio-proveedor.html";
+      }
 
       return "redirect:/inicio";
    }

@@ -372,7 +372,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-
 document.getElementById("filtro").addEventListener('click', function () {
     let detallesFiltro = document.getElementById('detalles-filtro');
     let listItems = document.querySelectorAll('#detalles-filtro .list-group-item');

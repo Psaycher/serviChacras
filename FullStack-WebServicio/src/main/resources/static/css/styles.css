@@ -80,7 +80,7 @@ ul li {
 }
 
 #detalles-usuario.show {
-    height: auto;
+    height: 364px;
     pointer-events: auto; /* Habilitar interacción */
 }
 
