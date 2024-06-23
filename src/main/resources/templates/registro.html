@@ -28,40 +28,46 @@
                     <div th:replace="~{/fragments/divError :: div}"> </div>
 
                     <div class="card-body">
-                        <form class="formulario" th:action="@{/registro}" method="POST" enctype="multipart/form-data"
-                            th:if="${session.usuariosession == null}">
-                            <div class="form-group my-3">
-                                <input type="text" class="form-control" name="nombre" placeholder="NOMBRE"
+                        <form class="formulario" th:action="@{/registro}" method="POST" enctype="multipart/form-data" th:if="${session.usuariosession == null}">
+                            <div class="form-group">
+                                <label for="nombre">Nombre:</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Ingrese su nombre"
                                     th:value="${nombre}">
                             </div>
-                            <div class="form-group my-3">
-                                <input type="text" class="form-control" name="apellido" placeholder="APELLIDO"
+                            <div class="form-group">
+                                <label for="apellido">Apellido:</label>
+                                <input type="text" class="form-control" id="apellido" name="apellido" placeholder="Ingrese su apellido"
                                     th:value="${apellido}">
                             </div>
-                            <div class="form-group my-3">
-                                <input type="email" class="form-control" name="email" placeholder="EMAIL"
+                            <div class="form-group">
+                                <label for="email">Email:</label>
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Ingrese su correo electrónico"
                                     th:value="${email}">
                             </div>
-                            <div class="form-group my-3">
-                                <input type="password" class="form-control" name="password" placeholder="CONTRASEÑA"
+                            <div class="form-group">
+                                <label for="password">Contraseña:</label>
+                                <input type="password" class="form-control" id="password" name="password" placeholder="Ingrese su contraseña"
                                     th:value="${password}">
                             </div>
-                            <div class="form-group my-3">
-                                <input type="password" class="form-control" name="password2"
-                                    placeholder="REPETIR CONTRASEÑA" th:value="${password2}">
+                            <div class="form-group">
+                                <label for="password2">Repetir Contraseña:</label>
+                                <input type="password" class="form-control" id="password2" name="password2" placeholder="Repita su contraseña"
+                                    th:value="${password2}">
                             </div>
-                            <div class="form-group my-3">
-                                <input type="text" class="form-control" name="barrio" placeholder="BARRIO"
+                            <div class="form-group">
+                                <label for="barrio">Barrio:</label>
+                                <input type="text" class="form-control" id="barrio" name="barrio" placeholder="Ingrese su barrio"
                                     th:value="${barrio}">
                             </div>
-                            <div class="form-group my-3">
-                                <input type="text" class="form-control" name="direccion" placeholder="DIRECCION"
+                            <div class="form-group">
+                                <label for="direccion">Dirección:</label>
+                                <input type="text" class="form-control" id="direccion" name="direccion" placeholder="Ingrese su dirección"
                                     th:value="${direccion}">
                             </div>
-                            <div class="form-group my-3">
-                                <input type="number" class="form-control" name="telefono" placeholder="TELEFONO"
+                            <div class="form-group">
+                                <label for="telefono">Teléfono:</label>
+                                <input type="tel" class="form-control" id="telefono" name="telefono" placeholder="Ingrese su teléfono"
                                     th:value="${telefono}">
-                            </div>
 
                             <div class="form-group my-3">
                                 <label>Seleccione su rol:</label><br>
