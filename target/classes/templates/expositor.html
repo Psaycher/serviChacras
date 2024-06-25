@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+    <head th:replace="~{/fragments/head :: head}"></head>
+
+    <body>
+        <!-- Navegador -->
+        <nav th:replace="~{/fragments/navbar :: nav}"></nav>
+    
+        <!-- Contenido Principal Cliente-->
+        <div id="fondo" class="container mt-5 contLogin">
+
+            <div class="row justify-content-center" id="contenedor_de_tarjetas" th:if="${rolSession == 'CLIENTE'}">
+                <div id="resultado-busqueda" >
+                    <h2>Resultados de la búsqueda</h2>
+                    <table class="table table-dark text-center">
+                        <thead>
+                            <tr>
+                                <th scope="col">Nombre y Apellido:</th>
+                                <th scope="col">Servicio:</th>
+                                <th scope="col">Puntuación promedio:</th>
+                                <th scope="col">Barrio:</th>
+                                <th scope="col">Teléfono:</th>
+                                <th scope="col">Acciones:</th>
+                            </tr>
+                        </thead>
+                        <tbody th:each="proveedor : ${proveedores}">
+                            <tr>
+                                <td th:text="${proveedor.usuario.nombre} + ' ' + ${proveedor.usuario.apellido}"></td>
+                                <td th:text="${proveedor.servicio.nombre}"></td>
+                                <td th:text="${proveedor.promPuntuacion}"></td>
+                                <td th:text="${proveedor.usuario.barrio}"></td>
+                                <td th:text="${proveedor.usuario.telefono}"></td>
+        
+                                <td>
+                                    <a th:href="@{/servicio/solicitar/__${proveedor.id}__}">
+                                        <i class="fas fa-feather-alt"></i> Solicitar Servicio
+                                    </a>
+                                </td>
+                            </tr>    
+                        </tbody>
+                    </table>
+                </div>
+            </div>            
+
+
+            <div class="container mt-5 contLogin" id="contenedor de tarjetas" th:if="${rolSession == 'PROVEEDOR'}">
+                <div id="resultado-busqueda" th:if="${vacio == false}">
+                    <h2>Resultados de la búsqueda</h2>
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Servicio Solicitado</th>
+                                <th scope="col">Puntuación</th>
+                                <th scope="col">Barrio</th>
+                                <th scope="col">Telefono</th>
+                                <th scope="col" sec:authorize="hasRole('ADMIN')">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody th:each="cliente : ${clientes}">
+                            <tr>
+                                <td th:text="${cliente.usuario.nombre} + ' ' + ${cliente.usuario.apellido}"></td>
+                                <td th:if="${pedidoHay == true}" th:text="${cliente.pedido.servicio.nombre}"></td>
+                                <td th:text="${cliente.promPuntuacion}"></td>
+                                <td th:text="${cliente.usuario.barrio}"></td>
+                                <td th:text="${cliente.usuario.telefono}"></td>
+        
+                                <td>
+                                    <a th:href= "@{/usuario/solicitar_servicio/__${cliente.id}__}"><i class="fas fa-feather-alt">Ver notificación</i></a>
+                                </td>
+                            </tr>    
+                        </tbody>
+                    </table>
+                </div>
+    
+                <div class="header row justify-content-center">
+                    <div class="col-md-6" id="contenedorError" th:if="${vacio == true}">
+                        <section class="py-5 text-center container">
+                            <div class="contenedortitulo">
+                                <a class="navbar-brand">No hay coincidencias.</a>
+                            </div>
+
+                            <div class="contenedorMsj">
+                                <p>No se encontraron Clientes con pedidos Vigentes o relacionados con usted.</p>
+                            </div>
+        
+                            <div class="row py-lg-5">
+                                <div class="col-lg-6 col-md-8 mx-auto">
+                                    <a th:href="@{/inicio}" class="btn btn-primary my-2">Volver</a>
+                                </div>
+                            </div>    
+                        </section>
+                    </div>
+                </div>                
+            </div>            
+
+
+
+            <div class="row py-lg-5 text-center container">
+                <div class="col-lg-6 col-md-8 mx-auto">
+                    <a th:href="@{/inicio}" class="btn btn-primary my-2">Volver</a>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-bottom: 10%;"></div>
+
+        <footer th:replace= "~{/fragments/footer :: footer}"></footer>
+
+        <!-- Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+        <script src="/js/main.js"></script>
+    </body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{/fragments/head :: head}"></head>
+
+<body>
+  <!-- Navegador -->
+  <nav th:replace="~{/fragments/navbar :: nav}"></nav>
+
+  <!-- Contenido Principal -->
+  <div id="fondo" class="container mt-5">
+    <div class="row">
+      <div class="col-md-12 text-center" th:if="${rolSession == 'MIXTO'}">
+        <h1 th:text="'Bienvenido ' + ${session.usuariosession.nombre}"></h1>
+        <p class="lead">Elegí el rol con el cual pensás operar.</p>
+      </div>
+
+      <div class="col-md-12 text-center" th:if="${rolSession == 'ADMIN'}">
+        <h1 th:text="'Bienvenido ' + ${session.usuariosession.nombre}"></h1>
+        <p class="lead">Elegí en que elementos querés ejercer alguna acción.</p>
+      </div>
+    </div>
+
+    <article id="inicioVarios">
+        <div class="containerVarios" th:if="${rolSession == 'MIXTO'}">
+
+            <div class="fondoVarios" id="fondoCliente">
+                <div class="botonInicio" id="ini-cliente"> 
+                    <a class="nav-link navbarDropdown" th:href= "@{/inivarios(rolSession='CLIENTE')}" role="button" aria-expanded="false">
+                      <h1>Cliente</h1>
+                      <div class="infoVarios">                        
+                          <p>Diríjase a la Interfaz de Clientes para observar el estado de tus Pedidos, solicitar Servicios y comunicarte con diferentes Proveedores</p>
+                      </div>
+                    </a>                            
+                </div>
+            </div>
+            
+            <div class="fondoVarios" id="fondoProveedor">
+                <div class="botonInicio ini-dcha" id="ini-proveedor">
+                    <a class="nav-link navbarDropdown" th:href= "@{/inivarios(rolSession='PROVEEDOR')}" role="button" aria-expanded="false">
+                      <h1>Proveedor</h1>
+                      <div class="infoVarios">                            
+                          <p>Diríjase a la Interfaz de Proveedores. Aquí podrás controlar tus pedidos, observar tus solicitudes y comunicarte con los clientes</p>
+                      </div>                      
+                    </a>   
+                </div>
+            </div>
+        </div>
+
+        <div class="containerVarios" th:if="${rolSession == 'ADMIN'}">
+                  
+          <div class="fondoVarios" id="fondoUsuario">
+              <div class="botonInicio" id="ini-usuario">           
+                <a class="nav-link navbarDropdown" th:href= "@{/inivarios(accionAdmin='USUARIO')}" role="button" aria-expanded="false">
+                    <h1>Usuarios</h1>
+                    <div class="infoVarios">                            
+                        <p>Ingrese al Control de todos los Usuarios. Desde éste Panel puede ejercer diferentes acciones</p>
+                    </div>
+                </a>                            
+              </div>
+          </div>
+          
+          <div class="fondoVarios" id="fondoServicio">
+              <div class="botonInicio" id="ini-servicio">                      
+                  <a class="nav-link navbarDropdown" th:href= "@{/inivarios(accionAdmin='SERVICIO')}" role="button" aria-expanded="false">
+                      <h1>Servicios</h1>
+                      <div class="infoVarios">                        
+                          <p>Edite, elimine o agregue los Servicios ofrecidos a los habitantes de los tres Barrios</p>
+                      </div>
+                  </a>   
+              </div>
+          </div>
+
+          <div class="fondoVarios" id="fondoPedido">
+            <div class="botonInicio ini-dcha" id="ini-pedido">     
+                <a class="nav-link navbarDropdown"  th:href= "@{/inivarios(accionAdmin='PEDIDO')}" role="button" aria-expanded="false">
+                    <h1>Pedidos</h1>
+                    <div class="infoVarios">                        
+                        <p>Observe los diferentes Pedidos presentes entre Clientes y Proveedores, y su avance.</p>
+                    </div>
+                </a>   
+            </div>
+        </div>
+      </div>
+    </article>
+
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <h3>¿Dónde nos ubicamos?</h3>
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13387.47124529573!2d-68.88720044175409!3d-32.9808891773436!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x967e0af3dc0e8f1f%3A0x6b647646861df9cf!2sChacras%20de%20Coria%2C%20Mendoza!5e0!3m2!1ses-419!2sar!4v1717636946323!5m2!1ses-419!2sar"
+          style="width: 80vw; height: 40vh; border:0; margin-bottom: 2vw;" allowfullscreen="" loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+    </div>
+
+    <div class="mensaje-container">
+      <div class="mensaje-header">
+        <span></span>
+        <div class="controls">
+          <span class="icon">👇</span>
+          <span class="icon">✖</span>
+        </div>
+      </div>
+      <div class="mensaje-user">
+        <a id="usuario-proveedor" class="nav-link" style="cursor: pointer;">
+          <img src="img/icono-usuario.jpg" alt="Proveedor">
+          <span id="nombre-proveedor" style="margin-left: 5px;">Proveedor</span>
+        </a>
+        <div id="detalles-proveedor" style="border-bottom: 1px solid #666; z-index:1000;">
+          <ul class="list-group"
+            style="background-color: #333; border: 1px solid #333; padding:0%; display: flex; flex-direction:row ; align-items: center;">
+            <li class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button
+                id="info-proveedor" type="button" class="btn btn-outline-info">Ver más Info</button></li>
+            <li id="eliminar" class="list-group-item"
+              style="padding: auto; background-color: #333; border: 1px solid #333;"><button id="cambiar-funcion"
+                type="button" class="btn btn-outline-success">Trabajo completo</button></li>
+            <li class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button
+                id="reportar" type="button" class="btn btn-outline-danger">Reportar</button></li>
+          </ul>
+        </div>
+      </div>
+      <div class="mensaje-content">
+        <div class="mensaje usuario">
+          <div class="texto">Hola, ¿cómo estás?</div>
+        </div>
+        <div class="mensaje destinatario">
+          <div class="texto">¡Hola! Estoy bien, ¿y tú?</div>
+        </div>
+        <!-- Más mensajes aquí -->
+      </div>
+      <div id="preview-container" class="preview-container"></div>
+      <div class="mensaje-form">
+        <label for="file-upload" class="upload-label">📎</label>
+        <input id="file-upload" type="file" accept="image/*" multiple>
+        <input type="text" placeholder="Escribe tu mensaje">
+        <button class="send">Enviar</button>
+      </div>
+    </div>
+
+    <div id="image-viewer" class="image-viewer" style="display: none;">
+      <span class="close-viewer">&times;</span>
+      <a id="download-link" class="download-link" download>Descargar</a>
+      <img id="viewer-image" src="" alt="Imagen">
+    </div>
+
+    <div class="report-container">
+      <div id="report-form-overlay" class="overlay" style="display: none; z-index:1000;"></div>
+      <div id="report-form" class="report-form" style="display: none; z-index:1000;">
+        <div class="report-header">
+          <h2>Reporte</h2>
+          <span class="close">&times;</span>
+        </div>
+        <form id="formulario-reporte">
+          <div class="form-group">
+            <label for="motivo-reporte">¿Qué reporta? (Aclare si es estafa, lenguaje malsonante, etc)</label>
+            <textarea id="motivo-reporte" name="motivo-reporte" rows="2" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="detalles-reporte">Más detalles</label>
+            <textarea id="detalles-reporte" name="detalles-reporte" rows="4"></textarea>
+          </div>
+          <div class="form-group">
+            <label for="evidencia-reporte">Adjunte evidencia (obligatorio)</label>
+            <input type="file" id="evidencia-reporte" name="evidencia-reporte" accept="image/*" required>
+          </div>
+          <button type="submit" class="send-btn">Enviar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <footer th:replace="~{/fragments/footer :: footer}"></footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="/js/main.js"></script>
+</body>
+
+</html>
