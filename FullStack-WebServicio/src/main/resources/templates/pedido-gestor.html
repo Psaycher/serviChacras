@@ -19,6 +19,7 @@
             <p th:if="${session.usuariosession != null}" th:text="'Hola de vuelta ' + ${session.usuariosession.nombre}"></p>
             <p th:if="${session.usuariosession != null}" sec:authorize="!hasRole('CLIENTE')">Que acción deseas realizar</p>
             <p th:if="${session.usuariosession != null}" sec:authorize="hasRole('CLIENTE')">Que Servicio estás necesitando</p>
+            <p th:if="${session.usuariosession != null}" sec:authorize="hasRole('PROVEEDOR')">Que acción deseas realizar?</p>
           </div>
 
           <div class="row py-lg-5">

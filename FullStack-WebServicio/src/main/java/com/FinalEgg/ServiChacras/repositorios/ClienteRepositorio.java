@@ -11,7 +11,7 @@ import com.FinalEgg.ServiChacras.entidades.Cliente;
 
 @Repository
 public interface ClienteRepositorio extends JpaRepository<Cliente, String> {
-       @Query("SELECT id FROM Cliente c WHERE c.usuario.id = :idUsuario")
+       @Query("SELECT c.id FROM Cliente c WHERE c.usuario.id = :idUsuario")
        public String idUsuario(@Param("idUsuario") String idUsuario);
 
        @Query("SELECT c FROM Cliente c WHERE c.usuario.email = :email")

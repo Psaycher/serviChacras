@@ -22,7 +22,7 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent" th:if="${session.usuariosession != null}">
             <ul class="navbar-nav ms-auto me-4 mb-1 mb-lg-0">
-                <form class="d-flex" role="search" style="display: flex; align-items: center;" th:action="@{/usuario/expositor}" method="get">
+                <form class="d-flex" role="search" style="display: flex; align-items: center;" th:action="@{/usuario/expositor}" method="get" th:if="${navBlock == 'buscadores'}">
                     <div type="hidden" th:if="${rolSession == 'CLIENTE'}">
                         <input type="hidden" th:value="'CLIENTE'" name="rolSession">
                     </div>
@@ -38,16 +38,17 @@
                     </button>
                 </form>
                 <!-- ! Filtro -->
-                <div id="detalles-filtro" class="list-group" style="height: 0; overflow: hidden;">
+                <div id="detalles-filtro" class="list-group" style="height: 0; overflow: hidden;" th:if="${navBlock == 'buscadores'}">
                     <form id="Formulario-filtro" role="search" th:action="@{/usuario/expositor}" method="get">
-                        <div class="list-group-item">
-                            <label for="barrio">Seleccione Barrio:</label>
-                            <select class="form-control" name="barrio" id="barrio" >
-                                <option th:value="todos">Todos</option>
-                                <option th:value="BARRIO1Ruta2km69">Ruta 2 km 69</option>
-                                <option th:value="BARRIO2Ruta2km75">Ruta 2 km 75</option>
-                                <option th:value="BARRIO3Ruta13km86">Ruta 13 km 86</option>
-                                <option th:value="ninguno">Ninguno</option>
+                        
+                        <div class="form-group list-group-item">
+                            <label for="barrioChacras">Seleccione Barrio:</label>
+                            <select class="form-control border-dark bg-light text-dark" id="barrioChacras" name="barrioChacras">
+                                <option value="" disabled selected>Seleccione un barrio</option>
+                                <option class="opcion" th:each="barrio : ${barrios}"
+                                    th:value="${barrio}" th:text="${barrio}">
+                                    <span></span>
+                                </option>
                             </select>
                         </div>
                     
@@ -107,6 +108,7 @@
                         </div>
                             
                         <button id="buscar" class="btn btn-primary" type="submit">Buscar</button>
+                    
                     </form>
                 </div>
 

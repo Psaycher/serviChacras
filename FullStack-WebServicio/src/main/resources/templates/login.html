@@ -11,7 +11,7 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card" th:if="${session.usuariosession == null}">
-                    <div class="card-header text-center">
+                    <div class="card-header text-center bg-dark text-white">
                         <h3>Iniciar Sesión</h3>
                     </div>
 
@@ -20,11 +20,11 @@
                     <div class="card-body">
                         <form th:action="@{/logincheck}" method="post">
                             <div class="form-group mb-3">
-                                <label for="email">Usuario</label>
+                                <label for="email">Email:</label>
                                 <input type="text" class="form-control" id="email" name="email" required>
                             </div>
                             <div class="form-group mb-3">
-                                <label for="password">Contraseña</label>
+                                <label for="password">Contraseña:</label>
                                 <input type="password" class="form-control" id="password" name="password" required>
                             </div>
                             <div class="form-group text-center">

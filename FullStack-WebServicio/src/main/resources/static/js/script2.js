@@ -140,3 +140,134 @@ document.getElementById("campana").addEventListener('click', function() {
         cambiarFuncion.classList.add('btn-outline-warning');
     }
   })
+
+
+  // ! Filtro
+
+  document.getElementById("filtro").addEventListener('click', function () {
+    let detallesFiltro = document.getElementById('detalles-filtro');
+    let listItems = document.querySelectorAll('#detalles-filtro .list-group-item');
+    let botonFiltro = document.getElementById('filtro');
+
+    // Calcular la altura total de los elementos de la lista con un margen adicional
+    let totalHeight = 0;
+    listItems.forEach(item => {
+        totalHeight += item.clientHeight;
+    });
+
+    // Agregar un margen adicional para asegurar que todos los elementos se muestren completamente
+    totalHeight += 58; // Puedes ajustar este valor según sea necesario
+
+    // Calcular la posición del botón y ajustar la posición del formulario
+    let rect = botonFiltro.getBoundingClientRect();
+    detallesFiltro.style.top = rect.bottom + 'px';
+    detallesFiltro.style.left = rect.left + 'px';
+
+    if (detallesFiltro.style.height == '0px' || detallesFiltro.style.height === '') {
+        detallesFiltro.style.height = totalHeight + 'px';
+        detallesFiltro.classList.add('show');
+    } else {
+        detallesFiltro.style.height = '0';
+        detallesFiltro.classList.remove('show');
+    }
+});
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    // Obtener los elementos del filtro y del contenedor de tarjetas
+    const filtroForm = document.getElementById('Formulario-filtro');
+    const cardContainer = document.getElementById('card-container');
+
+    // Datos simulados (deberías reemplazarlos con los datos reales)
+    const data = [
+        {
+            categoria: 'Ruta2km69',
+            title: 'Servicio 1',
+            imgSrc: 'ruta/a/la/imagen1.jpg',
+            description: 'Descripción del servicio 1',
+            items: ['Item 1', 'Item 2', 'Item 3'],
+            links: ['#', '#']
+        },
+        {
+            categoria: 'Ruta2km75',
+            title: 'Servicio 2',
+            imgSrc: 'ruta/a/la/imagen2.jpg',
+            description: 'Descripción del servicio 2',
+            items: ['Item 1', 'Item 2', 'Item 3'],
+            links: ['#', '#']
+        },
+        // Más datos aquí...
+    ];
+
+    // Función para generar las tarjetas
+    function generateCards(categoria) {
+        // Limpiar el contenedor de tarjetas
+        cardContainer.innerHTML = '';
+
+        // Filtrar los datos según la categoría seleccionada
+        const filteredData = data.filter(item => item.categoria === categoria);
+
+        // Generar las tarjetas
+        filteredData.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.style.width = '18rem';
+
+            const img = document.createElement('img');
+            img.src = item.imgSrc;
+            img.className = 'card-img-top';
+            img.alt = item.title;
+
+            const cardBody = document.createElement('div');
+            cardBody.className = 'card-body';
+
+            const cardTitle = document.createElement('h5');
+            cardTitle.className = 'card-title';
+            cardTitle.textContent = item.title;
+
+            const cardText = document.createElement('p');
+            cardText.className = 'card-text';
+            cardText.textContent = item.description;
+
+            cardBody.appendChild(cardTitle);
+            cardBody.appendChild(cardText);
+
+            const listGroup = document.createElement('ul');
+            listGroup.className = 'list-group list-group-flush';
+
+            item.items.forEach(listItem => {
+                const li = document.createElement('li');
+                li.className = 'list-group-item';
+                li.textContent = listItem;
+                listGroup.appendChild(li);
+            });
+
+            const cardBodyLinks = document.createElement('div');
+            cardBodyLinks.className = 'card-body';
+
+            item.links.forEach(link => {
+                const a = document.createElement('a');
+                a.href = link;
+                a.className = 'card-link';
+                a.textContent = 'Card link';
+                cardBodyLinks.appendChild(a);
+            });
+
+            card.appendChild(img);
+            card.appendChild(cardBody);
+            card.appendChild(listGroup);
+            card.appendChild(cardBodyLinks);
+
+            cardContainer.appendChild(card);
+        });
+    }
+
+    // Escuchar el evento submit del formulario del filtro
+    filtroForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const formData = new FormData(filtroForm);
+        const categoriaSeleccionada = formData.get('barrio'); // Ajusta el nombre según el select de tu filtro
+
+        generateCards(categoriaSeleccionada);
+    });
+});

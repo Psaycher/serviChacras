@@ -2,7 +2,6 @@ package com.FinalEgg.ServiChacras.entidades;
 
 import java.util.List;
 import jakarta.persistence.*;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
@@ -38,5 +37,5 @@ public class Proveedor {
     private Integer cantPedido;
 
     @Column(name = "promedio_puntuacion")
-    private Integer promPuntuacion;
+    private Float promPuntuacion;
 }

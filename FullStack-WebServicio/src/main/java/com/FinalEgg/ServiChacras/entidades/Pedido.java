@@ -3,12 +3,10 @@ package com.FinalEgg.ServiChacras.entidades;
 import java.util.Date;
 import java.util.List;
 import jakarta.persistence.*;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
-
 import com.FinalEgg.ServiChacras.enumeraciones.Estado;
 
 @Getter

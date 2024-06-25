@@ -1,15 +1,11 @@
 package com.FinalEgg.ServiChacras.entidades;
 
 import jakarta.persistence.*;
-
 import lombok.Setter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import java.util.List;
-
 import org.hibernate.annotations.GenericGenerator;
-
 import com.FinalEgg.ServiChacras.enumeraciones.*;
 
 @Getter
@@ -28,8 +24,7 @@ public class Usuario {
     private String email;
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    private Barrio barrio;
+    private String barrio;
     private String direccion;
     private String telefono;
 

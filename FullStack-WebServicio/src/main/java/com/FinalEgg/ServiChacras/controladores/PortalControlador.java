@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import org.springframework.ui.ModelMap;
 import jakarta.servlet.http.HttpSession;
+import com.FinalEgg.ServiChacras.servicios.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,10 +19,6 @@ import com.FinalEgg.ServiChacras.entidades.Usuario;
 import com.FinalEgg.ServiChacras.entidades.Servicio;
 import com.FinalEgg.ServiChacras.entidades.Notificacion;
 import com.FinalEgg.ServiChacras.excepciones.MiExcepcion;
-import com.FinalEgg.ServiChacras.servicios.PedidoServicio;
-import com.FinalEgg.ServiChacras.servicios.UsuarioServicio;
-import com.FinalEgg.ServiChacras.servicios.ServicioServicio;
-import com.FinalEgg.ServiChacras.servicios.ProveedorServicio;
 import com.FinalEgg.ServiChacras.repositorios.UsuarioRepositorio;
 import com.FinalEgg.ServiChacras.repositorios.MensajeRepositorio;
 import com.FinalEgg.ServiChacras.repositorios.ServicioRepositorio;
@@ -66,6 +63,8 @@ public class PortalControlador {
       List<Servicio> cuidado = servicioServicio.listarPorCategoria("Servicios de cuidado personal y bienestar");
       List<Servicio> logistica = servicioServicio.listarPorCategoria("Servicios de entrega y logistica");
 
+      modelo.addAttribute("barrios", usuarioServicio.obtenerListaDeBarrios());
+      
       modelo.addAttribute("limpieza", limpieza);
       modelo.addAttribute("mantenimiento", mantenimiento);
       modelo.addAttribute("seguridad", seguridad);
@@ -109,17 +108,13 @@ public class PortalControlador {
          notas.add(nota);
       }
 
-      if ( logueado.getRol().toString().equalsIgnoreCase("ADMIN") ) { 
-         String rolSession = "ADMIN";
-         modelo.addAttribute("rolSession", rolSession);
-
-         return "inicio-varios.html"; 
-      }
+      if ( logueado.getRol().toString().equalsIgnoreCase("ADMIN") ) { return "redirect:/admin/dashboard"; }
 
       if ( logueado.getRol().toString().equalsIgnoreCase("CLIENTE") ) {
 
          //Opciones del Filtro avanzado en Navegador---------------------------------->
          String rolSession = "CLIENTE";
+         String navBlock = "buscadores";
 
          List<Servicio> limpieza = servicioServicio.listarPorCategoria("Servicios de limpieza");
          List<Servicio> mantenimiento = servicioServicio.listarPorCategoria("Servicios de mantenimiento y reparaciones");
@@ -127,8 +122,12 @@ public class PortalControlador {
          List<Servicio> tecnologia = servicioServicio.listarPorCategoria("Servicios de tecnologia y conectividad");
          List<Servicio> cuidado = servicioServicio.listarPorCategoria("Servicios de cuidado personal y bienestar");
          List<Servicio> logistica = servicioServicio.listarPorCategoria("Servicios de entrega y logistica");
+
+         modelo.addAttribute("barrios", usuarioServicio.obtenerListaDeBarrios());
    
          modelo.addAttribute("rolSession", rolSession);
+         modelo.addAttribute("navBlock", navBlock);
+
          modelo.addAttribute("limpieza", limpieza);
          modelo.addAttribute("mantenimiento", mantenimiento);
          modelo.addAttribute("seguridad", seguridad);
@@ -152,12 +151,14 @@ public class PortalControlador {
       if ( logueado.getRol().toString().equalsIgnoreCase("PROVEEDOR") ) { 
          //Opciones del Filtro avanzado en Navegador---------------------------------->
          String rolSession = "PROVEEDOR";
-         System.out.println(rolSession);
+         String navBlock = "buscadores";
 
          String idProveedor = proveedorServicio.idUsuario(logueado.getId());
          List<Pedido> pedidos = pedidoServicio.getPedidoPorProveedores(idProveedor);
 
+         modelo.addAttribute("barrios", usuarioServicio.obtenerListaDeBarrios());
          modelo.addAttribute("rolSession", rolSession);
+         modelo.addAttribute("navBlock", navBlock);
          modelo.addAttribute("pedidos", pedidos);
          //--------------------------------------------------------------------------//
                   
@@ -175,9 +176,9 @@ public class PortalControlador {
       }
 
       if ( logueado.getRol().toString().equalsIgnoreCase("MIXTO") ) { 
-         String rolSession = "MIXTO";
-         modelo.addAttribute("rolSession", rolSession);
+         String rolSession = "MIXTO";     
 
+         modelo.addAttribute("rolSession", rolSession);   
          return "inicio-varios.html"; 
       }
       return "inicio.html";
@@ -195,9 +196,9 @@ public class PortalControlador {
          System.out.println("Esta es la accion elegida por el admin: " + accionAdmin);
 
          switch (accionAdmin) {
-            case "USUARIO": return "usuario-gestor.html";
-            case "SERVICIO": return "servicio-gestor.html";
-            case "PEDIDO": return "pedido-gestor.html";
+            case "USUARIO" -> { return "redirect:/admin/usuarios"; }
+            case "SERVICIO" -> { return "redirect:/admin/servicios"; }
+            case "PEDIDO" -> { return "redirect:/admin/pedidos"; }
          }
       }
 
@@ -227,6 +228,8 @@ public class PortalControlador {
       List<Servicio> cuidado = servicioServicio.listarPorCategoria("Servicios de cuidado personal y bienestar");
       List<Servicio> logistica = servicioServicio.listarPorCategoria("Servicios de entrega y logistica");
 
+      modelo.addAttribute("barrios", usuarioServicio.obtenerListaDeBarrios());
+
       modelo.addAttribute("limpieza", limpieza);
       modelo.addAttribute("mantenimiento", mantenimiento);
       modelo.addAttribute("seguridad", seguridad);
@@ -241,14 +244,14 @@ public class PortalControlador {
 
    @PostMapping("/registro")
    public String registro(@RequestParam String nombre, @RequestParam String apellido, @RequestParam String email, @RequestParam String password,
-                          @RequestParam String password2, @RequestParam(required = false) Integer barrio, @RequestParam(required = false) String rol,
+                          @RequestParam String password2, @RequestParam(required = false) String barrioChacras, @RequestParam(required = false) String rol,
                           @RequestParam String direccion, @RequestParam String telefono, @RequestParam(required = false) MultipartFile archivo,
                           @RequestParam(required = false) String descripcion, @RequestParam(required = false) String idServicio, ModelMap modelo, HttpSession session ) {
 
       Usuario logueado = (Usuario) session.getAttribute("usuariosession");
       if (logueado != null) { return "redirect:/inicio"; }
 
-      if (barrio == null) { barrio = 0;}
+      if (barrioChacras == null || barrioChacras.trim().isEmpty()) { barrioChacras = "Foraneo";}
       if (direccion.trim().isEmpty()) { direccion = "No especificada";}
       if (telefono.trim().isEmpty()) { telefono = "No especificada";}
       if (rol == null || rol.trim().isEmpty()) { rol = "USER"; }
@@ -270,7 +273,7 @@ public class PortalControlador {
       }
 
       try {
-         usuarioServicio.registrar(nombre, apellido, email, password, password2,  barrio, rol, direccion, telefono);
+         usuarioServicio.registrar(nombre, apellido, email, password, password2,  barrioChacras, rol, direccion, telefono);
 
          if (rol.equalsIgnoreCase("proveedor") || rol.equalsIgnoreCase("mixto")) {
             Usuario usuario = usuarioServicio.getPorEmail(email);
@@ -303,6 +306,8 @@ public class PortalControlador {
                List<Servicio> cuidado = servicioServicio.listarPorCategoria("Servicios de cuidado personal y bienestar");
                List<Servicio> logistica = servicioServicio.listarPorCategoria("Servicios de entrega y logistica");
 
+               modelo.addAttribute("barrios", usuarioServicio.obtenerListaDeBarrios());
+
                modelo.addAttribute("limpieza", limpieza);
                modelo.addAttribute("mantenimiento", mantenimiento);
                modelo.addAttribute("seguridad", seguridad);
@@ -330,17 +335,24 @@ public class PortalControlador {
    }
 
 
-   @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_CLIENTE', 'ROLE_PROVEEDOR', 'ROLE_MIXTO')")
    @PostMapping("/perfil/{id}")
    public String actualizar(@PathVariable String id, @RequestParam(required = false) String nombre, @RequestParam(required = false) String apellido, @RequestParam(required = false) String email,
-                            @RequestParam(required = false) String password, @RequestParam(required = false) String password2, @RequestParam(required = false) Integer barrio,
+                            @RequestParam(required = false) String password, @RequestParam(required = false) String password2, @RequestParam(required = false) String barrioChacras,
                             @RequestParam(required = false) String rol, @RequestParam(required = false) String direccion, @RequestParam(required = false) String telefono, 
                             @RequestParam(required = false) MultipartFile archivo, @RequestParam(required = false) String descripcion, @RequestParam(required = false) String idServicio, ModelMap modelo ) {
 
       String detalle = "";
 
+      System.out.println(nombre);
+      System.out.println(apellido);
+      System.out.println(email);
+      System.out.println(barrioChacras);
+      System.out.println(rol);
+      System.out.println(telefono);
+      System.out.println(direccion);
+
       try {
-         usuarioServicio.actualizar(id, nombre, apellido, email, password, password2, barrio, rol, direccion, telefono);
+         usuarioServicio.actualizar(id, nombre, apellido, email, password, password2, barrioChacras, rol, direccion, telefono);
          
          if (rol.equalsIgnoreCase("proveedor") || rol.equalsIgnoreCase("mixto")) {
             Usuario usuario = usuarioServicio.getOne(id);
@@ -374,6 +386,8 @@ public class PortalControlador {
                List<Servicio> cuidado = servicioServicio.listarPorCategoria("Servicios de cuidado personal y bienestar");
                List<Servicio> logistica = servicioServicio.listarPorCategoria("Servicios de entrega y logistica");
 
+               modelo.addAttribute("barrios", usuarioServicio.obtenerListaDeBarrios());
+
                modelo.addAttribute("limpieza", limpieza);
                modelo.addAttribute("mantenimiento", mantenimiento);
                modelo.addAttribute("seguridad", seguridad);
@@ -395,5 +409,5 @@ public class PortalControlador {
          return "actualizar-usuario.html";
       }
       return "redirect:/inicio";
-   }
+   }   
 }

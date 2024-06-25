@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.FinalEgg.ServiChacras.entidades.*;
@@ -71,8 +70,14 @@ public class ProveedorServicio {
     }
 
     @Transactional
-    public void deletearProveedor(String id) { proveedorRepositorio.deleteById(id); }
+    public void eliminarProveedor(String id) { proveedorRepositorio.deleteById(id); }
 
+    @Transactional
+    public void eliminarPorIdUsuario(String IdUsuario) {
+        String id = proveedorRepositorio.idUsuario(IdUsuario);
+        if (id != null) { proveedorRepositorio.deleteById(id); }
+    }
+    
     @Transactional(readOnly = true)
     public Proveedor getOne(String id) { return proveedorRepositorio.getOne(id); }
 

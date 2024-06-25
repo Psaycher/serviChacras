@@ -1,8 +1,10 @@
 package com.FinalEgg.ServiChacras.servicios;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Service;
@@ -22,9 +24,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import com.FinalEgg.ServiChacras.repositorios.*;
 import com.FinalEgg.ServiChacras.entidades.Usuario;
 import com.FinalEgg.ServiChacras.entidades.Cliente;
-import com.FinalEgg.ServiChacras.entidades.Mensaje;
-import com.FinalEgg.ServiChacras.entidades.Notificacion;
 import com.FinalEgg.ServiChacras.entidades.Proveedor;
+import com.FinalEgg.ServiChacras.entidades.Notificacion;
 import com.FinalEgg.ServiChacras.enumeraciones.Rol;
 import com.FinalEgg.ServiChacras.enumeraciones.Barrio;
 import com.FinalEgg.ServiChacras.excepciones.MiExcepcion;
@@ -43,7 +44,7 @@ public class UsuarioServicio implements UserDetailsService {
     private ProveedorRepositorio proveedorRepositorio;
 
     @Transactional
-    public void registrar(String nombre, String apellido, String email, String password, String password2, Integer barrio, String rolString, String direccion, String telefono) throws MiExcepcion {
+    public void registrar(String nombre, String apellido, String email, String password, String password2, String barrioChacras, String rolString, String direccion, String telefono) throws MiExcepcion {
         validar(nombre, apellido, email, password, password2);
         Usuario usuario = new Usuario();
 
@@ -52,13 +53,9 @@ public class UsuarioServicio implements UserDetailsService {
         usuario.setEmail(email);
         usuario.setPassword(new BCryptPasswordEncoder().encode(password));
 
-        switch (barrio) {
-            case 1 -> { usuario.setBarrio(Barrio.BARRIO1Ruta2km69); }
-            case 2 -> { usuario.setBarrio(Barrio.BARRIO2Ruta2km75); }
-            case 3 -> { usuario.setBarrio(Barrio.BARRIO3Ruta13km86); }
-            default -> { usuario.setBarrio(Barrio.FORANEO); }
-        }
-
+        Barrio barrio =  Barrio.obtenerPorNombre(barrioChacras);
+        usuario.setBarrio(barrio.getNombre());
+        
         usuario.setDireccion(direccion);
         usuario.setTelefono(telefono);
 
@@ -109,33 +106,50 @@ public class UsuarioServicio implements UserDetailsService {
     }         
     
     @Transactional(readOnly = true)
-    public List<Usuario> listarUsuarios() { return usuarioRepositorio.findAll();}
+    public List<Usuario> listarUsuarios() { return usuarioRepositorio.findAll(); }
 
     @Transactional
-    public void actualizar(String id, String nombre, String apellido, String email, String password, String password2, Integer barrio, String rolString, String direccion, String telefono) throws MiExcepcion {
-
-        validar(email, nombre, apellido, password, password2);
-
+    public void actualizar(String id, String nombre, String apellido, String email, String password, String password2, String barrioChacras, String rolString, String direccion, String telefono) throws MiExcepcion {
         Optional<Usuario> respuesta = usuarioRepositorio.findById(id);
+        boolean definir = false;
+
+        System.out.println("Entro a actualizar de usuario servicio");
 
         if (respuesta.isPresent()) {
-
             Usuario usuario = respuesta.get();
+            System.out.println("respuesta está presente");
+
+            if (nombre == null || nombre.trim().isEmpty()) { nombre = usuario.getNombre();}
+            if (apellido == null || apellido.trim().isEmpty()) { apellido = usuario.getApellido();}
+            if (email == null || email.trim().isEmpty()) { email = usuario.getEmail();}
+            if (password == null || password.trim().isEmpty()) { password = usuario.getPassword();}
+            if (barrioChacras == null || barrioChacras.trim().isEmpty()) { barrioChacras = usuario.getBarrio();}
+            
+            if (rolString == null || rolString.trim().isEmpty()) { rolString = String.valueOf(usuario.getRol()).toUpperCase(); } 
+            else { if (String.valueOf(usuario.getRol()).equals(rolString)) { definir = true; } }
+            
+            if (direccion == null || direccion.trim().isEmpty()) { direccion = usuario.getDireccion();}
+            if (telefono == null || telefono.trim().isEmpty()) { telefono = usuario.getTelefono();}
+
+                System.out.println(nombre);
+                System.out.println(apellido);
+                System.out.println(email);
+                System.out.println(password);
+                System.out.println(barrioChacras);
+                System.out.println(rolString);
+                System.out.println(direccion);
+                System.out.println(telefono);                
+
+            validar(email, nombre, apellido, password, password2);
 
             usuario.setNombre(nombre);
             usuario.setApellido(apellido);
             usuario.setEmail(email);
             usuario.setPassword(new BCryptPasswordEncoder().encode(password));
 
-            if (barrio != null) {
-                switch (barrio) {
-                    case 1 -> { usuario.setBarrio(Barrio.BARRIO1Ruta2km69); }
-                    case 2 -> { usuario.setBarrio(Barrio.BARRIO2Ruta2km75); }
-                    case 3 -> { usuario.setBarrio(Barrio.BARRIO3Ruta13km86); }
-                    default -> { usuario.setBarrio(Barrio.FORANEO); }
-                }
-            } else { usuario.setBarrio(Barrio.FORANEO); }
-
+            Barrio barrio = Barrio.obtenerPorNombre(barrioChacras);
+            usuario.setBarrio(barrio.getNombre());
+            
             usuario.setDireccion(direccion);
             usuario.setTelefono(telefono);
 
@@ -143,7 +157,7 @@ public class UsuarioServicio implements UserDetailsService {
             usuario.setRol(rol);      
 
             usuarioRepositorio.save(usuario);
-            definirCliente(usuario, 1);
+            if (definir) { definirCliente(usuario, 1); }            
         }
     }
 
@@ -199,17 +213,35 @@ public class UsuarioServicio implements UserDetailsService {
     }
 
     @Transactional
-    public void eliminarUsuario(String id) { 
+    public void altaBaja(String id) { 
         Optional<Usuario> respuesta = usuarioRepositorio.findById(id);
 
         if (respuesta.isPresent()) {
             Usuario usuario = respuesta.get();
-            usuario.setAlta(false); 
+
+            if (usuario.isAlta() == true) { usuario.setAlta(false); }
+            else { usuario.setAlta(true); }             
         }
     }
 
     @Transactional
-    public void deletearUsuario(String id) { usuarioRepositorio.deleteById(id); }
+    public void eliminarUsuario(String id) throws MiExcepcion {
+        System.out.println("entro en eliminarUsuario en usuarioServicio");
+
+        Usuario usuario = usuarioRepositorio.findById(id).orElseThrow(() -> new MiExcepcion("Usuario no encontrado"));
+
+        if (usuario.getRol() == Rol.CLIENTE) { System.out.println("entro al condicional de cliente");
+            clienteServicio.eliminarPorIdUsuario(id); }
+        if (usuario.getRol() == Rol.PROVEEDOR) { proveedorServicio.eliminarPorIdUsuario(id); }
+
+        if (usuario.getRol() == Rol.MIXTO) { 
+            clienteServicio.eliminarPorIdUsuario(id);
+            proveedorServicio.eliminarPorIdUsuario(id); 
+        }
+
+        System.out.println("antes de entrar al deleteById del repo");
+        usuarioRepositorio.deleteById(id);
+    }
 
     @Transactional(readOnly = true)
     public Usuario getOne(String id) { return usuarioRepositorio.getOne(id); }
@@ -225,4 +257,10 @@ public class UsuarioServicio implements UserDetailsService {
 
     @Transactional(readOnly = true)
     public List<Object> getProveedores() { return usuarioRepositorio.getProveedores(); }
+
+    public List<String> obtenerListaDeBarrios() {
+        return Arrays.stream(Barrio.values())
+                .map(Barrio::getNombre)
+                .collect(Collectors.toList());
+    }
 }

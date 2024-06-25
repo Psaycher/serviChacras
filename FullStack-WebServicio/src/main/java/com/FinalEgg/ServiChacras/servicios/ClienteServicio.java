@@ -28,20 +28,32 @@ public class ClienteServicio {
     public List<Cliente> listarClientes() { return clienteRepositorio.findAll(); }
 
     @Transactional
-    public void actualizar(String id, String nombre, String apellido, String email, String password, String password2, Integer barrio, String rolString, String direccion, String telefono) throws MiExcepcion {
+    public void actualizar(String id, String nombre, String apellido, String email, String password, String password2, String barrioChacras, String rolString, String direccion, String telefono) throws MiExcepcion {
         Optional<Cliente> optionalCliente = clienteRepositorio.findById(id);
 
         optionalCliente.ifPresent(cliente -> {
             Usuario usuario = cliente.getUsuario();
             UsuarioServicio usuarioServicio = new UsuarioServicio();
 
-            try { usuarioServicio.actualizar(usuario.getId(), nombre, apellido, email, password, password2, barrio, rolString, direccion, telefono); }
+            try { usuarioServicio.actualizar(usuario.getId(), nombre, apellido, email, password, password2, barrioChacras, rolString, direccion, telefono); }
             catch (MiExcepcion e) { e.printStackTrace(); }
 
             cliente.setUsuario(usuario);
             clienteRepositorio.save(cliente);
         });
     }
+
+    @Transactional
+    public void eliminarCliente(String id) { clienteRepositorio.deleteById(id); }
+
+    @Transactional
+    public void eliminarPorIdUsuario(String IdUsuario) {
+        String id = clienteRepositorio.idUsuario(IdUsuario);
+        if (id != null) { clienteRepositorio.deleteById(id); }
+    }
+
+    @Transactional(readOnly = true)
+    public String idUsuario(String id) { return clienteRepositorio.idUsuario(id); }
 
     @Transactional
     public void ClienteMensaje(String id) { clienteRepositorio.deleteById(id); }

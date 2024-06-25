@@ -28,19 +28,21 @@
             <div id="contenedor_de_tarjetas" th:if="${rolSession == 'CLIENTE'}">
                 <div id="resultado-busqueda" >
                     <h2>Resultados de la búsqueda</h2>
-                    <table class="table table-dark">
+                    <table class="table table-dark text-center">
                         <thead>
                             <tr>
-                                <th scope="col">Nombre</th>
-                                <th scope="col">Servicio</th>
-                                <th scope="col">Puntuación</th>
-                                <th scope="col">Barrio</th>
-                                <th scope="col">Telefono</th>
-                                <th scope="col">Acciones</th>
+                                <th scope="col">Foto de Perfil</th>
+                                <th scope="col">Nombre y Apellido:</th>
+                                <th scope="col">Servicio:</th>
+                                <th scope="col">Puntuación promedio:</th>
+                                <th scope="col">Barrio:</th>
+                                <th scope="col">Teléfono:</th>
+                                <th scope="col">Acciones:</th>
                             </tr>
                         </thead>
                         <tbody th:each="proveedor : ${proveedores}">
                             <tr>
+                                <td ><img th:if="${proveedor.imagen != null}" class="logo" th:src="@{/imagen/perfil/__${proveedor.id}__}"></td>
                                 <td th:text="${proveedor.usuario.nombre} + ' ' + ${proveedor.usuario.apellido}"></td>
                                 <td th:text="${proveedor.servicio.nombre}"></td>
                                 <td th:text="${proveedor.promPuntuacion}"></td>
@@ -48,7 +50,9 @@
                                 <td th:text="${proveedor.usuario.telefono}"></td>
         
                                 <td>
-                                    <a th:href= "@{/servicio/solicitar/__${proveedor.id}__}"><i class="fas fa-feather-alt">Solicitar Servicio</i></a>
+                                    <a th:href="@{/servicio/solicitar/__${proveedor.id}__}">
+                                        <i class="fas fa-feather-alt"></i> Solicitar Servicio
+                                    </a>
                                 </td>
                             </tr>    
                         </tbody>
