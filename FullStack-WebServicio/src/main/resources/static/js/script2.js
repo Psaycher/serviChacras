@@ -93,10 +93,13 @@ document.getElementById("campana").addEventListener('click', function() {
     }
   });
 
+
+
   document.getElementById("filtro").addEventListener('click', function() {
     let detallesFiltro = document.getElementById('detalles-filtro');
     let listItems = document.querySelectorAll('#detalles-filtro .list-group-item');
-    
+    let botonFiltro = document.getElementById('filtro');
+
     // Calcular la altura total de los elementos de la lista con un margen adicional
     let totalHeight = 0;
     listItems.forEach(item => {
@@ -104,18 +107,23 @@ document.getElementById("campana").addEventListener('click', function() {
     });
 
     // Agregar un margen adicional para asegurar que todos los elementos se muestren completamente
-    totalHeight += 8; // Puedes ajustar este valor según sea necesario
+    totalHeight += 78; // Puedes ajustar este valor según sea necesario
 
-    if (detallesFiltro.style.height == '0px') {
+    // Calcular la posición del botón y ajustar la posición del formulario
+    let rect = botonFiltro.getBoundingClientRect();
+    detallesFiltro.style.top = rect.bottom + 'px';
+    detallesFiltro.style.left = rect.left + 'px';
+
+    if (detallesFiltro.style.height == '0px' || detallesFiltro.style.height === '') {
         detallesFiltro.style.height = totalHeight + 'px';
-        notificationPopup.classList.add('show');
+        detallesFiltro.classList.add('show');
     } else {
         detallesFiltro.style.height = '0';
-        notificationPopup.classList.remove('show');
+        detallesFiltro.classList.remove('show');
     }
   });
 
-
+  
   // Evento para validar el formulario al enviarlo
   calificacionFormulario.addEventListener('submit', validarFormulario);
 
@@ -140,37 +148,6 @@ document.getElementById("campana").addEventListener('click', function() {
         cambiarFuncion.classList.add('btn-outline-warning');
     }
   })
-
-
-  // ! Filtro
-
-  document.getElementById("filtro").addEventListener('click', function () {
-    let detallesFiltro = document.getElementById('detalles-filtro');
-    let listItems = document.querySelectorAll('#detalles-filtro .list-group-item');
-    let botonFiltro = document.getElementById('filtro');
-
-    // Calcular la altura total de los elementos de la lista con un margen adicional
-    let totalHeight = 0;
-    listItems.forEach(item => {
-        totalHeight += item.clientHeight;
-    });
-
-    // Agregar un margen adicional para asegurar que todos los elementos se muestren completamente
-    totalHeight += 58; // Puedes ajustar este valor según sea necesario
-
-    // Calcular la posición del botón y ajustar la posición del formulario
-    let rect = botonFiltro.getBoundingClientRect();
-    detallesFiltro.style.top = rect.bottom + 'px';
-    detallesFiltro.style.left = rect.left + 'px';
-
-    if (detallesFiltro.style.height == '0px' || detallesFiltro.style.height === '') {
-        detallesFiltro.style.height = totalHeight + 'px';
-        detallesFiltro.classList.add('show');
-    } else {
-        detallesFiltro.style.height = '0';
-        detallesFiltro.classList.remove('show');
-    }
-});
 
 
 document.addEventListener('DOMContentLoaded', function () {

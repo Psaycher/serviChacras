@@ -1,25 +1,24 @@
 package com.FinalEgg.ServiChacras.controladores;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
+import jakarta.servlet.http.HttpSession;
 
-import com.FinalEgg.ServiChacras.entidades.*;
-import com.FinalEgg.ServiChacras.repositorios.ClienteRepositorio;
-import com.FinalEgg.ServiChacras.repositorios.ProveedorRepositorio;
-import com.FinalEgg.ServiChacras.repositorios.UsuarioRepositorio;
-import com.FinalEgg.ServiChacras.servicios.*;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.ModelMap;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
 
+import com.FinalEgg.ServiChacras.entidades.*;
+import com.FinalEgg.ServiChacras.servicios.*;
 import com.FinalEgg.ServiChacras.excepciones.MiExcepcion;
+import com.FinalEgg.ServiChacras.repositorios.UsuarioRepositorio;
+import com.FinalEgg.ServiChacras.repositorios.ClienteRepositorio;
+import com.FinalEgg.ServiChacras.repositorios.ProveedorRepositorio;
 
 @Controller
 @RequestMapping("/admin")
@@ -80,13 +79,32 @@ public class AdminControlador {
     // }
 
     @GetMapping("/modificarUsuario/{id}")
-    public  String modificarUsuario(@PathVariable String id, ModelMap modelo) throws MiExcepcion {
+    public  String modificarUsuario(@PathVariable String id, ModelMap modelo, HttpSession session) throws MiExcepcion {
         Optional<Usuario> optionalUsuario = usuarioRepositorio.findById(id);
+        Usuario admin = (Usuario) session.getAttribute("usuariosession");
+        String idAdmin = admin.getId();
 
         if (optionalUsuario.isPresent()) {
             Usuario usuario = optionalUsuario.get();
-            modelo.addAttribute("usuario", usuario);
 
+            List<Servicio> limpieza = servicioServicio.listarPorCategoria("Servicios de limpieza");
+            List<Servicio> mantenimiento = servicioServicio.listarPorCategoria("Servicios de mantenimiento y reparaciones");
+            List<Servicio> seguridad = servicioServicio.listarPorCategoria("Servicios de seguridad");
+            List<Servicio> tecnologia = servicioServicio.listarPorCategoria("Servicios de tecnologia y conectividad");
+            List<Servicio> cuidado = servicioServicio.listarPorCategoria("Servicios de cuidado personal y bienestar");
+            List<Servicio> logistica = servicioServicio.listarPorCategoria("Servicios de entrega y logistica");
+
+            modelo.addAttribute("barrios", usuarioServicio.obtenerListaDeBarrios());
+
+            modelo.addAttribute("limpieza", limpieza);
+            modelo.addAttribute("mantenimiento", mantenimiento);
+            modelo.addAttribute("seguridad", seguridad);
+            modelo.addAttribute("tecnologia", tecnologia);
+            modelo.addAttribute("cuidado", cuidado);
+            modelo.addAttribute("logistica", logistica);
+            modelo.addAttribute("idAdmin", idAdmin);
+            modelo.put("usuario", usuario);
+           
         } else { 
             modelo.addAttribute("codigo", 500);
             modelo.addAttribute("mensaje", "No se ha encontrado Usuario con el id: " + id);
@@ -110,10 +128,9 @@ public class AdminControlador {
 
         try {
             usuarioServicio.eliminarUsuario(id);
-            System.out.println("salio de eliminarUsuario y volvio al controlador");
             modelo.addAttribute("exito", "El usuario fue eliminado correctamente.");
+
         } catch (Exception e) {
-            System.out.println("se metio al catch del controlador");
             modelo.addAttribute("codigo", 500);
             modelo.addAttribute("mensaje", "Error al eliminar usuario con id: " + id);
             return "error.html";

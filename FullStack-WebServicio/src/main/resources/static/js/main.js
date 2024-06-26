@@ -384,7 +384,7 @@ document.getElementById("filtro").addEventListener('click', function () {
     });
 
     // Agregar un margen adicional para asegurar que todos los elementos se muestren completamente
-    totalHeight += 58; // Puedes ajustar este valor según sea necesario
+    totalHeight += 80; // Puedes ajustar este valor según sea necesario
 
     // Calcular la posición del botón y ajustar la posición del formulario
     let rect = botonFiltro.getBoundingClientRect();

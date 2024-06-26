@@ -336,27 +336,21 @@ public class PortalControlador {
 
 
    @PostMapping("/perfil/{id}")
-   public String actualizar(@PathVariable String id, @RequestParam(required = false) String nombre, @RequestParam(required = false) String apellido, @RequestParam(required = false) String email,
-                            @RequestParam(required = false) String password, @RequestParam(required = false) String password2, @RequestParam(required = false) String barrioChacras,
-                            @RequestParam(required = false) String rol, @RequestParam(required = false) String direccion, @RequestParam(required = false) String telefono, 
-                            @RequestParam(required = false) MultipartFile archivo, @RequestParam(required = false) String descripcion, @RequestParam(required = false) String idServicio, ModelMap modelo ) {
+   public String actualizar(@PathVariable String id, @RequestParam(required = false) String nombre, 
+                            @RequestParam(required = false) String apellido, @RequestParam(required = false) String email, 
+                            @RequestParam(required = false) String password, @RequestParam(required = false) String password2, 
+                            @RequestParam(required = false) String barrioChacras, @RequestParam(required = false) String rol, 
+                            @RequestParam(required = false) String direccion, @RequestParam(required = false) String telefono, 
+                            @RequestParam(required = false) MultipartFile archivo, @RequestParam(required = false) String descripcion, 
+                            @RequestParam(required = false) String idServicio, @RequestParam(required = false) String idAdmin, ModelMap modelo ) {
 
       String detalle = "";
-
-      System.out.println(nombre);
-      System.out.println(apellido);
-      System.out.println(email);
-      System.out.println(barrioChacras);
-      System.out.println(rol);
-      System.out.println(telefono);
-      System.out.println(direccion);
 
       try {
          usuarioServicio.actualizar(id, nombre, apellido, email, password, password2, barrioChacras, rol, direccion, telefono);
          
          if (rol.equalsIgnoreCase("proveedor") || rol.equalsIgnoreCase("mixto")) {
             Usuario usuario = usuarioServicio.getOne(id);
-            usuarioServicio.definirMixto(usuario, archivo, descripcion, idServicio, 1);
 
             if ((descripcion.equals("")) || (descripcion == null) || (idServicio == null)) {
                usuario = usuarioServicio.getPorEmail(email);
@@ -396,9 +390,9 @@ public class PortalControlador {
                modelo.addAttribute("logistica", logistica);
 
                modelo.put("error", "Los siguientes datos no pueden estar nulos: "+servicioNombre+concat+descrip);
-               return "registro.html";
+               return "actualizar-usuario.html";
             }
-            usuarioServicio.definirMixto(usuario, archivo, descripcion, idServicio, 0);
+            usuarioServicio.definirMixto(usuario, archivo, descripcion, idServicio, 1);
          }
          modelo.put("exito", "Usuario actualizado correctamente, ¿desea modificar algo más?");
 
@@ -407,6 +401,19 @@ public class PortalControlador {
          modelo.put("detalle", detalle);
 
          return "actualizar-usuario.html";
+      }
+
+      if (!idAdmin.isEmpty() || idAdmin != null) {
+         if (!idAdmin.equals(id)) {
+            List<Usuario> usuarios = usuarioServicio.listarUsuarios();
+            String listado = "USUARIO";
+
+            modelo.addAttribute("exito", "El usuario fue modificado correctamente.");
+            modelo.addAttribute("usuarios", usuarios);
+            modelo.addAttribute("listado", listado);
+
+            return "usuario-gestor.html";
+         }
       }
       return "redirect:/inicio";
    }   

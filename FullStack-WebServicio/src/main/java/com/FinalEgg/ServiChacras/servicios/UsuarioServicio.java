@@ -71,14 +71,18 @@ public class UsuarioServicio implements UserDetailsService {
     public void definirCliente(Usuario usuario, Integer num) throws MiExcepcion {
         if (num == 0) { clienteServicio.crearCliente(usuario); }
         else {
-            Optional<Cliente> opcionalCliente = clienteRepositorio.findById(clienteRepositorio.idUsuario(usuario.getId()));
-            Optional<Proveedor> opcionalProveedor = proveedorRepositorio.findById(proveedorRepositorio.idUsuario(usuario.getId()));
+            String idCliente = clienteRepositorio.idUsuario(usuario.getId());
+            String idProveedor = proveedorRepositorio.idUsuario(usuario.getId());
 
-            if (!opcionalCliente.isPresent()) { clienteServicio.crearCliente(usuario); }
-            opcionalProveedor.ifPresent(proveedor -> { proveedorRepositorio.deleteById(proveedor.getId()); });
+            Optional<Cliente> opcionalCliente = Optional.ofNullable(idCliente != null ? clienteServicio.getOne(idCliente) : null);
+            Optional<Proveedor> opcionalProveedor = Optional.ofNullable(idProveedor != null ? proveedorServicio.getOne(idProveedor) : null);
+
+            if (opcionalCliente.isEmpty()) { clienteServicio.crearCliente(usuario); }
+            opcionalProveedor.ifPresent(proveedor -> proveedorRepositorio.deleteById(proveedor.getId()));
         }
     }
-            
+
+
     @Transactional
     public void definirMixto(Usuario usuario, MultipartFile archivo, String descripcion, String idServicio, Integer num) throws MiExcepcion {
         String rol = String.valueOf(usuario.getRol());
@@ -86,24 +90,26 @@ public class UsuarioServicio implements UserDetailsService {
         if (num == 0) {
             if(rol.equals("MIXTO")) { clienteServicio.crearCliente(usuario); }
             proveedorServicio.crearProveedor(usuario, archivo, descripcion, idServicio);
-            System.out.println("salio de crearProveedor en proveedorServicio");
 
         } else {
-            Optional<Cliente> opcionalCliente = clienteRepositorio.findById(clienteRepositorio.idUsuario(usuario.getId()));
-            Optional<Proveedor> opcionalProveedor = proveedorRepositorio.findById(proveedorRepositorio.idUsuario(usuario.getId()));
+            String idCliente = clienteRepositorio.idUsuario(usuario.getId());
+            String idProveedor = proveedorRepositorio.idUsuario(usuario.getId());
 
-            switch (rol) {                
-                case "PROVEEDOR" -> {
-                    opcionalCliente.ifPresent(cliente -> { clienteRepositorio.deleteById(cliente.getId()); });
-                    if (!opcionalProveedor.isPresent()) { proveedorServicio.crearProveedor(usuario, archivo, descripcion, idServicio); }
-                }
-                case "MIXTO" -> {
-                    if (!opcionalCliente.isPresent()) { clienteServicio.crearCliente(usuario); }
-                    if (!opcionalProveedor.isPresent()) { proveedorServicio.crearProveedor(usuario, archivo, descripcion, idServicio); }
-                }
+            Optional<Cliente> opcionalCliente = Optional.ofNullable(idCliente != null ? clienteServicio.getOne(idCliente) : null);
+            Optional<Proveedor> opcionalProveedor = Optional.ofNullable(idProveedor != null ? proveedorServicio.getOne(idProveedor) : null);
+
+            switch (rol) {
+            case "PROVEEDOR" -> {
+                opcionalCliente.ifPresent(cliente -> { clienteRepositorio.deleteById(cliente.getId()); });
+                if (opcionalProveedor.isEmpty()) { proveedorServicio.crearProveedor(usuario, archivo, descripcion, idServicio); }
+            }
+            case "MIXTO" -> {
+                if (opcionalCliente.isEmpty()) { clienteServicio.crearCliente(usuario); }
+                if (opcionalProveedor.isEmpty()) { proveedorServicio.crearProveedor(usuario, archivo, descripcion, idServicio); }
             }
         }
-    }         
+    }
+}
     
     @Transactional(readOnly = true)
     public List<Usuario> listarUsuarios() { return usuarioRepositorio.findAll(); }
@@ -113,34 +119,25 @@ public class UsuarioServicio implements UserDetailsService {
         Optional<Usuario> respuesta = usuarioRepositorio.findById(id);
         boolean definir = false;
 
-        System.out.println("Entro a actualizar de usuario servicio");
-
         if (respuesta.isPresent()) {
             Usuario usuario = respuesta.get();
-            System.out.println("respuesta está presente");
 
             if (nombre == null || nombre.trim().isEmpty()) { nombre = usuario.getNombre();}
             if (apellido == null || apellido.trim().isEmpty()) { apellido = usuario.getApellido();}
             if (email == null || email.trim().isEmpty()) { email = usuario.getEmail();}
-            if (password == null || password.trim().isEmpty()) { password = usuario.getPassword();}
+            
+            if (password == null || password.trim().isEmpty()) { 
+                password = usuario.getPassword();
+                password2 = password;
+            }
+
             if (barrioChacras == null || barrioChacras.trim().isEmpty()) { barrioChacras = usuario.getBarrio();}
             
             if (rolString == null || rolString.trim().isEmpty()) { rolString = String.valueOf(usuario.getRol()).toUpperCase(); } 
-            else { if (String.valueOf(usuario.getRol()).equals(rolString)) { definir = true; } }
+            else { if (!String.valueOf(usuario.getRol()).equals(rolString)) { definir = true; } }
             
             if (direccion == null || direccion.trim().isEmpty()) { direccion = usuario.getDireccion();}
             if (telefono == null || telefono.trim().isEmpty()) { telefono = usuario.getTelefono();}
-
-                System.out.println(nombre);
-                System.out.println(apellido);
-                System.out.println(email);
-                System.out.println(password);
-                System.out.println(barrioChacras);
-                System.out.println(rolString);
-                System.out.println(direccion);
-                System.out.println(telefono);                
-
-            validar(email, nombre, apellido, password, password2);
 
             usuario.setNombre(nombre);
             usuario.setApellido(apellido);
@@ -154,10 +151,13 @@ public class UsuarioServicio implements UserDetailsService {
             usuario.setTelefono(telefono);
 
             Rol rol = Rol.valueOf(rolString.toUpperCase());
-            usuario.setRol(rol);      
+            usuario.setRol(rol);
+
+            validar(email, nombre, apellido, password, password2);
 
             usuarioRepositorio.save(usuario);
-            if (definir) { definirCliente(usuario, 1); }            
+
+            if (definir) { definirCliente(usuario, 1); }
         }
     }
 
@@ -186,12 +186,18 @@ public class UsuarioServicio implements UserDetailsService {
     }
 
     private void validar(String email, String nombre, String apellido, String password, String password2) throws MiExcepcion {
-
-        if (email.isEmpty() || email == null) { throw new MiExcepcion("el email no puede ser nulo o estar vacío"); }
-        if (nombre.isEmpty() || nombre == null) { throw new MiExcepcion("el nombre del Usuario no puede ser nulo o estar vacío"); }
-        if (apellido.isEmpty() || apellido == null) { throw new MiExcepcion("el apellido no puede ser nulo o estar vacío"); }
-        if (password.isEmpty() || password == null || password.length() <= 4) { throw new MiExcepcion("el password del Usuario no puede estar vacía, y debe tener más de 4 dígitos"); }
-        if (!password.equals(password2)) { throw new MiExcepcion("Las contraseñas ingresadas deben ser iguales"); }
+       
+        if (email.isEmpty() || email == null) { System.out.println("el problema esta en email");
+            throw new MiExcepcion("el email no puede ser nulo o estar vacío"); }
+        if (nombre.isEmpty() || nombre == null) { System.out.println("el problema esta en nombre");
+            throw new MiExcepcion("el nombre del Usuario no puede ser nulo o estar vacío"); }
+        if (apellido.isEmpty() || apellido == null) { System.out.println("el problema esta en apellido");
+            throw new MiExcepcion("el apellido no puede ser nulo o estar vacío"); }
+        if (password.isEmpty() || password == null || password.length() <= 4) { System.out.println("el problema esta en password");
+            throw new MiExcepcion("el password del Usuario no puede estar vacía, y debe tener más de 4 dígitos"); }
+        if (!password.equals(password2)) { System.out.println("el problema esta en  en password2");
+            throw new MiExcepcion("Las contraseñas ingresadas deben ser iguales"); }
+        System.out.println("dale de validar");
     }
 
     @Override

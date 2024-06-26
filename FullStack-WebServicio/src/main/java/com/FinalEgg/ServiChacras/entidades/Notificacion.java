@@ -19,6 +19,7 @@ public class Notificacion {
     private String id;
     private String asunto;
     private String remitente;
+    private String detalle;
     
    @Enumerated(EnumType.STRING)
     private TipoDeNota nota;
