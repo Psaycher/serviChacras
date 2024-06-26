@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+    <head th:replace="~{/fragments/head :: head}"></head>
+
+    <body>
+        <!-- Navegador -->
+        <nav th:replace="~{/fragments/navbar :: nav}"></nav>
+    
+        <!-- Contenido Principal Cliente-->
+        <div id="fondo" style="width:100%;" class="container d-flex flex-column justify-content-center align-items-center">
+
+            <!-- <div id="contenedor_de_tarjetas" style="width:100%;" class="grid-container" th:if="${rolSession == 'CLIENTE'}">
+
+                <div class="card" th:each="proveedor : ${proveedores}">
+                    <img th:src="@{${proveedor.imagen}}" class="card-img-top" th:alt="'Foto de ' + ${proveedor.usuario.nombre} + ' ' + ${proveedor.usuario.apellido}">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${proveedor.usuario.nombre}+' '+${proveedor.usuario.apellido}">Nombre</h5>
+                        <p class="card-text" th:text="${proveedor.servicio.nombre}">Detalle del proveedor</p>
+                        <p class="card-text" th:text="${proveedor.descripcion}">Detalle del proveedor</p>
+                        <p class="card-text" th:text="${proveedor.usuario.telefono}">Contacto</p>
+                        <a href="#" class="btn btn-primary">Botón</a>
+                    </div>
+                </div>
+
+            </div> -->
+
+            <div id="contenedor_de_tarjetas" th:if="${rolSession == 'CLIENTE'}">
+                <div id="resultado-busqueda" >
+                    <h2>Resultados de la búsqueda</h2>
+                    <table class="table table-dark text-center">
+                        <thead>
+                            <tr>
+                                <th scope="col">Foto de Perfil</th>
+                                <th scope="col">Nombre y Apellido:</th>
+                                <th scope="col">Servicio:</th>
+                                <th scope="col">Puntuación promedio:</th>
+                                <th scope="col">Barrio:</th>
+                                <th scope="col">Teléfono:</th>
+                                <th scope="col">Acciones:</th>
+                            </tr>
+                        </thead>
+                        <tbody th:each="proveedor : ${proveedores}">
+                            <tr>
+                                <td ><img th:if="${proveedor.imagen != null}" class="logo" th:src="@{/imagen/perfil/__${proveedor.id}__}"></td>
+                                <td th:text="${proveedor.usuario.nombre} + ' ' + ${proveedor.usuario.apellido}"></td>
+                                <td th:text="${proveedor.servicio.nombre}"></td>
+                                <td th:text="${proveedor.promPuntuacion}"></td>
+                                <td th:text="${proveedor.usuario.barrio}"></td>
+                                <td th:text="${proveedor.usuario.telefono}"></td>
+        
+                                <td>
+                                    <a th:href="@{/servicio/solicitar/__${proveedor.id}__}">
+                                        <i class="fas fa-feather-alt"></i> Solicitar Servicio
+                                    </a>
+                                </td>
+                            </tr>    
+                        </tbody>
+                    </table>
+                </div>
+            </div>            
+
+            <!-- <div id="contenedor de tarjetas" style="width:100%;" class="grid-container" th:if="${rolSession == 'PROVEEDOR'}">
+
+                <div class="card" th:each="cliente : ${cliente}">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${cliente.usuario.nombre}+' '+${cliente.usuario.apellido}">Nombre</h5>
+                        <p class="card-text" th:text="${cliente.usuario.email}">Detalle del proveedor</p>
+                        <a href="#" class="btn btn-primary">Botón</a>
+                    </div>
+                </div>
+
+            </div> -->
+
+            <div id="contenedor de tarjetas" th:if="${rolSession == 'PROVEEDOR'}">
+                <div id="resultado-busqueda" th:if="${vacio == false}">
+                    <h2>Resultados de la búsqueda</h2>
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <th scope="col">Nombre</th>
+                                <th scope="col">Servicio Solicitado</th>
+                                <th scope="col">Puntuación</th>
+                                <th scope="col">Barrio</th>
+                                <th scope="col">Telefono</th>
+                                <th scope="col" sec:authorize="hasRole('ADMIN')">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody th:each="cliente : ${clientes}">
+                            <tr>
+                                <td th:text="${cliente.usuario.nombre} + ' ' + ${cliente.usuario.apellido}"></td>
+                                <td th:if="${pedidoHay == true}" th:text="${cliente.pedido.servicio.nombre}"></td>
+                                <td th:text="${cliente.promPuntuacion}"></td>
+                                <td th:text="${cliente.usuario.barrio}"></td>
+                                <td th:text="${cliente.usuario.telefono}"></td>
+        
+                                <td>
+                                    <a th:href= "@{/usuario/solicitar_servicio/__${cliente.id}__}"><i class="fas fa-feather-alt">Ver notificación</i></a>
+                                </td>
+                            </tr>    
+                        </tbody>
+                    </table>
+                </div>
+    
+                <div class="header row justify-content-center">
+                    <div class="col-md-6" id="contenedorError" th:if="${vacio == true}">
+                        <section class="py-5 text-center container">
+                            <div class="contenedortitulo">
+                                <a class="navbar-brand">No hay coincidencias.</a>
+                            </div>
+
+                            <div class="contenedorMsj">
+                                <p>No se encontraron Clientes con pedidos Vigentes o relacionados con usted.</p>
+                            </div>
+        
+                            <div class="row py-lg-5">
+                                <div class="col-lg-6 col-md-8 mx-auto">
+                                    <a th:href="@{/inicio}" class="btn btn-primary my-2">Volver</a>
+                                </div>
+                            </div>    
+                        </section>
+                    </div>
+                </div>                
+            </div>            
+
+            <!-- Este es el elemento de fondo transparente para cerrar el formulario 
+            <div id="overlay" onclick="closeForm()">
+
+                Este es el formulario principal
+                <div id="serviceForm">
+                    <div class="form-header">
+                        <div class="form-title">Da más detalles de tu pedido</div>
+                        <span class="close-btn" onclick="closeForm()">&times;</span>
+                    </div>
+                    <form id="serviceFormInner" onsubmit="return validateForm()">
+                        <div class="form-header">
+                            <div class="form-title">Da más detalles de tu pedido</div>
+                            <span class="close-btn" onclick="closeForm()">&times;</span>
+                        </div>
+                        <div class="form-section">
+                            <div class="form-subtitle">¿Qué días deseas que trabaje?</div>
+                            <label><input type="checkbox" name="day[]" value="lunes"> Lunes</label><br>
+                            <label><input type="checkbox" name="day[]" value="martes"> Martes</label><br>
+                            <label><input type="checkbox" name="day[]" value="miércoles"> Miércoles</label><br>
+                            <label><input type="checkbox" name="day[]" value="jueves"> Jueves</label><br>
+                            <label><input type="checkbox" name="day[]" value="viernes"> Viernes</label><br>
+                            <div id="dayError" class="error-message"></div>
+                        </div>
+                        <div class="form-section">
+                            <div class="form-subtitle">¿En qué horarios del día?</div>
+                            <label>Hora de inicio: <input type="time" name="start_time" required></label><br>
+                            <label>Hora de fin: <input type="time" name="end_time" required></label><br>
+                        </div>
+                        <div class="form-section">
+                            <div class="form-subtitle">Más detalles:</div>
+                            <textarea name="details" rows="4" placeholder="Detalles adicionales..." required></textarea>
+                            <div id="detailsError" class="error-message"></div>
+                        </div>
+                        <button type="submit">Solicitar servicio</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="mensaje-container">
+                <div class="mensaje-header">
+                    <span></span>
+                    <div class="controls">
+                        <span class="icon">👇</span>
+                        <span class="icon">✖</span>
+                    </div>
+                </div>
+                <div class="mensaje-user">
+                    <a id="usuario-proveedor" class="nav-link" style="cursor: pointer;">
+                        <img src="static/img/icono-usuario.jpg" alt="Proveedor">
+                        <span id="nombre-proveedor" style="margin-left: 5px;">Proveedor</span>
+                    </a>
+                    <div id="detalles-proveedor" style="border-bottom: 1px solid #666; z-index:1000;">
+                        <ul class="list-group" style="background-color: #333; border: 1px solid #333; padding:0%; display: flex; flex-direction:row ; align-items: center;">
+                            <li class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button id="info-proveedor" type="button" class="btn btn-outline-info">Ver más Info</button></li>
+                            <li id="eliminar" class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button id="cambiar-funcion" type="button" class="btn btn-outline-success">Trabajo completo</button></li>
+                            <li class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button id="reportar" type="button" class="btn btn-outline-danger">Reportar</button></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mensaje-content">
+                    <div class="mensaje usuario">
+                        <div class="texto">Hola, ¿cómo estás?</div>
+                    </div>
+                    <div class="mensaje destinatario">
+                        <div class="texto">¡Hola! Estoy bien, ¿y tú?</div>
+                    </div>
+                    Más mensajes aquí
+                </div>
+                <div id="preview-container" class="preview-container"></div>
+                <div class="mensaje-form">
+                    <label for="file-upload" class="upload-label">📎</label>
+                    <input id="file-upload" type="file" accept="image/*" multiple>
+                    <input type="text" placeholder="Escribe tu mensaje">
+                    <button class="send">Enviar</button>
+                </div>
+            </div>
+
+            <div id="image-viewer" class="image-viewer" style="display: none;">
+                <span class="close-viewer">&times;</span>
+                <a id="download-link" class="download-link" download>Descargar</a>
+                <img id="viewer-image" src="" alt="Imagen">
+            </div>
+
+            <div class="report-container">
+                <div id="report-form-overlay" class="overlay" style="display: none;"></div>
+                <div id="report-form" class="report-form" style="display: none; z-index:1000;">
+                    <div class="report-header">
+                        <h2>Reporte</h2>
+                        <span class="close">&times;</span>
+                    </div>
+                    <form id="formulario-reporte">
+                        <div class="form-group">
+                            <label for="motivo-reporte">¿Qué reporta? (Aclare si es estafa, lenguaje malsonante, etc)</label>
+                            <textarea id="motivo-reporte" name="motivo-reporte" rows="2" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="detalles-reporte">Más detalles</label>
+                            <textarea id="detalles-reporte" name="detalles-reporte" rows="4"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="evidencia-reporte">Adjunte evidencia (obligatorio)</label>
+                            <input type="file" id="evidencia-reporte" name="evidencia-reporte" accept="image/*" required>
+                        </div>
+                        <button type="submit" class="send-btn">Enviar</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="mensaje-container">
+                <div class="mensaje-header">
+                    <span></span>
+                    <div class="controls">
+                        <span class="icon">👇</span>
+                        <span class="icon">✖</span>
+                    </div>
+                </div>
+                <div class="mensaje-user">
+                    <a id="usuario-proveedor" class="nav-link" style="cursor: pointer;">
+                        <img src="static/img/icono-usuario.jpg" alt="Proveedor">
+                        <span id="nombre-proveedor" style="margin-left: 5px;">Proveedor</span>
+                    </a>
+                    <div id="detalles-proveedor" style="border-bottom: 1px solid #666; z-index:1000;">
+                        <ul class="list-group" style="background-color: #333; border: 1px solid #333; padding:0%; display: flex; flex-direction:row ; align-items: center;">
+                            <li class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button id="info-proveedor" type="button" class="btn btn-outline-info">Ver más Info</button></li>
+                            <li id="eliminar" class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button id="cambiar-funcion" type="button" class="btn btn-outline-warning">Notificar trabajo completo</button></li>
+                            <li class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button id="reportar" type="button" class="btn btn-outline-danger">Reportar</button></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mensaje-content">
+                    <div class="mensaje usuario">
+                        <div class="texto">Hola, ¿cómo estás?</div>
+                    </div>
+                    <div class="mensaje destinatario">
+                        <div class="texto">¡Hola! Estoy bien, ¿y tú?</div>
+                    </div>
+                    Más mensajes aquí
+                </div>
+            </div>
+
+            <div id="preview-container" class="preview-container">
+                <div class="mensaje-form">
+                    <label for="file-upload" class="upload-label">📎</label>
+                    <input id="file-upload" type="file" accept="image/*" multiple>
+                    <input type="text" placeholder="Escribe tu mensaje">
+                    <button class="send">Enviar</button>
+                </div>
+            </div>
+
+            <div id="image-viewer" class="image-viewer" style="display: none;">
+                <span class="close-viewer">&times;</span>
+                <a id="download-link" class="download-link" download>Descargar</a>
+                <img id="viewer-image" src="" alt="Imagen">
+            </div>
+
+            <div class="report-container">
+                <div id="report-form-overlay" class="overlay" style="display: none;"></div>
+                    <div id="report-form" class="report-form" style="display: none;">
+                        <div class="report-header">
+                            <h2>Reporte</h2>
+                            <span class="close">&times;</span>
+                        </div>
+                        <form id="formulario-reporte">
+                            <div class="form-group">
+                                <label for="motivo-reporte">¿Qué reporta? (Aclare si es estafa, lenguaje malsonante, etc)</label>
+                                <textarea id="motivo-reporte" name="motivo-reporte" rows="2" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="detalles-reporte">Más detalles</label>
+                                <textarea id="detalles-reporte" name="detalles-reporte" rows="4"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="evidencia-reporte">Adjunte evidencia (obligatorio)</label>
+                                <input type="file" id="evidencia-reporte" name="evidencia-reporte" accept="image/*" required>
+                            </div>
+                            <button type="submit" class="send-btn">Enviar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rating-container">
+                <div id="rating-form-overlay" class="overlay" style="display: none;"></div>
+                <div id="rating-form" class="rating-form" style="display: none;">
+                    <div class="rating-header">
+                        <h2>Califica a tu proveedor</h2>
+                        <span id="close-rating-form" class="close">&times;</span>
+                    </div>
+                    <form id="calificacion-formulario">
+                        <div class="form-group">
+                            <label for="puntuacion">Escribe su puntuación</label>
+                            <div class="input-group">
+                                <input type="number" step="0.1" id="puntuacion" name="puntuacion" required min="0" max="5" >
+                                <span class="star">⭐</span>
+                                <span class="star">⭐</span>
+                                <span class="star">⭐</span>
+                                <span class="star">⭐</span>
+                                <span class="star">⭐</span>
+                            </div>
+                            <div id="puntuacion-error" class="error-message" style="display: none;">Por favor, ingresa una puntuación válida entre 0 y 5.</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="comentario">Haz algún comentario (opcional)</label>
+                            <textarea id="comentario" name="comentario" rows="4"></textarea>
+                        </div>
+                        <button type="submit" class="send-btn">Enviar</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="row py-lg-5">
+                <div class="col-lg-6 col-md-8 mx-auto">
+                    <a th:href="@{/inicio}" class="btn btn-primary my-2">Volver</a>
+                </div>
+            </div> -->
+            
+            <div class="row py-lg-5">
+                <div class="col-lg-6 col-md-8 mx-auto">
+                    <a th:href="@{/inicio}" class="btn btn-primary my-2">Volver</a>
+                </div>
+            </div>
+        </div>
+
+        <footer th:replace= "~{/fragments/footer :: footer}"></footer>
+
+        <!-- Scripts -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+        <script src="/js/main.js"></script>
+        <!-- <script src="/js/script.js"></script>
+        <script src="/js/script2.js"></script> -->
+    </body>
+</html>
