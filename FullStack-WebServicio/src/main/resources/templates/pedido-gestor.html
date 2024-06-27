@@ -9,28 +9,68 @@
 
     <header class="header row justify-content-center">
 
-      <section class="col-md-6" id="contenedorMain">
-        <section class="py-5 text-center container">
-          <div class="contenedortitulo">
-            <a class="navbar-brand">ServiChacras</a>
-          </div>
+    <body>
+        <!-- Navegador -->
+        <nav th:replace="~{/fragments/navbar :: nav}"></nav>
 
-          <div class="container contenedorMsj">
-            <p th:if="${session.usuariosession != null}" th:text="'Hola de vuelta ' + ${session.usuariosession.nombre}"></p>
-            <p th:if="${session.usuariosession != null}" sec:authorize="!hasRole('CLIENTE')">Que acción deseas realizar</p>
-            <p th:if="${session.usuariosession != null}" sec:authorize="hasRole('CLIENTE')">Que Servicio estás necesitando</p>
-            <p th:if="${session.usuariosession != null}" sec:authorize="hasRole('PROVEEDOR')">Que acción deseas realizar?</p>
-          </div>
+        <!-- Contenido Principal Cliente-->
+        <div id="fondo" style="width:100%;" class="container d-flex flex-column justify-content-center align-items-center">
 
-          <div class="row py-lg-5">
-            <div class="col-lg-6 col-md-8 mx-auto">
-              <a th:href="@{/}" class="btn btn-primary my-2">Volver</a>
+            <div th:replace="~{/fragments/divError :: div}"></div>
+
+            <div id="contenedor_de_tarjetas" th:if="${listado == 'PEDIDO'}">
+                <div id="resultado-busqueda" >
+                    <h2>Resultados de la búsqueda</h2>
+                    <table class="table table-dark text-center">
+                        <thead>
+                        <tr>
+                            <th scope="col">Cliente</th>
+                            <th scope="col">Pedido</th>
+                            <th scope="col">Proveedor</th>
+                            <th scope="col">Fecha pedido</th>
+                            <th scope="col">Estado</th>
+                                                         
+                        </tr>
+                    </thead>
+                    <tbody th:each="pedido : ${pedido}">
+                        <tr>
+                            <td th:text="${pedido.Cliente}"></td>
+                            <td th:text="${pedido.Servicio}"></td>                                
+                            <td th:text="${pedido.Proveedor}"></td>
+                            <td th:text="${pedido.fecha}"></td>
+                            <td th:text="${pedido.estado}"></td>
+                                          
+                            <td>
+                              <a th:href="@{/admin/modificarPedido/__${pedido.id}__}">
+                                  <i class="fas fa-feather-alt">Modificar</i> 
+                              </a>
+                            </td>
+                            <td>
+                              <a th:href="@{/admin/altaBaja/__${pedido.id}__}">
+                                  <i class="fas fa-feather-alt" th:text="${pedido.alta}"></i>
+                              </a>
+                            </td>
+                            <td>
+                                <form th:action="@{/admin/cancelarPedido/{id}(id=${pedido.id})}" method="post">
+                                    <input type="hidden" name="_method" value="delete"/>
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fas fa-feather-alt">Cancelar</i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>    
+                    </tbody>
+                </table>
             </div>
-          </div>
-        </section>
-      </section>
+        </div>            
 
-    </header>
+        <div class="row py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <a th:href="@{/inicio}" class="btn btn-primary my-2">Volver</a>
+            </div>
+        </div>
+
+    </div>
 
     <footer th:replace= "~{/fragments/footer :: footer}"></footer>
 

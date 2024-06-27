@@ -31,6 +31,10 @@ public class Pedido {
     @JoinColumn(name ="id_proveedor")
     private Proveedor proveedor;
 
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name ="id_pago")
+    private Pago pago;
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "fecha_pedido")
     private Date fechaPedido;

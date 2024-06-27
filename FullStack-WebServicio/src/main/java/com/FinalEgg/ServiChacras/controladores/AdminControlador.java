@@ -61,14 +61,20 @@ public class AdminControlador {
     @GetMapping("/servicios")
     public String listarServicios(ModelMap modelo){
         List<Servicio> servicios = servicioServicio.listarServicios();
+        String listado = "SERVICIO";
         modelo.addAttribute("servicios", servicios);
+
+        modelo.addAttribute("listado", listado);
         return "servicio-gestor.html"; 
     }
 
     @GetMapping("/pedidos")
     public  String listarPedidos(ModelMap modelo){
         List<Pedido> pedidos = pedidoServicio.listarPedidos();
+        String listado = "PEDIDO";
         modelo.addAttribute("pedidos", pedidos);
+
+        modelo.addAttribute("listado", listado);
         return "pedido-gestor.html";
     }
 
