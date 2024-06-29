@@ -38,6 +38,25 @@ nav #usuario p {
     color: #cccccc;
 }
 
+nav #logo-nav {
+    width: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;    
+}
+
+nav #logo-nav img {
+    max-width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+#logo-nav:hover { 
+    background-image: radial-gradient(rgba(165, 95, 69, 0.644), rgba(100, 25, 0, 0.76), rgba(253, 166, 135, 0.644), transparent, transparent, transparent); 
+    transition: all 0.4s ease-in-out;
+}
+
 .container {
     padding-top: 100px;
 }
@@ -767,4 +786,58 @@ td {
 .logo{
     width: 40%;
     margin: auto;
+}
+
+#foto-card {
+    width: 100%;
+    height: 150px;
+    border-radius: 15px;
+    margin-top: 12px;
+    position: relative;
+}
+
+#foto-card #img-card {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    overflow: hidden;
+    z-index: 2;
+}
+
+#foto-card #img-card .img {
+    width: 100%;
+    height: 100%;
+}
+
+#foto-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-conic-gradient(from var(--a), rgb(255, 126, 126), rgb(228, 153, 118), rgb(167, 53, 0), rgb(66, 8, 37), rgb(167, 53, 0), rgb(228, 153, 118), rgba(255, 126, 126));
+    border-radius: 15px;
+    animation: rotating 4s linear infinite;
+    filter: blur(5px);
+    opacity: 0.75;
+}
+
+#foto_card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-conic-gradient(from var(--a), rgb(255, 126, 126), rgb(228, 153, 118), rgb(167, 53, 0), rgb(66, 8, 37), rgb(167, 53, 0), rgb(228, 153, 118), rgba(255, 126, 126));
+    border-radius: 15px;
+    animation: rotating 4s linear infinite;
+    filter: blur(5px);
+    opacity: 0.75;
+}
+
+@property --a {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@keyframes rotating {
+    0% { --a: 0deg; }
+    100% { --a: 360deg; }
 }

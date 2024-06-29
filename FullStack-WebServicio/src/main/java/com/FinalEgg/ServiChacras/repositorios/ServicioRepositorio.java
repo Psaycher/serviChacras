@@ -11,6 +11,9 @@ import com.FinalEgg.ServiChacras.entidades.Servicio;
 
 @Repository
 public interface ServicioRepositorio extends JpaRepository<Servicio, String> {
+    @Query("SELECT categoria FROM Servicio")
+    public List<String> listarCategorias();
+
     @Query("SELECT p.servicio.nombre AS servicio, CONCAT(p.usuario.nombre, ' ', p.usuario.apellido) AS proveedor,"+
            " p.servicio.detalle FROM Proveedor p WHERE p.id = :idProveedor")
     public List<Object> getServicioPorProveedores(@Param("idProveedor") String idProveedor);

@@ -17,9 +17,10 @@ public class ServicioServicio {
     private ServicioRepositorio servicioRepositorio;
 
     @Transactional
-    public void crearServicio(String nombre, String detalle) throws MiExcepcion {
+    public void crearServicio(String nombre, String categoria, String detalle) throws MiExcepcion {
         Servicio servicio = new Servicio();
         servicio.setNombre(nombre);
+        servicio.setCategoria(categoria);
         servicio.setDetalle(detalle);
         servicioRepositorio.save(servicio);
     }
@@ -28,21 +29,37 @@ public class ServicioServicio {
     public List<Servicio> listarServicios() { return servicioRepositorio.findAll(); }
 
     @Transactional
-    public void actualizar(String id, String nombre, String detalle) throws MiExcepcion {
-        Optional<Servicio> optionalServicio = servicioRepositorio.findById(id);
+    public void actualizar(String id, String nombre, String categoria, String nueva, String detalle) throws MiExcepcion {
+        Optional<Servicio> respuesta = servicioRepositorio.findById(id);
+        System.out.println("dentro de actualizar en servicioServicio");
 
-        optionalServicio.ifPresent(servicio -> {
+        if (respuesta.isPresent()) {
+            Servicio servicio = respuesta.get();
+            
+            if (nombre == null || nombre.trim().isEmpty()) { nombre = servicio.getNombre(); }
+
+            if (categoria == null || categoria.trim().isEmpty()) { 
+                if (nueva == null || nueva.trim().isEmpty()) { categoria = servicio.getCategoria(); }
+                else { categoria = nueva; }
+            }
+
+            if (detalle == null || detalle.trim().isEmpty()) { detalle = servicio.getDetalle(); }  
+
             servicio.setNombre(nombre);
+            servicio.setCategoria(categoria);
             servicio.setDetalle(detalle);
             servicioRepositorio.save(servicio);
-        });
+        };
     }
 
     @Transactional
-    public void deletearServicio(String id) { servicioRepositorio.deleteById(id); }
+    public void eliminarServicio(String id) { servicioRepositorio.deleteById(id); }
 
     @Transactional(readOnly = true)
     public Servicio getOne(String id) { return servicioRepositorio.getOne(id); }
+
+    @Transactional(readOnly = true)
+    public List<String> listarCategoria() { return servicioRepositorio.listarCategorias(); }
 
     @Transactional(readOnly = true)
     public List<Object> getServicioPorProveedores(String id) { return servicioRepositorio.getServicioPorProveedores(id); }
