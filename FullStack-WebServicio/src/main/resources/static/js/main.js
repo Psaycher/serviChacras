@@ -137,24 +137,6 @@ document.getElementById("usuario-proveedor").addEventListener('click', function 
     }
 });
 
-let cambiarFuncion = document.getElementById("cambiar-funcion");
-
-cambiarFuncion.addEventListener('click', () => {
-    if (cambiarFuncion.textContent === "Trabajo completo") {
-        cambiarFuncion.textContent = "Pagar";
-        cambiarFuncion.classList.remove('btn-outline-success');
-        cambiarFuncion.classList.add('btn-outline-warning');
-    } else if (cambiarFuncion.textContent === "Pagar") {
-        cambiarFuncion.textContent = "Calificar";
-        cambiarFuncion.classList.remove('btn-outline-warning');
-        cambiarFuncion.classList.add('btn-outline-success');
-    } else if (cambiarFuncion.textContent === "Calificar") {
-        cambiarFuncion.textContent = "Modificar Calificacion";
-    } else {
-        cambiarFuncion.textContent = "Trabajo completo";
-    }
-})
-
 document.querySelector('.controls .icon:nth-child(1)').addEventListener('click', () => {
     if (document.querySelector('.controls .icon:nth-child(1)').textContent == "👇") {
         document.querySelector('.controls .icon:nth-child(1)').textContent = "👆";
@@ -259,8 +241,6 @@ function viewImage(src) {
     viewer.style.display = 'flex';
 }
 
-
-
 // script.js
 document.getElementById("reportar").addEventListener('click', function () {
     document.getElementById('report-form-overlay').style.display = 'block';
@@ -284,93 +264,6 @@ document.getElementById('formulario-reporte').addEventListener('submit', functio
     document.getElementById('report-form-overlay').style.display = 'none';
     document.getElementById('report-form').style.display = 'none';
 });
-
-
-// Espera a que se cargue completamente la página
-document.addEventListener('DOMContentLoaded', function () {
-    // Crear el elemento div con la clase "card"
-    var cardDiv = document.createElement('div');
-    cardDiv.classList.add('card');
-
-    // Crear la imagen dentro del div.card
-    var img = document.createElement('img');
-    img.src = '...'; // Aquí va la URL de la imagen
-    img.classList.add('card-img-top');
-    img.alt = '...'; // Texto alternativo de la imagen
-    cardDiv.appendChild(img);
-
-    // Crear el div.card-body para el título
-    var cardBodyTitle = document.createElement('div');
-    cardBodyTitle.classList.add('card-body');
-
-    // Crear el título h5 dentro del div.card-body
-    var cardTitle = document.createElement('h5');
-    cardTitle.classList.add('card-title');
-    cardTitle.textContent = 'Nombre de la empresa';
-    cardBodyTitle.appendChild(cardTitle);
-
-    // Añadir el div.card-body del título al div.card
-    cardDiv.appendChild(cardBodyTitle);
-
-    // Crear la lista ul.list-group.list-group-flush
-    var listGroup = document.createElement('ul');
-    listGroup.classList.add('list-group', 'list-group-flush');
-
-    // Crear los elementos li dentro de la lista
-    var listItem1 = document.createElement('li');
-    listItem1.classList.add('list-group-item');
-    listItem1.textContent = 'Servicio que ofrece';
-    listGroup.appendChild(listItem1);
-
-    var listItem2 = document.createElement('li');
-    listItem2.classList.add('list-group-item');
-    listItem2.textContent = 'Su ubicación';
-    listGroup.appendChild(listItem2);
-
-    var listItem3 = document.createElement('li');
-    listItem3.classList.add('list-group-item');
-    listItem3.textContent = 'Precio del servicio en el día';
-    listGroup.appendChild(listItem3);
-
-    // Añadir la lista ul al div.card
-    cardDiv.appendChild(listGroup);
-
-    // Crear el segundo div.card-body para los botones
-    var cardBodyButtons = document.createElement('div');
-    cardBodyButtons.classList.add('card-body');
-
-    // Crear el primer botón "Más Info"
-    var cardLink1 = document.createElement('a');
-    cardLink1.href = '#';
-    cardLink1.classList.add('card-link');
-    var button1 = document.createElement('button');
-    button1.type = 'button';
-    button1.classList.add('btn', 'btn-outline-info');
-    button1.textContent = 'Más Info';
-    cardLink1.appendChild(button1);
-    cardBodyButtons.appendChild(cardLink1);
-
-    // Crear el segundo botón "Solicitar Servicio"
-    var cardLink2 = document.createElement('a');
-    cardLink2.href = '#';
-    cardLink2.classList.add('card-link');
-    var button2 = document.createElement('button');
-    button2.type = 'button';
-    button2.classList.add('btn', 'btn-outline-success');
-    button2.textContent = 'Solicitar Servicio';
-    cardLink2.appendChild(button2);
-    cardBodyButtons.appendChild(cardLink2);
-
-    // Añadir el segundo div.card-body de los botones al div.card
-    cardDiv.appendChild(cardBodyButtons);
-
-    // Obtener el elemento donde se insertará la nueva tarjeta (por ejemplo, el body)
-    var container = document.body; // Puedes cambiar esto por el contenedor deseado
-
-    // Añadir la tarjeta creada al contenedor
-    container.appendChild(cardDiv);
-});
-
 
 document.getElementById("filtro").addEventListener('click', function () {
     let detallesFiltro = document.getElementById('detalles-filtro');
@@ -398,104 +291,4 @@ document.getElementById("filtro").addEventListener('click', function () {
         detallesFiltro.style.height = '0';
         detallesFiltro.classList.remove('show');
     }
-});
-
-
-document.addEventListener('DOMContentLoaded', function () {
-    // Obtener los elementos del filtro y del contenedor de tarjetas
-    const filtroForm = document.getElementById('Formulario-filtro');
-    const cardContainer = document.getElementById('card-container');
-
-    // Datos simulados (deberías reemplazarlos con los datos reales)
-    const data = [
-        {
-            categoria: 'Ruta2km69',
-            title: 'Servicio 1',
-            imgSrc: 'ruta/a/la/imagen1.jpg',
-            description: 'Descripción del servicio 1',
-            items: ['Item 1', 'Item 2', 'Item 3'],
-            links: ['#', '#']
-        },
-        {
-            categoria: 'Ruta2km75',
-            title: 'Servicio 2',
-            imgSrc: 'ruta/a/la/imagen2.jpg',
-            description: 'Descripción del servicio 2',
-            items: ['Item 1', 'Item 2', 'Item 3'],
-            links: ['#', '#']
-        },
-        // Más datos aquí...
-    ];
-
-    // Función para generar las tarjetas
-    function generateCards(categoria) {
-        // Limpiar el contenedor de tarjetas
-        cardContainer.innerHTML = '';
-
-        // Filtrar los datos según la categoría seleccionada
-        const filteredData = data.filter(item => item.categoria === categoria);
-
-        // Generar las tarjetas
-        filteredData.forEach(item => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.style.width = '18rem';
-
-            const img = document.createElement('img');
-            img.src = item.imgSrc;
-            img.className = 'card-img-top';
-            img.alt = item.title;
-
-            const cardBody = document.createElement('div');
-            cardBody.className = 'card-body';
-
-            const cardTitle = document.createElement('h5');
-            cardTitle.className = 'card-title';
-            cardTitle.textContent = item.title;
-
-            const cardText = document.createElement('p');
-            cardText.className = 'card-text';
-            cardText.textContent = item.description;
-
-            cardBody.appendChild(cardTitle);
-            cardBody.appendChild(cardText);
-
-            const listGroup = document.createElement('ul');
-            listGroup.className = 'list-group list-group-flush';
-
-            item.items.forEach(listItem => {
-                const li = document.createElement('li');
-                li.className = 'list-group-item';
-                li.textContent = listItem;
-                listGroup.appendChild(li);
-            });
-
-            const cardBodyLinks = document.createElement('div');
-            cardBodyLinks.className = 'card-body';
-
-            item.links.forEach(link => {
-                const a = document.createElement('a');
-                a.href = link;
-                a.className = 'card-link';
-                a.textContent = 'Card link';
-                cardBodyLinks.appendChild(a);
-            });
-
-            card.appendChild(img);
-            card.appendChild(cardBody);
-            card.appendChild(listGroup);
-            card.appendChild(cardBodyLinks);
-
-            cardContainer.appendChild(card);
-        });
-    }
-
-    // Escuchar el evento submit del formulario del filtro
-    filtroForm.addEventListener('submit', function (event) {
-        event.preventDefault();
-        const formData = new FormData(filtroForm);
-        const categoriaSeleccionada = formData.get('barrio'); // Ajusta el nombre según el select de tu filtro
-
-        generateCards(categoriaSeleccionada);
-    });
 });
