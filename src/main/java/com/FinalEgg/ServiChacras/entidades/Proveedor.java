@@ -37,5 +37,5 @@ public class Proveedor {
     private Integer cantPedido;
 
     @Column(name = "promedio_puntuacion")
-    private Float promPuntuacion;
+    private Double promPuntuacion;
 }

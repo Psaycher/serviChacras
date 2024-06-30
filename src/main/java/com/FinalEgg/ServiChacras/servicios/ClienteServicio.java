@@ -21,6 +21,7 @@ public class ClienteServicio {
     public void crearCliente(Usuario usuario) throws MiExcepcion {
         Cliente cliente = new Cliente();
         cliente.setUsuario(usuario);
+        cliente.setPromPuntuacion(0.0);
         clienteRepositorio.save(cliente);
     }
 

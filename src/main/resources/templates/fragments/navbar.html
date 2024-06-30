@@ -45,7 +45,7 @@
                         
                         <div class="form-group list-group-item">
                             <label for="barrioChacras">Seleccione Barrio:</label>
-                            <select class="form-control border-dark bg-light text-dark" id="barrioChacras" name="barrioChacras">
+                            <select class="form-control border-dark bg-light text-dark" id="barrio" name="barrio">
                                 <option value="" disabled selected>Seleccione un barrio</option>
                                 <option class="opcion" th:each="barrio : ${barrios}"
                                     th:value="${barrio}" th:text="${barrio}">
@@ -124,7 +124,7 @@
                     </a>
                     <div id="noti-mensajes">
                         <ul class="list-group"th:each="mensaje : ${mensajes}">
-                            <li class="list-group-item" style="border: 1px solid whitesmoke;" th:text="${mensaje.remitente}"></li>
+                            <li class="list-group-item"><button class="btn btn-outline-light" type="button" id="botonAbrirMensaje" onclick="abrir_mensajes()" th:text="${mensaje.remitente}"></button></li>
                             <a class="nav-link navbarDropdown" th:href="@{/mensajeria/bandejaMensajes/__${mensaje.id}__}">Ver mensaje</a>
                         </ul>
                     </div>

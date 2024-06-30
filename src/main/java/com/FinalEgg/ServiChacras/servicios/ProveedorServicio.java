@@ -38,6 +38,7 @@ public class ProveedorServicio {
 
         if (opcionalServicio.isPresent()) { servicio = opcionalServicio.get(); }
         proveedor.setServicio(servicio);
+        proveedor.setPromPuntuacion(0.0);
 
         proveedorRepositorio.save(proveedor);
     }
