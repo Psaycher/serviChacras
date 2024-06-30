@@ -17,4 +17,5 @@ Catcheado (Error 👎, El usuario no pudo ser registrado User User user@user.com
 
 
 Fixes:
-Actualizado el form de actualizar usuario.
+-Actualizado el form de actualizar usuario.
+-El botón de la navbar, vuelve al index.
