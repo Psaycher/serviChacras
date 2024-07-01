@@ -83,17 +83,16 @@
                     <img src="static/img/icono-usuario.jpg" alt="Proveedor">
                     <span id="nombre-proveedor" style="margin-left: 5px;">Proveedor</span>
                 </a>
-                <div id="detalles-proveedor" style="border-bottom: 1px solid #666; z-index:1000;">
-                    <ul class="list-group" style="background-color: #333; border: 1px solid #333; padding:0%; display: flex; flex-direction:row ; align-items: center;">
-                        <li class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button id="info-proveedor" type="button" class="btn btn-outline-info">Ver más Info</button></li>
-                        <li class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button type="button" class="btn btn-outline-success">Trabajo completo</button></li>
-                        <li class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button type="button" class="btn btn-outline-warning" onclick="showModal()">Pagar</button></li>
-                        <li class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button type="button" class="btn btn-outline-success">Aceptar Pedido</button></li>
-                        <li class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button id="notificar-trabajo-completo" type="button" class="btn btn-outline-success">Notificar trabajo completo</button></li>
-                        <li class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button id="pedir-pago" type="button" class="btn btn-outline-warning">Pedir pago</button></li>
-                        <li class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button id="pago-recibido" type="button" class="btn btn-outline-success">Pago recibido</button></li>
-                        <li class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button type="button" class="btn btn-outline-success calificarBtn" onclick="calificar()">Calificar</button></li>
-                        <li class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button type="button" class="btn btn-outline-danger" onclick="reportar()">Reportar</button></li>
+                <div id="detalles-proveedor" style="z-index:1000;">
+                    <ul class="list-group" style="background-color: #2f2117; border: 1px solid #2f2117; padding:0%; display: flex; flex-direction:row ; align-items: center;">
+                        <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button id="info-proveedor" type="button" class="btn btn-outline-info">Ver más Info</button></li>
+                        <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button type="button" class="btn btn-outline-success">Trabajo completo</button></li>
+                        <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button type="button" class="btn btn-outline-warning" onclick="showModal()">Pagar</button></li>
+                        <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button id="notificar-trabajo-completo" type="button" class="btn btn-outline-success">Notificar trabajo completo</button></li>
+                        <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button id="pedir-pago" type="button" class="btn btn-outline-warning">Pedir pago</button></li>
+                        <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button id="pago-recibido" type="button" class="btn btn-outline-success">Pago recibido</button></li>
+                        <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button type="button" class="btn btn-outline-success calificarBtn" onclick="calificar()">Calificar</button></li>
+                        <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button type="button" class="btn btn-outline-danger" onclick="reportar()">Reportar</button></li>
                     </ul>
                 </div>
             </div>
@@ -114,13 +113,13 @@
                 <button class="send" onclick="enviarMensaje()">Enviar</button>
             </div>
           </div>
-
+    
           <div id="image-viewer" class="image-viewer" style="display: none;" onclick="handleImageViewerClick(event)">
             <span class="close-viewer">&times;</span>
             <a id="download-link" class="download-link" download>Descargar</a>
             <img id="viewer-image" src="" alt="Imagen">
           </div>
-
+    
           <div class="report-container">
             <div id="reportFormOverlay" class="overlay" style="display: none;" onclick="reportClose()"></div>
             <div id="reportForm" class="report-form" style="display: none; z-index:1000;">
@@ -145,7 +144,7 @@
                 </form>
             </div>
           </div>
-
+    
           <div class="rating-container">
             <div id="overlayCalificacion" class="overlay" style="display: none;" onclick="cerrarFormularioCalificacion()"></div>
             <div id="formularioCalificacion" class="rating-form" style="display: none;">
@@ -174,7 +173,7 @@
                 </form>
             </div>
           </div>
-
+    
           <div id="cerrarModal" class="cerrar-modal" style="display: none;" onclick="hideModal()"></div>
           <div id="modal" class="modal" style="display: none;">
               <button id="botonCerrarModal" class="close-btn-modal" onclick="hideModal()">&times;</button>

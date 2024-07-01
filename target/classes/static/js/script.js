@@ -1,27 +1,5 @@
-/*Funcion inicial*/
-document.addEventListener('DOMContentLoaded', function () {
-    var clienteRadio = document.getElementById('cliente');
-    var proveedorRadio = document.getElementById('proveedor');
-    var mixtoRadio = document.getElementById('mixto');
-    var userRadio = document.getElementById('user');
-    var tipoServicioDiv = document.getElementById('tipoServicio');
-
-    function toggleTipoServicio() {
-        if (proveedorRadio.checked || mixtoRadio.checked) {
-            tipoServicioDiv.style.display = 'block';
-        } else {
-            tipoServicioDiv.style.display = 'none';
-        }
-    }
-    clienteRadio.addEventListener('change', toggleTipoServicio);
-    userRadio.addEventListener('change', toggleTipoServicio);
-    proveedorRadio.addEventListener('change', toggleTipoServicio);
-    mixtoRadio.addEventListener('change', toggleTipoServicio);
-    toggleTipoServicio();
-});
-
-
 /* NavBar Funciones */
+
 document.getElementById("usuario").addEventListener('click', function() {
     let detallesUsuario = document.getElementById('detalles-usuario');
     let listItems = document.querySelectorAll('#detalles-usuario .list-group-item');
@@ -83,51 +61,23 @@ document.getElementById("usuario").addEventListener('click', function() {
     }
   });
   
-//   document.getElementById("filtro").addEventListener('click', function() {
-//     let detallesFiltro = document.getElementById('detalles-filtro');
-//     let listItems = document.querySelectorAll('#detalles-filtro .list-group-item');
-    
-//     // Calcular la altura total de los elementos de la lista con un margen adicional
-//     let totalHeight = 0;
-//     listItems.forEach(item => {
-//         totalHeight += item.clientHeight;
-//     });
-//     // Agregar un margen adicional para asegurar que todos los elementos se muestren completamente
-//     totalHeight += 8; // Puedes ajustar este valor según sea necesario
-//     if (detallesFiltro.style.height == '0px') {
-//         detallesFiltro.style.height = totalHeight + 'px';
-//         notificationPopup.classList.add('show');
-//     } else {
-//         detallesFiltro.style.height = '0';
-//         notificationPopup.classList.remove('show');
-//     }
-//   });
-
   document.getElementById("filtro").addEventListener('click', function() {
     let detallesFiltro = document.getElementById('detalles-filtro');
     let listItems = document.querySelectorAll('#detalles-filtro .list-group-item');
-    let botonFiltro = document.getElementById('filtro');
-
+    
     // Calcular la altura total de los elementos de la lista con un margen adicional
     let totalHeight = 0;
     listItems.forEach(item => {
         totalHeight += item.clientHeight;
     });
-
     // Agregar un margen adicional para asegurar que todos los elementos se muestren completamente
-    totalHeight += 78; // Puedes ajustar este valor según sea necesario
-
-    // Calcular la posición del botón y ajustar la posición del formulario
-    let rect = botonFiltro.getBoundingClientRect();
-    detallesFiltro.style.top = rect.bottom + 'px';
-    detallesFiltro.style.left = rect.left + 'px';
-
-    if (detallesFiltro.style.height == '0px' || detallesFiltro.style.height === '') {
+    totalHeight += 8; // Puedes ajustar este valor según sea necesario
+    if (detallesFiltro.style.height == '0px') {
         detallesFiltro.style.height = totalHeight + 'px';
-        detallesFiltro.classList.add('show');
+        notificationPopup.classList.add('show');
     } else {
         detallesFiltro.style.height = '0';
-        detallesFiltro.classList.remove('show');
+        notificationPopup.classList.remove('show');
     }
   });
   
@@ -164,6 +114,28 @@ document.getElementById("usuario").addEventListener('click', function() {
           // Aquí debe ir la lógica para ocultar la notificación si corresponde
       }
   });
+
+   function detallesProveedorG() {
+    let detallesUsuario = document.getElementById('detalles-proveedorG');
+    let listItems = document.querySelectorAll('#detalles-proveedorG .list-group-item');
+    
+    // Calcular la altura total de los elementos de la lista con un margen adicional
+    let totalHeight = 100;
+    //listItems.forEach(item => {
+    //    totalHeight += item.clientHeight;
+    //});
+
+    // Agregar un margen adicional para asegurar que todos los elementos se muestren completamente
+    //totalHeight -= 95; // Ajustar según sea necesario
+
+    if (detallesUsuario.style.height == '0px') {
+        detallesUsuario.style.height = totalHeight + 'px';
+        // Aquí debe ir la lógica para mostrar la notificación si corresponde
+    } else {
+        detallesUsuario.style.height = '0';
+        // Aquí debe ir la lógica para ocultar la notificación si corresponde
+    }
+   }
   
   function minimizar(){
       if(document.getElementById('minimizar').textContent=="👇"){
@@ -290,6 +262,21 @@ document.getElementById("usuario").addEventListener('click', function() {
       downloadLink.href = src;
       viewer.style.display = 'flex';
   }
+  
+  //Buscador de la mensajeria grande
+  document.getElementById('searchUsuarios').addEventListener('input', function() {
+      let filter = this.value.toLowerCase();
+      let buttons = document.querySelectorAll('#chatsUsuarios .btn');
+  
+      buttons.forEach(button => {
+          let name = button.getAttribute('name').toLowerCase();
+          if (name.includes(filter)) {
+              button.style.display = '';
+          } else {
+              button.style.display = 'none';
+          }
+      });
+  });
   /*Fin de Mensajeria*/
   
   /*Boton calificar*/

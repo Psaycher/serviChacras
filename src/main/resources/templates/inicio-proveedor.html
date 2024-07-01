@@ -7,29 +7,104 @@
     <!-- Navegador -->
     <nav th:replace="~{/fragments/navbar :: nav}"></nav>
 
-    <header class="header row justify-content-center">
+    <header>
 
-      <section class="col-md-6" id="contenedorMain">
-        <section class="py-5 text-center container">
-          <div class="contenedortitulo">
-            <a class="navbar-brand">ServiChacras</a>
-          </div>
-
-          <div class="container contenedorMsj">
-            <p th:if="${session.usuariosession != null}" th:text="'Hola de vuelta ' + ${session.usuariosession.nombre}"></p>
-            <p th:if="${session.usuariosession != null}" sec:authorize="!hasRole('CLIENTE')">Que acción deseas realizar?</p>
-            <p th:if="${session.usuariosession != null}" sec:authorize="hasRole('CLIENTE')">Que Servicio estás necesitando</p>
-          </div>
-
-          <div class="row py-lg-5">
-            <div class="col-lg-6 col-md-8 mx-auto">
-              <a th:href="@{/}" class="btn btn-primary my-2">Volver</a>
+        <section class="container" id="contenedorMain">
+          <section class="py-5 text-center container">
+            <div class="contenedortitulo">
+              <p></p>
             </div>
-          </div>
+  
+            <div class="container contenedorMsj" style="background-color: #6e4e378b; color: beige; padding-left:20px; padding-top:10px; padding-bottom:10px;">
+              <h1 th:if="${session.usuariosession != null}" th:text="'Hola de vuelta ' + ${session.usuariosession.nombre}"></h1>
+              <div th:if="${session.usuariosession != null}" sec:authorize="!hasRole('CLIENTE')">
+                <h2 >Que acción deseas realizar?</h2>
+                <div class="row">
+                  <div class="col-3" style="max-height: 450px;">
+                    <h3>Filtrar</h3>
+                    <form>
+                        <div class="form-group">
+                            <label for="filterBarrio">Por Barrio</label>
+                            <select class="form-control" id="filterBarrio">
+                                <option value="">Seleccionar...</option>
+                                <option>Opción 1</option>
+                                <option>Opción 2</option>
+                                <option>Opción 3</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filterFecha">Por Fecha</label>
+                            <select class="form-control" id="filterFecha">
+                                <option value="">Seleccionar...</option>
+                                <option>Opción 1</option>
+                                <option>Opción 2</option>
+                                <option>Opción 3</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filterValor">Por Valor</label>
+                            <select class="form-control" id="filterValor">
+                                <option value="">Seleccionar...</option>
+                                <option>Opción 1</option>
+                                <option>Opción 2</option>
+                                <option>Opción 3</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filterUrgencia">Por Urgencia</label>
+                            <select class="form-control" id="filterUrgencia">
+                                <option value="">Seleccionar...</option>
+                                <option>Opción 1</option>
+                                <option>Opción 2</option>
+                                <option>Opción 3</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                    </form>
+                  </div>
+                  <div class="col-9" style="overflow-y: auto; max-height: 450px;">
+                    <div class="card text-bg-dark">
+                      <div class="card-body">
+                        <h5 class="card-title">Nombre del cliente</h5>
+                      </div>
+                      <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Su ubicación</li>
+                        <li class="list-group-item">El dia que quiere empezar</li>
+                        <li class="list-group-item">En que horarios quiere el servicio</li>
+                      </ul>
+                      <div class="card-body">
+                        <a href="#" class="card-link"><button type="button" class="btn btn-outline-info">Más Info</button></a>
+                        <button type="button" class="btn btn-outline-success">Aceptar Pedido</button>
+                      </div>
+                    </div>
+                    <div class="card text-bg-dark">
+                      <div class="card-body">
+                        <h5 class="card-title">Nombre del cliente</h5>
+                      </div>
+                      <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Su ubicación</li>
+                        <li class="list-group-item">El dia que quiere empezar</li>
+                        <li class="list-group-item">En que horarios quiere el servicio</li>
+                      </ul>
+                      <div class="card-body">
+                        <a href="#" class="card-link"><button type="button" class="btn btn-outline-info">Más Info</button></a>
+                        <button type="button" class="btn btn-outline-success">Aceptar Pedido</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+  
+            <div class="row py-lg-5">
+              <div class="col-lg-6 col-md-8 mx-auto">
+                <a th:href="@{/}" class="btn btn-primary my-2">Volver</a>
+              </div>
+            </div>
+          </section>
         </section>
-      </section>
-
-    </header>
+  
+      </header>
             <div class="mensaje-container">
               <div class="mensaje-header">
                   <span></span>
@@ -43,17 +118,16 @@
                       <img src="static/img/icono-usuario.jpg" alt="Proveedor">
                       <span id="nombre-proveedor" style="margin-left: 5px;">Proveedor</span>
                   </a>
-                  <div id="detalles-proveedor" style="border-bottom: 1px solid #666; z-index:1000;">
-                      <ul class="list-group" style="background-color: #333; border: 1px solid #333; padding:0%; display: flex; flex-direction:row ; align-items: center;">
-                          <li class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button id="info-proveedor" type="button" class="btn btn-outline-info">Ver más Info</button></li>
-                          <li class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button type="button" class="btn btn-outline-success">Trabajo completo</button></li>
-                          <li class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button type="button" class="btn btn-outline-warning" onclick="showModal()">Pagar</button></li>
-                          <li class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button type="button" class="btn btn-outline-success">Aceptar Pedido</button></li>
-                          <li class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button id="notificar-trabajo-completo" type="button" class="btn btn-outline-success">Notificar trabajo completo</button></li>
-                          <li class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button id="pedir-pago" type="button" class="btn btn-outline-warning">Pedir pago</button></li>
-                          <li class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button id="pago-recibido" type="button" class="btn btn-outline-success">Pago recibido</button></li>
-                          <li class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button type="button" class="btn btn-outline-success calificarBtn" onclick="calificar()">Calificar</button></li>
-                          <li class="list-group-item" style="padding: auto; background-color: #333; border: 1px solid #333;"><button type="button" class="btn btn-outline-danger" onclick="reportar()">Reportar</button></li>
+                  <div id="detalles-proveedor" style="z-index:1000;">
+                      <ul class="list-group" style="background-color: #2f2117; border: 1px solid #2f2117; padding:0%; display: flex; flex-direction:row ; align-items: center;">
+                          <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button id="info-proveedor" type="button" class="btn btn-outline-info">Ver más Info</button></li>
+                          <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button type="button" class="btn btn-outline-success">Trabajo completo</button></li>
+                          <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button type="button" class="btn btn-outline-warning" onclick="showModal()">Pagar</button></li>
+                          <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button id="notificar-trabajo-completo" type="button" class="btn btn-outline-success">Notificar trabajo completo</button></li>
+                          <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button id="pedir-pago" type="button" class="btn btn-outline-warning">Pedir pago</button></li>
+                          <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button id="pago-recibido" type="button" class="btn btn-outline-success">Pago recibido</button></li>
+                          <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button type="button" class="btn btn-outline-success calificarBtn" onclick="calificar()">Calificar</button></li>
+                          <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button type="button" class="btn btn-outline-danger" onclick="reportar()">Reportar</button></li>
                       </ul>
                   </div>
               </div>

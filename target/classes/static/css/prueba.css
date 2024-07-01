@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background-image: url('fondo-pagina-o-mantenimiento.jpg'); 
+    background-image: url('posible-fonfo-2.jpg'); 
     background-size: cover; 
     background-position: center;
     position: relative;
@@ -28,10 +28,15 @@ nav {
     z-index: 1000;
     top: 0;
     width: 100%;
-    background-color: #1a130e; /* Tono más oscuro de marrón */
+    background-color: #3e271f; /* Tono más oscuro de marrón */
     color: #f5f5dc; /* Color beige para el texto */
  /* Color de fondo negro */
-    border-bottom: 2px solid #6c604d; /* Borde inferior marrón */
+    border-bottom: 2px solid #6c5a4d; /* Borde inferior marrón */
+}
+
+footer{
+    background-color: #3e2c1f81; 
+    color: #f5f5dc;
 }
 
 #fondo{
@@ -147,7 +152,7 @@ button[type="submit"]:hover {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: #333;
+    background: #3E2C1B;
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -222,7 +227,7 @@ ul li {
 }
 .list-group-item{
     background: #3e2c1f;
-    border: 1px solid #5D4037;
+    border: 1px solid #2f211700;
     color: #FFF8E1; /* Un color beige para el texto similar a los detalles internos del emblema */
 }
 
@@ -330,8 +335,8 @@ ul li {
     position: absolute;
     display: flex;
     align-items: center;
-    background: #4A3827; /* Marrón oscuro */
-    border: 1px solid #4A3827; /* Marrón oscuro */
+    background: #2f2117; 
+    border: 1px solid #5D4037; 
     width: 598px;
     top: 94px;
     right: 0;
@@ -345,14 +350,40 @@ ul li {
     pointer-events: auto;
 }
 
+#detalles-proveedorG {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    background: #2f2117; 
+    border: 1px solid #5D4037; 
+    width: 959px;
+    right: 144px;
+    top: 144px;
+    height: 0px;
+    overflow: hidden;
+    transition: height 0.3s ease, pointer-events 0s 0.3s;
+}
+
+#detalles-proveedorG.show {
+    height: auto;
+    pointer-events: auto;
+}
+
+.mensaje-containerG {
+    background-color: #2f2117; /* Beige grisáceo */
+    border: 1px solid #5D4037; /* Marrón medio */
+    margin: 0 auto;
+    color: #F5F5F5; /* Blanco apagado */
+}
+
 .mensaje-container {
     position: fixed;
     display: none;
     bottom: 0;
     width: 100%;
     max-width: 600px;
-    background-color: #7C6E65; /* Beige grisáceo */
-    border: 1px solid #5C5248; /* Marrón medio */
+    background-color: #2f2117; /* Beige grisáceo */
+    border: 1px solid #5D4037; /* Marrón medio */
     margin: 0 auto;
     right: 5px;
     z-index: 1000;
@@ -363,9 +394,9 @@ ul li {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #6D6259; /* Beige oscuro */
+    background-color: #3e2c1f; /* Beige oscuro */
     padding: 5px 10px;
-    border-bottom: 1px solid #5C5248; /* Marrón medio */
+    border-bottom: 1px solid #5D4037; /* Marrón medio */
     color: #F5F5F5; /* Blanco apagado */
 }
 
@@ -383,7 +414,7 @@ ul li {
     display: flex;
     align-items: center;
     padding: 10px;
-    border-bottom: 1px solid #666;
+    border-bottom: 1px solid #5D4037;
     color: #F5F5F5; /* Blanco apagado */
 }
 
@@ -433,7 +464,7 @@ ul li {
     align-items: center;
     padding: 10px;
     border-top: 1px solid #666;
-    background-color: #333; /* Fondo gris oscuro */
+    background-color: #3e2c1f; /* Fondo gris oscuro */
     color: #F5F5F5; /* Blanco apagado */
 }
 
@@ -459,9 +490,9 @@ ul li {
 
 .mensaje-form .send {
     padding: 10px 15px;
-    background-color: #4A3827; /* Marrón oscuro */
+    background-color: #30251d; /* Marrón oscuro */
     color: #F5F5F5; /* Blanco apagado */
-    border: none;
+    border: 1px solid #666e;
     border-radius: 20px;
     cursor: pointer;
 }
@@ -472,7 +503,7 @@ ul li {
     flex-wrap: wrap;
     gap: 10px;
     padding: 10px;
-    background-color: #3E2C1F; /* Marrón oscuro similar al fondo del emblema */
+    background-color: #222;
 }
 
 .preview-image {
@@ -519,7 +550,7 @@ ul li {
     flex-wrap: wrap;
     gap: 10px;
     padding: 10px;
-    border: solid 2px #D9CAB3; /* Borde beige claro alrededor de las imágenes en los mensajes */
+    border: solid 2px #222; /* Borde beige claro alrededor de las imágenes en los mensajes */
 }
 
 .preview-image {
@@ -667,7 +698,7 @@ ul li {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: #333;
+    background: #3E2C1B;
     color: white;
     padding: 20px;
     border-radius: 10px;
@@ -707,7 +738,7 @@ ul li {
 .form-group input[type="file"] {
     width: 100%;
     padding: 10px;
-    background: #444;
+    background: #6E4E37;
     border: 1px solid #555;
     color: white;
     border-radius: 5px;
