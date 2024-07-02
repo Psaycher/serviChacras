@@ -139,16 +139,16 @@ public class PedidoServicio {
     public Pedido getOne(String id) { return pedidoRepositorio.getOne(id); }
 
     @Transactional(readOnly = true)
-    public String getIdPedidoPorClientes(String id) { return pedidoRepositorio.getIdPedidoPorClientes(id); }
+    public String getIdPedidoPorClientes(String id) { return pedidoRepositorio.getIdPedidoPorCliente(id); }
 
     @Transactional(readOnly = true)
-    public List<Pedido> getPedidoPorClientes(String id) { return pedidoRepositorio.getPedidoPorClientes(id); }
+    public List<Pedido> getPedidoPorClientes(String id) { return pedidoRepositorio.getPedidosPorClientes(id); }
 
     @Transactional(readOnly = true)
-    public String getIdPedidoPorProveedores(String id) { return pedidoRepositorio.getIdPedidoPorProveedores(id); }
+    public String getIdPedidoPorProveedores(String id) { return pedidoRepositorio.getIdPedidoPorProveedor(id); }
 
     @Transactional(readOnly = true)
-    public List<Pedido> getPedidoPorProveedores(String id) { return pedidoRepositorio.getPedidoPorProveedores(id); }
+    public List<Pedido> getPedidoPorProveedores(String id) { return pedidoRepositorio.getPedidosPorProveedores(id); }
 
     @Transactional(readOnly = true)
     public List<Pedido> getPedidosPendiente() { return pedidoRepositorio.getPedidosPendiente(); }

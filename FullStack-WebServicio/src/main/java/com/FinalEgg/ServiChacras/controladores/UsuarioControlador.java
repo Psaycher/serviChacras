@@ -3,6 +3,7 @@ package com.FinalEgg.ServiChacras.controladores;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.ui.ModelMap;
@@ -13,9 +14,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.FinalEgg.ServiChacras.entidades.Cliente;
@@ -23,6 +21,10 @@ import com.FinalEgg.ServiChacras.entidades.Usuario;
 import com.FinalEgg.ServiChacras.entidades.Proveedor;
 import com.FinalEgg.ServiChacras.servicios.ClienteServicio;
 import com.FinalEgg.ServiChacras.servicios.ProveedorServicio;
+import com.FinalEgg.ServiChacras.repositorios.PedidoRepositorio;
+import com.FinalEgg.ServiChacras.repositorios.ClienteRepositorio;
+import com.FinalEgg.ServiChacras.repositorios.UsuarioRepositorio;
+import com.FinalEgg.ServiChacras.repositorios.ProveedorRepositorio;
 
 @Controller
 @RequestMapping("/usuario")
@@ -31,17 +33,24 @@ public class UsuarioControlador {
     private ClienteServicio clienteServicio;
     @Autowired
     private ProveedorServicio proveedorServicio;
+    @Autowired
+    private PedidoRepositorio pedidoRepositorio;
+    @Autowired
+    private ClienteRepositorio clienteRepositorio;
+    @Autowired
+    private UsuarioRepositorio usuarioRepositorio;
+    @Autowired
+    private ProveedorRepositorio proveedorRepositorio;
 
+    //MÉTODO QUE LISTA PROVEEDORES O CLIENTES SEGÚN USUARIO Y DERIVA A expositor.html
     @GetMapping("/expositor")
     public String expositor(ModelMap modelo, HttpSession session, @RequestParam(value = "rolSession", required = false) String rolSession, @RequestParam(required = false) String barrio,
                             @RequestParam(required = false) String idServicio, @RequestParam(required = false) String idPedido, @RequestParam(required = false) String nombreUsuario) {
 
         Usuario logueado = (Usuario) session.getAttribute("usuariosession");
-        System.out.println("entro el controlador y este es el session:" + rolSession);
 
         if (rolSession != null && rolSession.equals("CLIENTE")) {
             List<Proveedor> proveedores = new ArrayList<>();
-            System.out.println("entro en condicional del session:" + rolSession);
 
             if (barrio == null) {
                 if (idServicio == null) {
@@ -54,7 +63,6 @@ public class UsuarioControlador {
                 }
 
             } else {
-
                 if (idServicio == null) {
                     if (nombreUsuario != null) { proveedores = proveedorServicio.getPorBarrioYNombre(nombreUsuario, barrio); }
                     else if (nombreUsuario == null || nombreUsuario.isEmpty()) { proveedores = proveedorServicio.getPorBarrio(barrio); }
@@ -113,12 +121,13 @@ public class UsuarioControlador {
             modelo.addAttribute("pedidoHay", pedidoHay);            
             modelo.addAttribute("vacio", vacio);
         }
-
         modelo.addAttribute("rolSession", rolSession);
+        modelo.addAttribute("logueado", logueado);
 
         return "expositor.html";
     }
 
+    //MÉTODO PARA IMAGEN DE PROVEEDOR
     @GetMapping("/imagen/{id}")
     public ResponseEntity<byte[]> ImagenProveedor(@PathVariable String id) {
         Proveedor proveedor = proveedorServicio.getOne(id);
@@ -128,5 +137,77 @@ public class UsuarioControlador {
         headers.setContentType(MediaType.IMAGE_JPEG);
 
         return new ResponseEntity<>(imagen, headers, HttpStatus.OK);
+    }
+
+    //MÉTODO PARA VISUALIZAR LA INFO DE UN USUARIO
+    @GetMapping("/unicard/{id}")
+    public String unicard(@PathVariable String id, @RequestParam String rolSession, ModelMap modelo) {
+        Optional<Usuario> optionalUsuario = usuarioRepositorio.findById(id);
+
+        if (optionalUsuario.isPresent()) {
+            Usuario usuario = optionalUsuario.get();
+
+            if (rolSession.equals("CLIENTE")) {
+                Optional<Proveedor> opcionalProveedor = proveedorRepositorio.findById(proveedorRepositorio.idUsuario(id));
+
+                if (opcionalProveedor.isPresent()) {
+                    Proveedor proveedor = opcionalProveedor.get();                
+                    Integer cantidadPedidos = pedidoRepositorio.contarPedidosPorProveedor(proveedor.getId());
+
+                    modelo.addAttribute("cantidadPedidos", cantidadPedidos);
+                    modelo.addAttribute("proveedor", proveedor);                   
+
+                } else {
+                    modelo.addAttribute("codigo", 404);
+                    modelo.addAttribute("mensaje", "No se ha encontrado al proveedor con id de usuario: " + id);
+                    return "error.html";
+                }
+            }
+
+            if (rolSession.equals("PROVEEDOR")) {
+                Optional<Cliente> opcionalCliente = clienteRepositorio.findById(clienteRepositorio.idUsuario(id));
+
+                if (opcionalCliente.isPresent()) {
+                    Cliente cliente = opcionalCliente.get();
+                    Integer cantidadPedidos = pedidoRepositorio.contarPedidosPorCliente(cliente.getId());
+                    
+                    modelo.addAttribute("cantidadPedidos", cantidadPedidos); 
+                    modelo.addAttribute("cliente", cliente); 
+
+                } else {
+                    modelo.addAttribute("codigo", 404);
+                    modelo.addAttribute("mensaje", "No se ha encontrado al cliente con id de usuario: " + id);
+                    return "error.html";
+                }
+            }
+
+            modelo.addAttribute("usuario", usuario);
+            modelo.addAttribute("rolSession", rolSession);
+            return "carta-usuario.html";
+
+        } else { 
+            modelo.addAttribute("codigo", 404);
+            modelo.addAttribute("mensaje", "No se ha encontrado Usuario con el id: " + id);
+            return "error.html";
+        }
+    }
+
+    //MÉTODO PARA IR AL FORMULARIO DE SOLICITUD DE PEDIDOS AL PROVEEDOR
+    @GetMapping("/solicitarPedido/{id}")
+    public String solicitarPedido(@PathVariable String id, HttpSession session, ModelMap modelo) {
+        Usuario logueado = (Usuario) session.getAttribute("usuariosession");
+        Optional<Usuario> optionalUsuario = usuarioRepositorio.findById(id);
+
+        if (optionalUsuario.isPresent()) {
+            Usuario usuario = optionalUsuario.get();
+            modelo.addAttribute("usuario", usuario);
+            modelo.addAttribute("logueado", logueado);
+
+        } else {
+            modelo.addAttribute("codigo", 404);
+            modelo.addAttribute("mensaje", "No se ha encontrado al proveedor con id de usuario: " + id);
+            return "error.html";
+        }
+        return "form-pedido.html";
     }
 }

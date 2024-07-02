@@ -7,12 +7,14 @@
         <!-- Navegador -->
         <nav th:replace="~{/fragments/navbar :: nav}"></nav>
 
+        <br>
+
         <div id="containerRegistro" class="container mt-5 mb-5">
             <div class="row justify-content-center">
                 <div class="col-md-6">
-                    <div class="card" id="cardRegistro">
-                        <div class="card-header text-center">
-                            <h3>Actualizar Usuario</h3>
+                    <div class="card" id="cardRegistro" style="background-color: #5d2d11c3; color: beige;">
+                        <div class="card-header text-center" style="padding-top:10px;">
+                            <h3 style="background-color: #5d2d11ec;">Actualizar Usuario</h3>
                         </div>
 
                         <div th:replace="~{/fragments/divError :: div}"> </div>
@@ -150,6 +152,140 @@
                 </section>
             </div>
         </div>
+        <div class="mensaje-container">
+            <div class="mensaje-header">
+                <span></span>
+                <div class="controls">
+                    <span id="minimizar" class="icon" onclick="minimizar()">👇</span>
+                    <span id="cerrarMensajes" class="icon" onclick="cerrarMensaje()">✖</span>
+                </div>
+            </div>
+            <div class="mensaje-user">
+                <a id="usuario-proveedor" class="nav-link" style="cursor: pointer;">
+                    <img src="static/img/icono-usuario.jpg" alt="Proveedor">
+                    <span id="nombre-proveedor" style="margin-left: 5px;">Proveedor</span>
+                </a>
+                <div id="detalles-proveedor" style="z-index:1000;">
+                    <ul class="list-group" style="background-color: #2f2117; border: 1px solid #2f2117; padding:0%; display: flex; flex-direction:row ; align-items: center;">
+                        <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button id="info-proveedor" type="button" class="btn btn-outline-info">Ver más Info</button></li>
+                        <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button type="button" class="btn btn-outline-success">Trabajo completo</button></li>
+                        <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button type="button" class="btn btn-outline-warning" onclick="showModal()">Pagar</button></li>
+                        <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button type="button" class="btn btn-outline-success">Aceptar Pedido</button></li>
+                        <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button id="notificar-trabajo-completo" type="button" class="btn btn-outline-success">Notificar trabajo completo</button></li>
+                        <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button id="pedir-pago" type="button" class="btn btn-outline-warning">Pedir pago</button></li>
+                        <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button id="pago-recibido" type="button" class="btn btn-outline-success">Pago recibido</button></li>
+                        <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button type="button" class="btn btn-outline-success calificarBtn" onclick="calificar()">Calificar</button></li>
+                        <li class="list-group-item" style="padding: auto; background-color: #2f2117; border: 1px solid #2f2117;"><button type="button" class="btn btn-outline-danger" onclick="reportar()">Reportar</button></li>
+                    </ul>
+                </div>
+            </div>
+            <div id="mensaje-content" class="mensaje-content">
+                <div class="mensaje usuario">
+                    <div class="texto">Hola, ¿cómo estás?</div>
+                </div>
+                <div class="mensaje destinatario">
+                    <div class="texto">¡Hola! Estoy bien, ¿y tú?</div>
+                </div>
+                <!-- Más mensajes aquí -->
+            </div>
+            <div id="preview-container" class="preview-container" onclick="handlePreviewContainerClick(event)"></div>
+            <div id="mensaje-form" class="mensaje-form">
+                <label for="file-upload" class="upload-label" onclick="handleFileUploadClick()">📎</label>
+                <input id="file-upload" type="file" accept="image/*" multiple onchange="handleFileChange(event)">
+                <input type="text" placeholder="Escribe tu mensaje">
+                <button class="send" onclick="enviarMensaje()">Enviar</button>
+            </div>
+          </div>
+
+          <div id="image-viewer" class="image-viewer" style="display: none;" onclick="handleImageViewerClick(event)">
+            <span class="close-viewer">&times;</span>
+            <a id="download-link" class="download-link" download>Descargar</a>
+            <img id="viewer-image" src="" alt="Imagen">
+          </div>
+
+          <div class="report-container">
+            <div id="reportFormOverlay" class="overlay" style="display: none;" onclick="reportClose()"></div>
+            <div id="reportForm" class="report-form" style="display: none; z-index:1000;">
+                <div class="report-header">
+                    <h2>Reporte</h2>
+                    <span class="close" onclick="reportClose()">&times;</span>
+                </div>
+                <form id="formulario-reporte" onclick="formularioReporte(event)">
+                    <div class="form-group">
+                        <label for="motivo-reporte">¿Qué reporta? (Aclare si es estafa, lenguaje malsonante, etc)</label>
+                        <textarea id="motivo-reporte" name="motivo-reporte" rows="2" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="detalles-reporte">Más detalles</label>
+                        <textarea id="detalles-reporte" name="detalles-reporte" rows="4"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="evidencia-reporte">Adjunte evidencia (obligatorio)</label>
+                        <input type="file" id="evidencia-reporte" name="evidencia-reporte" accept="image/*" required>
+                    </div>
+                    <button type="submit" class="send-btn">Enviar</button>
+                </form>
+            </div>
+          </div>
+
+          <div class="rating-container">
+            <div id="overlayCalificacion" class="overlay" style="display: none;" onclick="cerrarFormularioCalificacion()"></div>
+            <div id="formularioCalificacion" class="rating-form" style="display: none;">
+                <div class="rating-header">
+                    <h2>Califica a tu proveedor</h2>
+                    <span id="close-rating-form" class="close" onclick="cerrarFormularioCalificacion()">&times;</span>
+                </div>
+                <form id="calificacionFormulario" onclick="validarFormulario(event)">
+                    <div class="form-group">
+                        <label for="puntuacion">Escribe su puntuación</label>
+                        <div class="input-group">
+                            <input type="number" step="0.1" id="puntuacion" name="puntuacion" required min="0" max="5" >
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                            <span class="star">⭐</span>
+                        </div>
+                        <div id="errorPuntuacion" class="error-message" style="display: none;">Por favor, ingresa una puntuación válida entre 0 y 5.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="comentario">Haz algún comentario (opcional)</label>
+                        <textarea id="comentario" name="comentario" rows="4"></textarea>
+                    </div>
+                    <button type="submit" class="send-btn">Enviar</button>
+                </form>
+            </div>
+          </div>
+
+          <div id="cerrarModal" class="cerrar-modal" style="display: none;" onclick="hideModal()"></div>
+          <div id="modal" class="modal" style="display: none;">
+              <button id="botonCerrarModal" class="close-btn-modal" onclick="hideModal()">&times;</button>
+              <h2>Detalles de la cuenta bancaria</h2>
+              <table>
+                  <tr>
+                      <td>Nombre del titular:</td>
+                      <td>Juan Pérez</td>
+                  </tr>
+                  <tr>
+                      <td>DNI:</td>
+                      <td>00.000.001</td>
+                  </tr>
+                  <tr>
+                      <td>Alias:</td>
+                      <td>juan.perez</td>
+                  </tr>
+                  <tr>
+                      <td>CBU:</td>
+                      <td>0000000001</td>
+                  </tr>
+                  <tr>
+                      <td>Tipo de banco:</td>
+                      <td>Nacion</td>
+                  </tr>
+              </table>
+              <div class="alert">Recuerda pasar por el chat la captura de la transferencia completada</div>
+              <button id="notify-btn" type="button" class="btn btn-outline-success" onclick="hideModal()">Pago realizado</button>
+          </div>
 
         <footer th:replace="~{/fragments/footer :: footer}"></footer>
 
@@ -158,7 +294,7 @@
             crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-        <script src="/js/main.js"></script>
+        <script src="/js/script.js"></script>
     </body>
 
 </html>

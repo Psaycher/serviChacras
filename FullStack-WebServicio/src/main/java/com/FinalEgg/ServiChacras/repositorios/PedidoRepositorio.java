@@ -13,16 +13,22 @@ import com.FinalEgg.ServiChacras.entidades.Pedido;
 @Repository
 public interface PedidoRepositorio extends JpaRepository<Pedido, String> {
        @Query("SELECT p.id FROM Pedido p WHERE p.cliente.id = :idCliente")
-       public String getIdPedidoPorClientes(@Param("idCliente") String idCliente);
+       public String getIdPedidoPorCliente(@Param("idCliente") String idCliente);
 
        @Query("SELECT p FROM Pedido p WHERE p.cliente.id = :idCliente")
-       public List<Pedido> getPedidoPorClientes(@Param("idCliente") String idCliente);
+       public List<Pedido> getPedidosPorClientes(@Param("idCliente") String idCliente);
+
+       @Query("SELECT COUNT(p) FROM Pedido p WHERE p.cliente.id = :idCliente")
+       public Integer contarPedidosPorCliente(@Param("idCliente") String idCliente);
 
        @Query("SELECT p FROM Pedido p WHERE p.proveedor.id = :idProveedor")
-       public List<Pedido> getPedidoPorProveedores(@Param("idProveedor") String idProveedor);
+       public List<Pedido> getPedidosPorProveedores(@Param("idProveedor") String idProveedor);
 
        @Query("SELECT p.id FROM Pedido p WHERE p.proveedor.id = :idProveedor")
-       public String getIdPedidoPorProveedores(@Param("idProveedor") String idProveedor);
+       public String getIdPedidoPorProveedor(@Param("idProveedor") String idProveedor);
+
+       @Query("SELECT COUNT(p) FROM Pedido p WHERE p.proveedor.id = :idProveedor")
+       public Integer contarPedidosPorProveedor(@Param("idProveedor") String idProveedor);
 
        @Query("SELECT p FROM Pedido p WHERE p.estado = 'PENDIENTE'")
        public List<Pedido> getPedidosPendiente();

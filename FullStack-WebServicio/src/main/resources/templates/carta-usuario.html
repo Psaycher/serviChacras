@@ -8,71 +8,150 @@
         <nav th:replace="~{/fragments/navbar :: nav}"></nav>
 
         <br>
-        <br>
     
         <!-- Contenido Principal Cliente-->
-        <div id="fondo" style="width:100%;" class="container d-flex flex-column justify-content-center align-items-center">
+        <div id="fondo" style="width:100%;" class="container contUnicard d-flex flex-column justify-content-center align-items-center">
+            <div id="">
 
-            <div th:replace="~{/fragments/divError :: div}"></div>
-            
-            <div id="contenedor_de_tarjetas" th:if="${rolSession == 'CLIENTE'}">
-
-                <div id="contenedor-tarjetas" style="width:100%; margin-top:25px; margin-bottom:10px;" class="row">
-                    <div class="card cardExpositor mx-3 my-3 text-bg-dark col-md-5" th:each="proveedor : ${proveedores}">
-                        <div id="foto-card">
-                            <div id="img-card" th:if="${proveedor.imagen != null}">
-                                <img th:src="@{/usuario/imagen/__${proveedor.id}__}">
+                <div class="card mb-3" style="max-width: 100%; background: #202429; border: 1px solid #adadad; color: whitesmoke;">
+                    <div class="row g-0">
+                        <div class="col-md-4" th:if="${rolSession == 'CLIENTE'}">                           
+                           <div style="width:100%; height: 100%;" class="img-fluid rounded-start"  th:if="${proveedor.imagen != null}">
+                                <img class="card-img-top" th:src="@{/usuario/imagen/__${proveedor.id}__}">
                             </div>
-                            <div id="img-card" th:if="${proveedor.imagen == null}">
-                                <img src="/img/usuario-sin-foto.jpeg">
-                            </div>                             
-                        </div>                        
-                        <div class="card-body">
-                            <h5 class="card-title" th:text="${proveedor.usuario.nombre} + ' ' + ${proveedor.usuario.apellido}"></h5>
-                            <p class="card-text" th:text="${proveedor.usuario.barrio}"></p>
+                            <div style="width:100%; height: 100%;" class="img-fluid rounded-start"  th:if="${proveedor.imagen == null}">
+                                <img class="card-img-top" src="/img/usuario-sin-foto.jpeg">
+                            </div>     
                         </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item" th:text="${proveedor.servicio.nombre}"></li>
-                            <!-- <li class="list-group-item" th:if="${encargo == "ENCARGO"}" th:text="${pedido.asunto}"></li> -->
-                        </ul>
-                        <div class="card-body">
-                            <a href="#" class="card-link" th:href="@{/usuario/unicard/__${proveedor.usuario.id}__(rolSession=CLIENTE)}"><button type="button" class="btn btn-outline-info">Más Info</button></a>
-                            <a href="#" class="card-link" th:href="@{/usuario/solicitarPedido/__${proveedor.usuario.id}__}">
-                                <button id="solicitar-servicio" type="button" class="btn btn-outline-success">Solicitar Servicio</button>
-                            </a> 
-                            <button type="button" class="btn btn-outline-success">Trabajo completo</button>
-                            <button type="button" class="btn btn-outline-warning" onclick="showModal()">Pagar</button>
-                            <button type="button" class="btn btn-outline-success calificarBtn" onclick="calificar()">Calificar</button>
-                            <button type="button" class="btn btn-outline-danger" onclick="reportar()">Reportar</button>
+                        <div class="col-md-4" th:if="${rolSession == 'PROVEEDOR'}">                                                   
+                             <div style="width:100%; height: 100%;" class="img-fluid rounded-start">
+                                 <img class="card-img-top" src="/img/usuario-sin-foto.jpeg">
+                             </div>     
+                         </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title" style="border-bottom: 1px #666 solid;">Tus Datos</h5>
+                                <ul class="list-group">
+                                    <li class="list-group-item" th:text="${usuario.nombre} + ' ' + ${usuario.apellido}">Nombre y apellido</li>
+                                    <li class="list-group-item" th:text="${usuario.direccion}  + ', ' + ${usuario.barrio}">Direccion y barrio</li>
+                                    <li class="list-group-item" th:text="${usuario.email}">Email</li>                        
+                                    <li class="list-group-item" th:text="${usuario.telefono}">Telefono</li>
+                                    <li class="list-group-item" th:if="${rolSession == 'CLIENTE'}">
+                                        <h5 th:text="${proveedor.servicio.nombre} + ': '"></h5>
+                                        <p th:text="${proveedor.descripcion}"></p>
+                                    </li>
+                                    <li class="list-group-item">Pedidos: <p style="margin: 0%;" th:text="${cantidadPedidos}"></p></li>
+                                    <li class="list-group-item" th:if="${rolSession == 'CLIENTE'}">
+                                        <h6>Calificacion Promedio del proveedor:</h6>
+                                        <p style="margin: 0%;" th:text="' ' + ${proveedor.promPuntuacion}"></p>
+                                    </li>
+                                    <li class="list-group-item" th:if="${rolSession == 'PROVEEDOR'}">
+                                        <h6>Calificacion Promedio del cliente:</h6>
+                                        <p style="margin: 0%;" th:text="' ' + ${cliente.promPuntuacion}"></p>
+                                    </li>
+                                    <div class="card-body" th:if="${rolSession == 'USUARIO'}">
+                                      <a href="#" class="card-link"><button type="button" id="cambiar-datos-usuario" class="btn btn-outline-primary">Cambiar Datos</button></a>
+                                    </div>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
 
             </div>
 
-            <div id="contenedor_de_tarjetas" th:if="${rolSession == 'PROVEEDOR'}">
-
-                <div id="contenedor-tarjetas" style="width:100%; margin-top:25px; margin-bottom:10px;" class="row">
-                    <div class="card cardExpositor text-bg-dark col-md-5" th:each="cliente : ${clientes}">
-                        <div class="card-body">
-                            <h5 class="card-title" th:text="${cliente.usuario.nombre} + ' ' + ${cliente.usuario.apellido}"></h5>
-                            <p class="card-text" th:text="${cliente.usuario.barrio}"></p>
+            <!--Calificaciones-->
+            <div id="filtrar-calificaciones">
+                <div class="col-3" style="max-height: 450px;">
+                    <h3>Filtrar Calificaciones</h3>
+                    <form>
+                        <div class="form-group">
+                            <label for="filterCalificacion">Por Calificación</label>
+                            <select class="form-control" id="filterCalificacion">
+                            <option value="">Seleccionar...</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            </select>
                         </div>
-                        <!-- <ul class="list-group list-group-flush" th:if="${encargo == "ENCARGO"}" th:each="pedido : ${pedidos}">
-                            <li class="list-group-item" th:text="${pedido.asunto}"></li>
-                        </ul> -->
-                        <div class="card-body">
-                            <a href="#" class="card-link" th:href="@{/usuario/unicard/__${cliente.usuario.id}__(rolSession=PROVEEDOR)}"><button type="button" class="btn btn-outline-info">Más Info</button></a>
-                            <button type="button" class="btn btn-outline-success">Aceptar Pedido</button>
-                            <button id="notificar-trabajo-completo" type="button" class="btn btn-outline-success">Notificar trabajo completo</button>
-                            <button id="pedir-pago" type="button" class="btn btn-outline-warning">Pedir pago</button>
-                            <button id="pago-recibido" type="button" class="btn btn-outline-success">Pago recibido</button>
-                            <button type="button" class="btn btn-outline-success calificarBtn" onclick="calificar()">Calificar</button>
-                            <button type="button" class="btn btn-outline-danger" onclick="reportar()">Reportar</button>
+                        <div class="form-group">
+                            <label for="filterFecha">Por Fecha</label>
+                            <select class="form-control" id="filterFecha">
+                            <option value="">Seleccionar...</option>
+                            <option value="antigua">Más antigua</option>
+                            <option value="reciente">Más reciente</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filterOrdenCalificacion">Por Orden de Calificación</label>
+                            <select class="form-control" id="filterOrdenCalificacion">
+                            <option value="">Seleccionar...</option>
+                            <option value="mayor">Desde mayor calificación</option>
+                            <option value="menor">Desde menor calificación</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                    </form>
+                    <br>
+                </div>
+            </div>
+            <div class="row" id="calificaciones-contenedor" style="margin-bottom:10px;">
+                <div class="col-4">
+                    <div class="card mb-3" style="max-width: 540px;">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src="..." class="img-fluid rounded-start" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                <h5 class="card-title">Nombre cliente</h5>
+                                <p class="card-text">Descripcion</p>
+                                <p class="card-text">Calificacion: <span>0</span></p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <!-- Este es el elemento de fondo transparente para cerrar el formulario -->
+            <div id="overlay" onclick="closeForm()"></div>
+            
+            <!-- Este es el formulario principal -->
+            <div id="serviceForm">
+                <div class="form-header">
+                    <div class="form-title">Da más detalles de tu pedido</div>
+                    <span class="close-btn" onclick="closeForm()">&times;</span>
+                </div>
+                <form id="serviceFormInner">
+                  <div class="form-section">
+                      <div class="form-subtitle">¿Qué días deseas que trabaje?</div>
+                        <label><input type="checkbox" name="day[]" value="lunes"> Lunes</label><br>
+                        <label><input type="checkbox" name="day[]" value="martes"> Martes</label><br>
+                        <label><input type="checkbox" name="day[]" value="miércoles"> Miércoles</label><br>
+                        <label><input type="checkbox" name="day[]" value="jueves"> Jueves</label><br>
+                        <label><input type="checkbox" name="day[]" value="viernes"> Viernes</label><br>
+                      <div id="dayError" class="error-message"></div>
+                  </div>
+                  <div class="form-section">
+                      <div class="form-subtitle">¿En qué horarios del día?</div>
+                      <label>Hora de inicio: <input type="time" name="start_time" required></label><br>
+                      <label>Hora de fin: <input type="time" name="end_time" required></label><br>
+                  </div>
+                  <div class="form-section">
+                      <div class="form-subtitle">Más detalles:</div>
+                      <textarea name="details" rows="4" placeholder="Detalles adicionales..." required></textarea>
+                      <div id="detailsError" class="error-message"></div>
+                  </div>
+                  <button type="submit">Solicitar servicio</button>
+                </form>
             </div>
 
             <div class="mensaje-container">

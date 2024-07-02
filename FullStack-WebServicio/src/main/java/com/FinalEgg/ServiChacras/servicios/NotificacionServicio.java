@@ -3,6 +3,7 @@ package com.FinalEgg.ServiChacras.servicios;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +14,7 @@ import com.FinalEgg.ServiChacras.repositorios.UsuarioRepositorio;
 import com.FinalEgg.ServiChacras.repositorios.ProveedorRepositorio;
 import com.FinalEgg.ServiChacras.repositorios.NotificacionRepositorio;
 
+@Service
 public class NotificacionServicio {
     @Autowired
     private PagoServicio pagoServicio;
@@ -29,8 +31,10 @@ public class NotificacionServicio {
     
 
     @Transactional
-    public void crearNotificacion(String notaString, String idRemitente, String idDestinatario, String idCliente, String idProveedor, String idPago, String idPedido, String idDenuncia, Integer valor) throws MiExcepcion {
-        TipoDeNota nota = TipoDeNota.valueOf(notaString.toUpperCase());
+    public void crearNotificacion(String notaString, String idRemitente, String idDestinatario, String idCliente, String idProveedor, 
+                                  String idPago, String idPedido, String idDenuncia, Integer valor) throws MiExcepcion {
+        
+        TipoDeNota nota = TipoDeNota.valueOf(notaString);
         Notificacion notificacion = new Notificacion();
         String asunto = "";
 
@@ -53,19 +57,25 @@ public class NotificacionServicio {
                 notificacion.setNota(nota); 
                 
                 switch (notaString) {
-                    case "PEDIDOSolicitud" -> { 
-                        asunto = "Solicitud de Pedido";
+                    case "PEDIDOSolicitud" -> { asunto = "Solicitud de Pedido"; }
+                    case "PEDIDOAceptado"-> { 
+                        asunto = "Se ha aceptado el Pedido"; 
                         String idServicio = proveedorRepositorio.getIdServicio(idProveedor);
                         Pedido pedido = pedidoServicio.crearPedido(idCliente, idServicio, idProveedor);
-                        notificacion.setPedido(pedido.getId());  
+                        notificacion.setPedido(pedido.getId());
                     }
-                    case "PEDIDOAceptado"-> { asunto = "Se ha aceptado el Pedido"; }
                     case "PEDIDORechazado" -> { asunto = "Se ha rechazado el Pedido"; }
-                    case "PEDIDOCancelado" -> { asunto = "Se ha cancelado el Pedido"; }
+                    case "PEDIDOCancelado" -> { 
+                        asunto = "Se ha cancelado el Pedido";
+                        List<Notificacion> notificaciones = listarPorPedido(idPedido);
+                        notificaciones.removeIf(noti -> noti.getPedido().equals(idPedido));
+                        notificacion.setPedido(idPedido);
+                    }
                     case "PEDIDOFinalizado" -> { 
                         asunto = "Se ha concluido el Pedido"; 
                         List<Notificacion> notificaciones = listarPorPedido(idPedido);
                         notificaciones.removeIf(noti -> noti.getPedido().equals(idPedido));
+                        pedidoServicio.cancelarPedido(idPedido);
                         notificacion.setPedido(idPedido);
                     }
                     case "PAGOPendiente"-> { 

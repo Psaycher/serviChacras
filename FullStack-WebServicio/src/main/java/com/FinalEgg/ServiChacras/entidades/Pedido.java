@@ -18,6 +18,7 @@ public class Pedido {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name ="uuid", strategy = "uuid2")
     private String id;
+    private String asunto;
 
     @ManyToOne
     @JoinColumn(name ="id_cliente")

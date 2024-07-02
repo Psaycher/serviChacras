@@ -25,5 +25,5 @@ public class Cliente {
     private List<Pedido> pedidos;
 
     @Column(name = "promedio_puntuacion")
-    private Integer promPuntuacion;
+    private Double promPuntuacion;
 }
