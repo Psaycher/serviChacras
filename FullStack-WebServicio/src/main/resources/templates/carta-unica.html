@@ -8,137 +8,136 @@
         <nav th:replace="~{/fragments/navbar :: nav}"></nav>
 
         <br>
-        <div>
-            <br>
-            <br>
-        </div>
-        <br>
-
+    
         <!-- Contenido Principal Cliente-->
-        <div id="fondo" class="container" style="width: 100%; background-color: #6e4e378b; color: beige">
+        <div id="fondo" class="container contUnicard" style="width: 100%; background-color: #6e4e378b; color: beige">
+            <div id="">
 
-                <div id="" th:if="${rolSession == 'CLIENTE'}">
-    
-                    <div class="card mb-3" style="max-width: 100%; background: #6e4e378b; border: 1px solid #adadad; color: whitesmoke;">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                               <img th:src="@{/usuario/imagen/__${proveedor.id}__}" style="width:100%; height: 100%;" class="img-fluid rounded-start" alt="...">
+                <div class="card mb-3" style="max-width: 100%; background: #6e4e378b; border: 1px solid #adadad; color: whitesmoke;">
+                    <div class="row g-0">
+                        <div class="col-md-4 imgUnicard" style="height: 80%;" th:if="${rolSession == 'CLIENTE'}">                           
+                           <div style="width:100%; height: 100%;" class="img-fluid rounded-start"  th:if="${proveedor.imagen != null}">
+                                <img class="card-img-top" th:src="@{/usuario/imagen/__${proveedor.id}__}">
                             </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h4 class="card-title" style="border-bottom: 1px beige solid; color: beige;">Nombre de la Empresa</h4>
-                                    <h5>Servicio que ofrece</h5>
-                                    <ul class="list-group">
-                                        <li class="list-group-item">Nombre del Proveedor</li>
-                                        <li class="list-group-item">Direccion del Proveedor</li>
-                                        <li class="list-group-item">Email del Proveedor</li>                        
-                                        <li class="list-group-item">Telefono del Proveedor</li>
-                                        <li class="list-group-item">Detalles del Proveedor: <p>(Aca puede ir el trabajo que hace)</p></li>
-                                        <li class="list-group-item">Precio de su trabajo: <p>(Debe ser por dia o por hora pero debe estar alclarado)</p></li>
-                                        <li class="list-group-item">Pedidos Realizados: <p style="margin: 0%;">0</p></li>
-                                        <li class="list-group-item">Calificacion Promedio: <p style="margin: 0%;">0</p></li>
-                                        <div class="card-body">
-                                          <button id="solicitar-servicio" type="button" class="btn btn-outline-success" onclick="openForm()">Solicitar Servicio</button>
-                                          <button type="button" class="btn btn-outline-success">Trabajo completo</button>
-                                          <button type="button" class="btn btn-outline-warning" onclick="showModal()">Pagar</button>
-                                          <button type="button" class="btn btn-outline-success calificarBtn" onclick="calificar()">Calificar</button>
-                                          <button type="button" class="btn btn-outline-danger" onclick="reportar()">Reportar</button>
-                                        </div>
-                                    </ul>
-                                </div>
+                            <div style="width:100%; height: 100%;" class="img-fluid rounded-start"  th:if="${proveedor.imagen == null}">
+                                <img class="card-img-top" src="/img/usuario-sin-foto.jpeg">
+                            </div>     
+                        </div>
+                        <div class="col-md-4" th:if="${rolSession == 'PROVEEDOR'}">                                                   
+                             <div style="width:100%; height: 100%;" class="img-fluid rounded-start">
+                                 <img class="card-img-top" src="/img/usuario-sin-foto.jpeg">
+                             </div>     
+                         </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title" style="border-bottom: 1px beige solid; color: beige;">Tus Datos</h5>
+                                <ul class="list-group">
+                                    <li class="list-group-item" th:text="${usuario.nombre} + ' ' + ${usuario.apellido}">Nombre y apellido</li>
+                                    <li class="list-group-item" th:text="${usuario.direccion}  + ', ' + ${usuario.barrio}">Direccion y barrio</li>
+                                    <li class="list-group-item" th:text="${usuario.email}">Email</li>                        
+                                    <li class="list-group-item" th:text="${usuario.telefono}">Telefono</li>
+                                    <li class="list-group-item" th:if="${rolSession == 'USUARIO'}">
+                                        <p>Rol: <span th:text="${usuario.rol}"></span></p>
+                                    </li>
+                                    <li class="list-group-item" th:if="${rolSession == 'CLIENTE'}">
+                                        <h5 th:text="${proveedor.servicio.nombre} + ': '"></h5>
+                                        <p th:text="${proveedor.descripcion}"></p>
+                                    </li>
+                                    <li class="list-group-item">Pedidos: <p style="margin: 0%;" th:text="${cantidadPedidos}"></p></li>
+                                    <li class="list-group-item" th:if="${rolSession == 'CLIENTE'}">
+                                        <h6>Calificacion Promedio del proveedor:</h6>
+                                        <p style="margin: 0%;" th:text="' ' + ${proveedor.promPuntuacion}"></p>
+                                    </li>
+                                    <li class="list-group-item" th:if="${rolSession == 'PROVEEDOR'}">
+                                        <h6>Calificacion Promedio del cliente:</h6>
+                                        <p style="margin: 0%;" th:text="' ' + ${cliente.promPuntuacion}"></p>
+                                    </li>
+                                    <div class="card-body" th:if="${rolSession == 'USUARIO'}">
+                                      <a href="#" class="card-link"><button type="button" id="cambiar-datos-usuario" class="btn btn-outline-primary">Cambiar Datos</button></a>
+                                    </div>
+                                    <div th:if="${rolSession == 'PROVEEDOR'}">
+                                        <a href="#" class="card-link" th:href="@{/pedido/notificarPedido/__${cliente.usuario.id}__}">
+                                            <button id="solicitar-servicio" type="button" class="btn btn-outline-success">Aceptar Pedido</button>
+                                        </a>
+                                        <div th:if="${hayPedido == 'HAY'}">
+                                            <button id="notificar-trabajo-completo" type="button" class="btn btn-outline-success">Notificar trabajo completo</button>
+                                            <button id="pedir-pago" type="button" class="btn btn-outline-warning">Pedir pago</button>
+                                            <button id="pago-recibido" type="button" class="btn btn-outline-success">Pago recibido</button>
+                                            <button type="button" class="btn btn-outline-success calificarBtn" onclick="calificar()">Calificar</button>
+                                            <button type="button" class="btn btn-outline-danger" onclick="reportar()">Reportar</button>
+                                        </div>                                                                       
+                                    </div>
+                                    <div th:if="${rolSession == 'CLIENTE'}">
+                                        <a href="#" class="card-link" th:href="@{/usuario/solicitarPedido/__${proveedor.usuario.id}__}">
+                                            <button id="solicitar-servicio" type="button" class="btn btn-outline-success">Solicitar Servicio</button>
+                                        </a>
+                                        <div th:if="${hayPedido == 'HAY'}">                                            
+                                            <button type="button" class="btn btn-outline-success">Trabajo completo</button>
+                                            <button type="button" class="btn btn-outline-warning" onclick="showModal()">Pagar</button>
+                                            <button type="button" class="btn btn-outline-success calificarBtn" onclick="calificar()">Calificar</button>
+                                            <button type="button" class="btn btn-outline-danger" onclick="reportar()">Reportar</button>
+                                        </div>                                                                           
+                                    </div>
+                                </ul>
                             </div>
                         </div>
                     </div>
-    
                 </div>
-    
-                <div id="" th:if="${rolSession == 'PROVEEDOR'}">
-    
-                    <div class="card mb-3" style="max-width: 100%; background: #6e4e378b; border: 1px solid #adadad; color: whitesmoke;">
-                        <div class="row g-0">
-                            <div class="col-md-4">
-                               <img src="/img/icono-usuario.jpg" style="width:100%; height: 100%;" class="img-fluid rounded-start" alt="...">
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body">
-                                    <h5 class="card-title" style="border-bottom: 1px beige solid; color: beige;">Nombre del cliente</h5>
-                                    <ul class="list-group">
-                                        <li class="list-group-item">Direccion y barrio</li>
-                                        <li class="list-group-item">Email</li>                        
-                                        <li class="list-group-item">Telefono</li>
-                                        <li class="list-group-item">Detalles del pedido: <p>(Aca puede ir su problema)</p></li>
-                                        <li class="list-group-item">Disponible: <p>(Los dias que esta disponible y en que horarios)</p></li>
-                                        <li class="list-group-item">Pedidos: <p style="margin: 0%;">0</p></li>
-                                        <li class="list-group-item">Calificacion Promedio: <p style="margin: 0%;">0</p></li>
-                                        <div class="card-body">
-                                          <button type="button" class="btn btn-outline-success">Aceptar Pedido</button>
-                                          <button id="notificar-trabajo-completo" type="button" class="btn btn-outline-success">Notificar trabajo completo</button>
-                                          <button id="pedir-pago" type="button" class="btn btn-outline-warning">Pedir pago</button>
-                                          <button id="pago-recibido" type="button" class="btn btn-outline-success">Pago recibido</button>
-                                          <button type="button" class="btn btn-outline-success calificarBtn" onclick="calificar()">Calificar</button>
-                                          <button type="button" class="btn btn-outline-danger" onclick="reportar()">Reportar</button>
-                                        </div>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-    
-                </div>
+
                 <!--Calificaciones-->
-                <div id="filtrar-calificaciones">
+                <div id="filtrar-calificaciones" th:if="${rolSession != 'USUARIO'}">
                     <div class="col-3" style="max-height: 450px;">
-                      <h3>Filtrar Calificaciones</h3>
+                        <h3>Filtrar Calificaciones</h3>
                         <form>
                             <div class="form-group">
                                 <label for="filterCalificacion">Por Calificación</label>
                                 <select class="form-control" id="filterCalificacion">
-                                  <option value="">Seleccionar...</option>
-                                  <option value="1">1</option>
-                                  <option value="2">2</option>
-                                  <option value="3">3</option>
-                                  <option value="4">4</option>
-                                  <option value="5">5</option>
-                                  <option value="6">6</option>
-                                  <option value="7">7</option>
-                                  <option value="8">8</option>
-                                  <option value="9">9</option>
-                                  <option value="10">10</option>
+                                    <option value="">Seleccionar...</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                    <option value="7">7</option>
+                                    <option value="8">8</option>
+                                    <option value="9">9</option>
+                                    <option value="10">10</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="filterFecha">Por Fecha</label>
                                 <select class="form-control" id="filterFecha">
-                                  <option value="">Seleccionar...</option>
-                                  <option value="antigua">Más antigua</option>
-                                  <option value="reciente">Más reciente</option>
+                                    <option value="">Seleccionar...</option>
+                                    <option value="antigua">Más antigua</option>
+                                    <option value="reciente">Más reciente</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="filterOrdenCalificacion">Por Orden de Calificación</label>
                                 <select class="form-control" id="filterOrdenCalificacion">
-                                  <option value="">Seleccionar...</option>
-                                  <option value="mayor">Desde mayor calificación</option>
-                                  <option value="menor">Desde menor calificación</option>
+                                    <option value="">Seleccionar...</option>
+                                    <option value="mayor">Desde mayor calificación</option>
+                                    <option value="menor">Desde menor calificación</option>
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-primary">Buscar</button>
                         </form>
                         <br>
                     </div>
-                    <div class="row" id="calificaciones-contenedor" style="margin-bottom:10px;">
-                        <div class="col-4">
-                            <div class="card mb-3" style="max-width: 540px;">
-                                <div class="row g-0">
-                                    <div class="col-md-4">
-                                      <img src="..." class="img-fluid rounded-start" alt="...">
-                                    </div>
-                                    <div class="col-md-8">
-                                        <div class="card-body">
-                                            <h5 class="card-title">Nombre proveedor</h5>
-                                            <p class="card-text">Descripcion</p>
-                                            <p class="card-text">Calificacion: <span>0</span></p>
-                                        </div>
+                </div>
+                <div class="row" id="calificaciones-contenedor" style="margin-bottom:10px;" th:if="${hayPedido == 'HAY'}">
+                    <div class="col-4">
+                        <div class="card mb-3" style="max-width: 540px;" th:each="pedido : ${pedidoss}">
+                            <div class="row g-0">                                
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                    <h5 th:text="${pedido.asunto}"></h5>
+                                    <p class="card-text">fecha: <span th:text="${pedido.fecha}"></span></p>
+                                    <p class="card-text">Estado: <span th:text="${pedido.estado}"></span></p>
+                                    <a th:href="@{/pedido/verPedido/__${pedido.id}__}">
+                                        <button type="button" class="btn btn-outline-info">Ir al detalle del Pedido</button>
+                                    </a>
                                     </div>
                                 </div>
                             </div>
@@ -146,125 +145,40 @@
                     </div>
                 </div>
 
-                         <!-- <div id="resultado-busqueda" >
-                             <h2>Resultados de la búsqueda</h2>
-                             <table class="table table-dark text-center">
-                                 <thead>
-                                     <tr>
-                                         <th scope="col">Foto de Perfil</th>
-                                         <th scope="col">Nombre y Apellido:</th>
-                                         <th scope="col">Servicio:</th>
-                                         <th scope="col">Puntuación promedio:</th>
-                                         <th scope="col">Barrio:</th>
-                                         <th scope="col">Teléfono:</th>
-                                         <th scope="col">Acciones:</th>
-                                     </tr>
-                                 </thead>
-                                 <tbody th:each="proveedor : ${proveedores}">
-                                     <tr>
-                                         <td ><img th:if="${proveedor.imagen != null}" class="logo" th:src="@{/imagen/perfil/__${proveedor.id}__}"></td>
-                                         <td th:text="${proveedor.usuario.nombre} + ' ' + ${proveedor.usuario.apellido}"></td>
-                                         <td th:text="${proveedor.servicio.nombre}"></td>
-                                         <td th:text="${proveedor.promPuntuacion}"></td>
-                                         <td th:text="${proveedor.usuario.barrio}"></td>
-                                         <td th:text="${proveedor.usuario.telefono}"></td>
-                 
-                                         <td>
-                                             <a th:href="@{/servicio/solicitar/__${proveedor.id}__}">
-                                                 <i class="fas fa-feather-alt"></i> Solicitar Servicio
-                                             </a>
-                                         </td>
-                                     </tr>    
-                                 </tbody>
-                             </table>
-                         </div>-->
-                     
-                     
-         
-                         <!-- <div id="resultado-busqueda" th:if="${vacio == false}">
-                             <h2>Resultados de la búsqueda</h2>
-                             <table class="table table-dark">
-                                 <thead>
-                                     <tr>
-                                         <th scope="col">Nombre</th>
-                                         <th scope="col">Servicio Solicitado</th>
-                                         <th scope="col">Puntuación</th>
-                                         <th scope="col">Barrio</th>
-                                         <th scope="col">Telefono</th>
-                                         <th scope="col" sec:authorize="hasRole('ADMIN')">Acciones</th>
-                                     </tr>
-                                 </thead>
-                                 <tbody th:each="cliente : ${clientes}">
-                                     <tr>
-                                         <td th:text="${cliente.usuario.nombre} + ' ' + ${cliente.usuario.apellido}"></td>
-                                         <td th:if="${pedidoHay == true}" th:text="${cliente.pedido.servicio.nombre}"></td>
-                                         <td th:text="${cliente.promPuntuacion}"></td>
-                                         <td th:text="${cliente.usuario.barrio}"></td>
-                                         <td th:text="${cliente.usuario.telefono}"></td>
-                 
-                                         <td>
-                                             <a th:href= "@{/usuario/solicitar_servicio/__${cliente.id}__}"><i class="fas fa-feather-alt">Ver notificación</i></a>
-                                         </td>
-                                     </tr>    
-                                 </tbody>
-                             </table>
-                         </div>
-             
-                         <div class="header row justify-content-center">
-                             <div class="col-md-6" id="contenedorError" th:if="${vacio == true}">
-                                 <section class="py-5 text-center container">
-                                     <div class="contenedortitulo">
-                                         <a class="navbar-brand">No hay coincidencias.</a>
-                                     </div>
-         
-                                     <div class="contenedorMsj">
-                                         <p>No se encontraron Clientes con pedidos Vigentes o relacionados con usted.</p>
-                                     </div>
-                 
-                                     <div class="row py-lg-5">
-                                         <div class="col-lg-6 col-md-8 mx-auto">
-                                             <a th:href="@{/inicio}" class="btn btn-primary my-2">Volver</a>
-                                         </div>
-                                     </div>    
-                                 </section>
-                             </div>
-                         </div>                
-                     </div>             -->
-
                 <!-- Este es el elemento de fondo transparente para cerrar el formulario -->
                 <div id="overlay" onclick="closeForm()"></div>
                 
                 <!-- Este es el formulario principal -->
-                <div id="serviceForm">
+                <div id="serviceForm" th:if="${rolSession != 'USUARIO'}">
                     <div class="form-header">
                         <div class="form-title">Da más detalles de tu pedido</div>
                         <span class="close-btn" onclick="closeForm()">&times;</span>
                     </div>
                     <form id="serviceFormInner">
-                      <div class="form-section">
-                          <div class="form-subtitle">¿Qué días deseas que trabaje?</div>
-                          <label><input type="checkbox" name="day[]" value="lunes"> Lunes</label><br>
-                          <label><input type="checkbox" name="day[]" value="martes"> Martes</label><br>
-                          <label><input type="checkbox" name="day[]" value="miércoles"> Miércoles</label><br>
-                          <label><input type="checkbox" name="day[]" value="jueves"> Jueves</label><br>
-                          <label><input type="checkbox" name="day[]" value="viernes"> Viernes</label><br>
-                          <div id="dayError" class="error-message"></div>
-                      </div>
-                      <div class="form-section">
-                          <div class="form-subtitle">¿En qué horarios del día?</div>
-                          <label>Hora de inicio: <input type="time" name="start_time" required></label><br>
-                          <label>Hora de fin: <input type="time" name="end_time" required></label><br>
-                      </div>
-                      <div class="form-section">
-                          <div class="form-subtitle">Más detalles:</div>
-                          <textarea name="details" rows="4" placeholder="Detalles adicionales..." required></textarea>
-                          <div id="detailsError" class="error-message"></div>
-                      </div>
-                      <button type="submit">Solicitar servicio</button>
+                    <div class="form-section">
+                        <div class="form-subtitle">¿Qué días deseas que trabaje?</div>
+                            <label><input type="checkbox" name="day[]" value="lunes"> Lunes</label><br>
+                            <label><input type="checkbox" name="day[]" value="martes"> Martes</label><br>
+                            <label><input type="checkbox" name="day[]" value="miércoles"> Miércoles</label><br>
+                            <label><input type="checkbox" name="day[]" value="jueves"> Jueves</label><br>
+                            <label><input type="checkbox" name="day[]" value="viernes"> Viernes</label><br>
+                        <div id="dayError" class="error-message"></div>
+                    </div>
+                    <div class="form-section">
+                        <div class="form-subtitle">¿En qué horarios del día?</div>
+                        <label>Hora de inicio: <input type="time" name="start_time" required></label><br>
+                        <label>Hora de fin: <input type="time" name="end_time" required></label><br>
+                    </div>
+                    <div class="form-section">
+                        <div class="form-subtitle">Más detalles:</div>
+                        <textarea name="details" rows="4" placeholder="Detalles adicionales..." required></textarea>
+                        <div id="detailsError" class="error-message"></div>
+                    </div>
+                    <button type="submit">Solicitar servicio</button>
                     </form>
                 </div>
 
-                <div class="mensaje-container">
+                <div class="mensaje-container" th:if="${rolSession != 'USUARIO'}">
                     <div class="mensaje-header">
                         <span></span>
                         <div class="controls">
@@ -308,14 +222,14 @@
                         <button class="send" onclick="enviarMensaje()">Enviar</button>
                     </div>
                 </div>
-  
-                <div id="image-viewer" class="image-viewer" style="display: none;" onclick="handleImageViewerClick(event)">
-                  <span class="close-viewer">&times;</span>
-                  <a id="download-link" class="download-link" download>Descargar</a>
-                  <img id="viewer-image" src="" alt="Imagen">
+    
+                <div id="image-viewer" class="image-viewer" style="display: none;" onclick="handleImageViewerClick(event)" th:if="${rolSession != 'USUARIO'}">
+                    <span class="close-viewer">&times;</span>
+                    <a id="download-link" class="download-link" download>Descargar</a>
+                    <img id="viewer-image" src="" alt="Imagen">
                 </div>
   
-                <div class="report-container">
+                <div class="report-container" th:if="${rolSession != 'USUARIO'}">
                     <div id="reportFormOverlay" class="overlay" style="display: none;" onclick="reportClose()"></div>
                     <div id="reportForm" class="report-form" style="display: none; z-index:1000;">
                         <div class="report-header">
@@ -340,7 +254,7 @@
                     </div>
                 </div>
   
-                <div class="rating-container">
+                <div class="rating-container" th:if="${rolSession != 'USUARIO'}">
                     <div id="overlayCalificacion" class="overlay" style="display: none;" onclick="cerrarFormularioCalificacion()"></div>
                     <div id="formularioCalificacion" class="rating-form" style="display: none;">
                         <div class="rating-header">
@@ -369,8 +283,8 @@
                     </div>
                 </div>
   
-                <div id="cerrarModal" class="cerrar-modal" style="display: none;" onclick="hideModal()"></div>
-                <div id="modal" class="modal" style="display: none;">
+                <div id="cerrarModal" class="cerrar-modal" style="display: none;" onclick="hideModal()" th:if="${rolSession != 'USUARIO'}"></div>
+                <div id="modal" class="modal" style="display: none;" th:if="${rolSession != 'USUARIO'}">
                     <button id="botonCerrarModal" class="close-btn-modal" onclick="hideModal()">&times;</button>
                     <h2>Detalles de la cuenta bancaria</h2>
                     <table>
@@ -400,12 +314,12 @@
                 </div>
             
                 <div class="row py-lg-5">
-                    <div class="col-lg-6 col-md-8 mx-auto">
+                    <div class="col-lg-6 col-md-8 mx-auto divBtn">
                         <a th:href="@{/inicio}" class="btn btn-primary my-2">Volver</a>
                     </div>
                 </div>
             </div>
-        </div>
+        </div>            
 
         <footer th:replace= "~{/fragments/footer :: footer}"></footer>
 

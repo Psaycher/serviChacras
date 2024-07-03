@@ -16,15 +16,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.FinalEgg.ServiChacras.entidades.Cliente;
-import com.FinalEgg.ServiChacras.entidades.Usuario;
-import com.FinalEgg.ServiChacras.entidades.Proveedor;
+import com.FinalEgg.ServiChacras.entidades.*;
+import com.FinalEgg.ServiChacras.repositorios.*;
 import com.FinalEgg.ServiChacras.servicios.ClienteServicio;
 import com.FinalEgg.ServiChacras.servicios.ProveedorServicio;
-import com.FinalEgg.ServiChacras.repositorios.PedidoRepositorio;
-import com.FinalEgg.ServiChacras.repositorios.ClienteRepositorio;
-import com.FinalEgg.ServiChacras.repositorios.UsuarioRepositorio;
-import com.FinalEgg.ServiChacras.repositorios.ProveedorRepositorio;
 
 @Controller
 @RequestMapping("/usuario")
@@ -36,11 +31,15 @@ public class UsuarioControlador {
     @Autowired
     private PedidoRepositorio pedidoRepositorio;
     @Autowired
+    private MensajeRepositorio mensajeRepositorio;
+    @Autowired
     private ClienteRepositorio clienteRepositorio;
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
     @Autowired
     private ProveedorRepositorio proveedorRepositorio;
+    @Autowired
+    private NotificacionRepositorio notificacionRepositorio;
 
     //MÉTODO QUE LISTA PROVEEDORES O CLIENTES SEGÚN USUARIO Y DERIVA A expositor.html
     @GetMapping("/expositor")
@@ -48,6 +47,30 @@ public class UsuarioControlador {
                             @RequestParam(required = false) String idServicio, @RequestParam(required = false) String idPedido, @RequestParam(required = false) String nombreUsuario) {
 
         Usuario logueado = (Usuario) session.getAttribute("usuariosession");
+
+        //Conteo e indicaciones de Notificaciones en Navegador----------------------->
+        Integer mensajeNoVisto = mensajeRepositorio.contarPorUsuarioNoVisto(logueado.getId());
+        List<Mensaje> mensajes = mensajeRepositorio.getPorUsuarioNoVisto(logueado.getId());
+
+        //Conteo e indicaciones de Notificaciones en Navegador----------------------->
+        Integer notificacionNoVisto = notificacionRepositorio.contarPorUsuarioNoVisto(logueado.getId());
+        List<Notificacion> notificaciones = notificacionRepositorio.getPorUsuarioNoVisto(logueado.getId());
+        List<String> notas = new ArrayList<>();
+        String nota = "";
+
+        for (Notificacion notificacion : notificaciones) {
+            nota = notificacion.getRemitente() + " - " + notificacion.getAsunto();
+            notas.add(nota);
+        }
+
+        //Modelos para Notificaciones y Mensajes en Navegador----------------------->
+        modelo.put("notificacionNoVisto", notificacionNoVisto);
+        modelo.put("notificaciones", notificaciones);
+
+        modelo.put("notas", notas);
+        modelo.put("mensajeNoVisto", mensajeNoVisto);
+        modelo.put("mensajes", mensajes);
+        //--------------------------------------------------------------------------//
 
         if (rolSession != null && rolSession.equals("CLIENTE")) {
             List<Proveedor> proveedores = new ArrayList<>();
@@ -72,9 +95,7 @@ public class UsuarioControlador {
                     else if (nombreUsuario == null || nombreUsuario.isEmpty()) { proveedores = proveedorServicio.getPorServicioYBarrio(idServicio, barrio); }
                 }
             }
-
             proveedores = proveedores.stream().filter(Objects::nonNull).collect(Collectors.toList());
-
             modelo.addAttribute("proveedores", proveedores);
         }
 
@@ -120,10 +141,9 @@ public class UsuarioControlador {
             System.out.println("clientes está vacio: "+ vacio);
             modelo.addAttribute("pedidoHay", pedidoHay);            
             modelo.addAttribute("vacio", vacio);
-        }
+        }       
         modelo.addAttribute("rolSession", rolSession);
         modelo.addAttribute("logueado", logueado);
-
         return "expositor.html";
     }
 
@@ -141,18 +161,56 @@ public class UsuarioControlador {
 
     //MÉTODO PARA VISUALIZAR LA INFO DE UN USUARIO
     @GetMapping("/unicard/{id}")
-    public String unicard(@PathVariable String id, @RequestParam String rolSession, ModelMap modelo) {
+    public String unicard(@PathVariable String id, @RequestParam String rolSession, ModelMap modelo, HttpSession session) {
+        Usuario logueado = (Usuario) session.getAttribute("usuariosession");
         Optional<Usuario> optionalUsuario = usuarioRepositorio.findById(id);
+        
+        //Conteo e indicaciones de Notificaciones en Navegador----------------------->
+        Integer mensajeNoVisto = mensajeRepositorio.contarPorUsuarioNoVisto(logueado.getId());
+        List<Mensaje> mensajes = mensajeRepositorio.getPorUsuarioNoVisto(logueado.getId());
+
+        //Conteo e indicaciones de Notificaciones en Navegador----------------------->
+        Integer notificacionNoVisto = notificacionRepositorio.contarPorUsuarioNoVisto(logueado.getId());
+        List<Notificacion> notificaciones = notificacionRepositorio.getPorUsuarioNoVisto(logueado.getId());
+        List<String> notas = new ArrayList<>();
+        String hayPedido = "";        
+        String nota = "";
+
+        for (Notificacion notificacion : notificaciones) {
+            nota = notificacion.getRemitente() + " - " + notificacion.getAsunto();
+            notas.add(nota);
+        }
+
+        //Modelos para Notificaciones y Mensajes en Navegador----------------------->
+        modelo.put("notificacionNoVisto", notificacionNoVisto);
+        modelo.put("notificaciones", notificaciones);
+
+        modelo.put("notas", notas);
+        modelo.put("mensajeNoVisto", mensajeNoVisto);
+        modelo.put("mensajes", mensajes);
+        //--------------------------------------------------------------------------//
 
         if (optionalUsuario.isPresent()) {
-            Usuario usuario = optionalUsuario.get();
+            Usuario usuario = optionalUsuario.get();             
 
             if (rolSession.equals("CLIENTE")) {
                 Optional<Proveedor> opcionalProveedor = proveedorRepositorio.findById(proveedorRepositorio.idUsuario(id));
 
                 if (opcionalProveedor.isPresent()) {
-                    Proveedor proveedor = opcionalProveedor.get();                
+                    Proveedor proveedor = opcionalProveedor.get();
                     Integer cantidadPedidos = pedidoRepositorio.contarPedidosPorProveedor(proveedor.getId());
+                    
+                    String idProveedor = proveedor.getId();
+                    String idCliente = clienteServicio.idUsuario(logueado.getId());
+
+                    Optional<List<Pedido>> opcionalListPedido = Optional.ofNullable(pedidoRepositorio.getPedidosCompartidos(idCliente, idProveedor));
+                    if(opcionalListPedido.isPresent()) {
+                        List<Pedido> pedidos = opcionalListPedido.get();
+        
+                        hayPedido = "HAY";
+                        modelo.addAttribute("hayPedido", hayPedido);
+                        modelo.addAttribute("pedidos", pedidos);
+                    }
 
                     modelo.addAttribute("cantidadPedidos", cantidadPedidos);
                     modelo.addAttribute("proveedor", proveedor);                   
@@ -171,6 +229,18 @@ public class UsuarioControlador {
                     Cliente cliente = opcionalCliente.get();
                     Integer cantidadPedidos = pedidoRepositorio.contarPedidosPorCliente(cliente.getId());
                     
+                    String idCliente = cliente.getId();
+                    String idProveedor = proveedorServicio.idUsuario(logueado.getId());
+
+                    Optional<List<Pedido>> opcionalListPedido = Optional.ofNullable(pedidoRepositorio.getPedidosCompartidos(idCliente, idProveedor));
+                    if(opcionalListPedido.isPresent()) {
+                        List<Pedido> pedidos = opcionalListPedido.get();                      
+                                       
+                        hayPedido = "HAY";
+                        modelo.addAttribute("hayPedido", hayPedido);
+                        modelo.addAttribute("pedidos", pedidos);
+                    }
+                
                     modelo.addAttribute("cantidadPedidos", cantidadPedidos); 
                     modelo.addAttribute("cliente", cliente); 
 
@@ -180,10 +250,9 @@ public class UsuarioControlador {
                     return "error.html";
                 }
             }
-
             modelo.addAttribute("usuario", usuario);
             modelo.addAttribute("rolSession", rolSession);
-            return "carta-usuario.html";
+            return "carta-unica.html";
 
         } else { 
             modelo.addAttribute("codigo", 404);
@@ -197,6 +266,30 @@ public class UsuarioControlador {
     public String solicitarPedido(@PathVariable String id, HttpSession session, ModelMap modelo) {
         Usuario logueado = (Usuario) session.getAttribute("usuariosession");
         Optional<Usuario> optionalUsuario = usuarioRepositorio.findById(id);
+        
+        //Conteo e indicaciones de Notificaciones en Navegador----------------------->
+        Integer mensajeNoVisto = mensajeRepositorio.contarPorUsuarioNoVisto(logueado.getId());
+        List<Mensaje> mensajes = mensajeRepositorio.getPorUsuarioNoVisto(logueado.getId());
+
+        //Conteo e indicaciones de Notificaciones en Navegador----------------------->
+        Integer notificacionNoVisto = notificacionRepositorio.contarPorUsuarioNoVisto(logueado.getId());
+        List<Notificacion> notificaciones = notificacionRepositorio.getPorUsuarioNoVisto(logueado.getId());
+        List<String> notas = new ArrayList<>();
+        String nota = "";
+
+        for (Notificacion notificacion : notificaciones) {
+            nota = notificacion.getRemitente() + " - " + notificacion.getAsunto();
+            notas.add(nota);
+        }
+
+        //Modelos para Notificaciones y Mensajes en Navegador----------------------->
+        modelo.put("notificacionNoVisto", notificacionNoVisto);
+        modelo.put("notificaciones", notificaciones);
+
+        modelo.put("notas", notas);
+        modelo.put("mensajeNoVisto", mensajeNoVisto);
+        modelo.put("mensajes", mensajes);
+        //--------------------------------------------------------------------------//
 
         if (optionalUsuario.isPresent()) {
             Usuario usuario = optionalUsuario.get();

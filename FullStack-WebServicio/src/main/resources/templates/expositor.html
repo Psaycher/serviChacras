@@ -15,10 +15,10 @@
 
             <div th:replace="~{/fragments/divError :: div}"></div>
             
-            <div id="contenedor_de_tarjetas" th:if="${rolSession == 'CLIENTE'}">
+            <div id="contenedor_de_tarjetas" style="width:100%;" th:if="${rolSession == 'CLIENTE'}">
 
                 <div id="contenedor-tarjetas" style="width:100%; margin-top:25px; margin-bottom:10px;" class="row">
-                    <div class="card cardExpositor mx-3 my-3 text-bg-dark col-md-5" th:each="proveedor : ${proveedores}">
+                    <div class="card mx-3 my-3 text-bg-dark col-md-5" style="width:250PX; height: 350px;" th:each="proveedor : ${proveedores}">
                         <div id="foto-card">
                             <div id="img-card" th:if="${proveedor.imagen != null}">
                                 <img th:src="@{/usuario/imagen/__${proveedor.id}__}">
@@ -36,14 +36,9 @@
                             <!-- <li class="list-group-item" th:if="${encargo == "ENCARGO"}" th:text="${pedido.asunto}"></li> -->
                         </ul>
                         <div class="card-body">
-                            <a href="#" class="card-link" th:href="@{/usuario/unicard/__${proveedor.usuario.id}__(rolSession=CLIENTE)}"><button type="button" class="btn btn-outline-info">Más Info</button></a>
-                            <a href="#" class="card-link" th:href="@{/usuario/solicitarPedido/__${proveedor.usuario.id}__}">
-                                <button id="solicitar-servicio" type="button" class="btn btn-outline-success">Solicitar Servicio</button>
-                            </a> 
-                            <button type="button" class="btn btn-outline-success">Trabajo completo</button>
-                            <button type="button" class="btn btn-outline-warning" onclick="showModal()">Pagar</button>
-                            <button type="button" class="btn btn-outline-success calificarBtn" onclick="calificar()">Calificar</button>
-                            <button type="button" class="btn btn-outline-danger" onclick="reportar()">Reportar</button>
+                            <a href="#" class="card-link" th:href="@{/usuario/unicard/__${proveedor.usuario.id}__(rolSession=CLIENTE)}">
+                                <button type="button" class="btn btn-outline-info">Más Info</button>
+                            </a>                                
                         </div>
                     </div>
                 </div>
@@ -62,13 +57,9 @@
                             <li class="list-group-item" th:text="${pedido.asunto}"></li>
                         </ul> -->
                         <div class="card-body">
-                            <a href="#" class="card-link" th:href="@{/usuario/unicard/__${cliente.usuario.id}__(rolSession=PROVEEDOR)}"><button type="button" class="btn btn-outline-info">Más Info</button></a>
-                            <button type="button" class="btn btn-outline-success">Aceptar Pedido</button>
-                            <button id="notificar-trabajo-completo" type="button" class="btn btn-outline-success">Notificar trabajo completo</button>
-                            <button id="pedir-pago" type="button" class="btn btn-outline-warning">Pedir pago</button>
-                            <button id="pago-recibido" type="button" class="btn btn-outline-success">Pago recibido</button>
-                            <button type="button" class="btn btn-outline-success calificarBtn" onclick="calificar()">Calificar</button>
-                            <button type="button" class="btn btn-outline-danger" onclick="reportar()">Reportar</button>
+                            <a href="#" class="card-link" th:href="@{/usuario/unicard/__${cliente.usuario.id}__(rolSession=PROVEEDOR)}">
+                                <button type="button" class="btn btn-outline-info">Más Info</button>
+                            </a>                            
                         </div>
                     </div>
                 </div>

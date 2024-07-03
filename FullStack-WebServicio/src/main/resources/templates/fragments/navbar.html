@@ -124,8 +124,12 @@
                     </a>
                     <div id="noti-mensajes">
                         <ul class="list-group"th:each="mensaje : ${mensajes}">
-                            <li class="list-group-item"><button class="btn btn-outline-light" type="button" id="botonAbrirMensaje" onclick="abrir_mensajes()" th:text="${mensaje.remitente}"></button></li>
-                            <a class="nav-link navbarDropdown" th:href="@{/mensajeria/bandejaMensajes/__${mensaje.id}__}">Ver mensaje</a>
+                            <li class="list-group-item" style="border: 1px solid whitesmoke;" th:each="mj : ${mjs}">
+                                <p style="font-size: 14px;" th:text="${mj}"></p>
+                                <a class="nav-link navbarDropdown" th:href="@{/usuario/verMensaje/__${mensaje.id}__}">Ver detalle</a>
+                            </li>
+                            <br>                            
+                            <a class="nav-link navbarDropdown" th:href="@{/mensajeria/bandejaMensajes}">Ver todos</a>
                         </ul>
                     </div>
                 </li>
@@ -139,11 +143,13 @@
                     </a>
 
                     <div id="notification">
-                        <ul class="list-group" th:each="notificacion : ${notificaciones}">
-                            <span th:each="nota : ${notas}">
-                            <li class="list-group-item" style="border: 1px solid whitesmoke;" th:text="${nota}"></li>
-                            <a class="nav-link navbarDropdown" th:href="@{/mensajeria/bandejaNotificaciones/__${notificacion.id}__}">Ver detalle</a>
-                            </span> 
+                        <ul class="list-group" th:each="notificacion : ${notificaciones}">                           
+                            <li class="list-group-item" style="border: 1px solid whitesmoke;" th:each="nota : ${notas}">
+                                <p style="font-size: 14px;" th:text="${nota}"></p>
+                                <a class="nav-link navbarDropdown" th:href="@{/usuario/verNotificacion/__${notificacion.id}__}">Ver detalle</a>
+                            </li>
+                            <br>
+                            <a class="nav-link navbarDropdown" th:href="@{/usuario/bandejaNotificaciones}">Ver todas</a>                            
                         </ul>
                     </div>
                 </li>

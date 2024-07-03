@@ -22,6 +22,8 @@ import com.FinalEgg.ServiChacras.repositorios.ProveedorRepositorio;
 @Service
 public class PedidoServicio {
     @Autowired
+    private PagoServicio pagoServicio;
+    @Autowired
     private MensajeServicio mensajeServicio;
     @Autowired
     private PedidoRepositorio pedidoRepositorio;
@@ -59,6 +61,7 @@ public class PedidoServicio {
         pedido.setEstado(Estado.PENDIENTE);
         pedido.setAlta(true);
 
+        pagoServicio.crearPago(idCliente, idProveedor);
         pedidoRepositorio.save(pedido);
         return pedido;
     }
@@ -74,6 +77,8 @@ public class PedidoServicio {
             Estado estado = Estado.valueOf(estadoString.toUpperCase());
             pedido.setEstado(estado);
             pedido.setComentario(comentario);
+
+            
             pedidoRepositorio.save(pedido);
         });
     }
@@ -139,17 +144,20 @@ public class PedidoServicio {
     public Pedido getOne(String id) { return pedidoRepositorio.getOne(id); }
 
     @Transactional(readOnly = true)
-    public String getIdPedidoPorClientes(String id) { return pedidoRepositorio.getIdPedidoPorCliente(id); }
+    public String getIdPedidoPorClientes(String idCliente) { return pedidoRepositorio.getIdPedidoPorCliente(idCliente); }
 
     @Transactional(readOnly = true)
-    public List<Pedido> getPedidoPorClientes(String id) { return pedidoRepositorio.getPedidosPorClientes(id); }
+    public List<Pedido> getPedidosPorClientes(String idCliente) { return pedidoRepositorio.getPedidosPorClientes(idCliente); }
 
     @Transactional(readOnly = true)
-    public String getIdPedidoPorProveedores(String id) { return pedidoRepositorio.getIdPedidoPorProveedor(id); }
+    public String getIdPedidoPorProveedores(String idProveedor) { return pedidoRepositorio.getIdPedidoPorProveedor(idProveedor); }
 
     @Transactional(readOnly = true)
     public List<Pedido> getPedidoPorProveedores(String id) { return pedidoRepositorio.getPedidosPorProveedores(id); }
 
     @Transactional(readOnly = true)
     public List<Pedido> getPedidosPendiente() { return pedidoRepositorio.getPedidosPendiente(); }
+
+    @Transactional(readOnly = true)
+    public List<Pedido> getPedidosCompartidos(String idCliente, String idProveedor) { return pedidoRepositorio.getPedidosCompartidos(idCliente, idProveedor); }
 }

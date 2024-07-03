@@ -16,7 +16,7 @@ public interface PedidoRepositorio extends JpaRepository<Pedido, String> {
        public String getIdPedidoPorCliente(@Param("idCliente") String idCliente);
 
        @Query("SELECT p FROM Pedido p WHERE p.cliente.id = :idCliente")
-       public List<Pedido> getPedidosPorClientes(@Param("idCliente") String idCliente);
+       public List<Pedido> getPedidosPorClientes(@Param("idCliente") String idCliente);       
 
        @Query("SELECT COUNT(p) FROM Pedido p WHERE p.cliente.id = :idCliente")
        public Integer contarPedidosPorCliente(@Param("idCliente") String idCliente);
@@ -38,4 +38,7 @@ public interface PedidoRepositorio extends JpaRepository<Pedido, String> {
 
        @Query("SELECT p FROM Pedido p WHERE p.fechaPedido BETWEEN :inicio AND :fin")
        public List<Pedido> getPedidosEntreFechas(@Param("inicio") Date fechaInicio, @Param("fin") Date fechaFin);
+
+       @Query("SELECT p FROM Pedido p WHERE p.cliente.id = :idCliente AND p.proveedor.id = :idProveedor")
+       public List<Pedido> getPedidosCompartidos(@Param("idCliente") String idCliente, @Param("idProveedor") String idProveedor);
 }

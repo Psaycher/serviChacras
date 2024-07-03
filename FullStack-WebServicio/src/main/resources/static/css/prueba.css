@@ -901,14 +901,13 @@ footer div span {
     box-shadow: 0 0 15px #0ff135;
     text-shadow: 0 0 15px #0ff135;
 }
+
 /* cartas de expositor */
 #contenedor-tarjetas { 
     display: flex;
-    justify-content: space-around;
+    justify-content:center;
     align-content: space-around;
 }
-
-card.carExpositor { width: 300px;}
 
 /* Divs de mensajes */
 .div__error {
@@ -1015,7 +1014,7 @@ card.carExpositor { width: 300px;}
 
 #foto-card {
     width: 100%;
-    height: 300px;
+    height: 150px;
     border-radius: 15px;
     margin-top: 12px;
     position: relative;
@@ -1031,7 +1030,7 @@ card.carExpositor { width: 300px;}
 
 #foto-card #img-card img {
     width: auto;
-    height: 300px !important;
+    height: 150px !important;
 }
 
 #foto-card::before {
@@ -1054,6 +1053,26 @@ card.carExpositor { width: 300px;}
     animation: rotating 4s linear infinite;
     filter: blur(5px);
     opacity: 0.75;
+}
+
+.imgUnicard {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    position: relative;
+    left: 1%;
+    top: 2%;
+    overflow: hidden;
+}
+
+.imgUnicard img {
+    width: auto;
+    height: 100%;
+}
+
+.divBtn {
+    display: flex;
+    justify-content: center;
 }
 
 @property --a {

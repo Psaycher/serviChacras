@@ -80,7 +80,7 @@ public class NotificacionServicio {
                     }
                     case "PAGOPendiente"-> { 
                         asunto = "Pago Pendiente"; 
-                        Pago pago = pagoServicio.crearPago(idCliente, idProveedor, valor);
+                        Pago pago = pagoServicio.crearPago(idCliente, idProveedor);
                         notificacion.setPago(pago.getId());  
                     }
                     case "PAGODemandado" -> { asunto = "Pago Exigido"; }

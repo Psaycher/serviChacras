@@ -90,17 +90,18 @@ public class PortalControlador {
 
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER', 'ROLE_CLIENTE', 'ROLE_PROVEEDOR', 'ROLE_MIXTO')")
    @GetMapping("/inicio")
-   public String inicio( ModelMap modelo, HttpSession session, @RequestParam(required = false) String idUsuario ) {
+   public String inicio( ModelMap modelo, HttpSession session) {
       Usuario logueado = (Usuario) session.getAttribute("usuariosession");
 
       //Conteo e indicaciones de Notificaciones en Navegador----------------------->
-      Integer mensajeNoVisto = mensajeRepositorio.contarPorUsuarioNoVisto(idUsuario);
-      List<Mensaje> mensajes = mensajeRepositorio.getPorUsuarioNoVisto(idUsuario);
+      Integer mensajeNoVisto = mensajeRepositorio.contarPorUsuarioNoVisto(logueado.getId());
+      List<Mensaje> mensajes = mensajeRepositorio.getPorUsuarioNoVisto(logueado.getId());
 
       //Conteo e indicaciones de Notificaciones en Navegador----------------------->
-      Integer notificacionNoVisto = notificacionRepositorio.contarPorUsuarioNoVisto(idUsuario);
-      List<Notificacion> notificaciones = notificacionRepositorio.getPorUsuarioNoVisto(idUsuario);
+      Integer notificacionNoVisto = notificacionRepositorio.contarPorUsuarioNoVisto(logueado.getId());
+      List<Notificacion> notificaciones = notificacionRepositorio.getPorUsuarioNoVisto(logueado.getId());
       List<String> notas = new ArrayList<>();
+      String navBlock = "buscadores";
       String nota = "";
 
       for (Notificacion notificacion : notificaciones) {
@@ -108,13 +109,20 @@ public class PortalControlador {
          notas.add(nota);
       }
 
+      //Modelos para Notificaciones y Mensajes en Navegador----------------------->
+      modelo.put("notificacionNoVisto", notificacionNoVisto);
+      modelo.put("notificaciones", notificaciones);
+
+      modelo.put("notas", notas);
+      modelo.put("mensajeNoVisto", mensajeNoVisto);
+      modelo.put("mensajes", mensajes);
+      //--------------------------------------------------------------------------//
+
       if ( logueado.getRol().toString().equalsIgnoreCase("ADMIN") ) { return "redirect:/admin/dashboard"; }
 
       if ( logueado.getRol().toString().equalsIgnoreCase("CLIENTE") ) {
-
-         //Opciones del Filtro avanzado en Navegador---------------------------------->
+         //Opciones del Filtro avanzado en Navegador para Clientes-------------------->
          String rolSession = "CLIENTE";
-         String navBlock = "buscadores";
 
          List<Servicio> limpieza = servicioServicio.listarPorCategoria("Servicios de limpieza");
          List<Servicio> mantenimiento = servicioServicio.listarPorCategoria("Servicios de mantenimiento y reparaciones");
@@ -122,9 +130,8 @@ public class PortalControlador {
          List<Servicio> tecnologia = servicioServicio.listarPorCategoria("Servicios de tecnologia y conectividad");
          List<Servicio> cuidado = servicioServicio.listarPorCategoria("Servicios de cuidado personal y bienestar");
          List<Servicio> logistica = servicioServicio.listarPorCategoria("Servicios de entrega y logistica");
-
-         modelo.addAttribute("barrios", usuarioServicio.obtenerListaDeBarrios());
    
+         modelo.addAttribute("barrios", usuarioServicio.obtenerListaDeBarrios());
          modelo.addAttribute("rolSession", rolSession);
          modelo.addAttribute("navBlock", navBlock);
 
@@ -136,22 +143,12 @@ public class PortalControlador {
          modelo.addAttribute("logistica", logistica);
          //--------------------------------------------------------------------------//
                   
-         //Modelos para Notificaciones y Mensajes en Navegador----------------------->
-         modelo.put("notificacionNoVisto", notificacionNoVisto);
-         modelo.put("notificaciones", notificaciones);
-
-         modelo.put("notas", notas);
-         modelo.put("mensajeNoVisto", mensajeNoVisto);
-         modelo.put("mensajes", mensajes);
-         //--------------------------------------------------------------------------//
-
          return "inicio-cliente.html";
       }
 
       if ( logueado.getRol().toString().equalsIgnoreCase("PROVEEDOR") ) { 
-         //Opciones del Filtro avanzado en Navegador---------------------------------->
-         String rolSession = "PROVEEDOR";
-         String navBlock = "buscadores";
+         //Opciones del Filtro avanzado en Navegador para proveedores----------------->
+         String rolSession = "PROVEEDOR";       
 
          String idProveedor = proveedorServicio.idUsuario(logueado.getId());
          List<Pedido> pedidos = pedidoServicio.getPedidoPorProveedores(idProveedor);
@@ -160,16 +157,6 @@ public class PortalControlador {
          modelo.addAttribute("rolSession", rolSession);
          modelo.addAttribute("navBlock", navBlock);
          modelo.addAttribute("pedidos", pedidos);
-         //--------------------------------------------------------------------------//
-                  
-         //Modelos para Notificaciones y Mensajes en Navegador----------------------->
-         modelo.put("notificacionNoVisto", notificacionNoVisto);
-         modelo.put("notificaciones", notificaciones);
-         
-         modelo.put("notas", notas);
-         modelo.put("mensajeNoVisto", mensajeNoVisto);
-         modelo.put("mensajes", mensajes);
-         //--------------------------------------------------------------------------//
          //--------------------------------------------------------------------------//
 
          return "inicio-proveedor.html"; 
@@ -342,8 +329,9 @@ public class PortalControlador {
                             @RequestParam(required = false) String barrioChacras, @RequestParam(required = false) String rol, 
                             @RequestParam(required = false) String direccion, @RequestParam(required = false) String telefono, 
                             @RequestParam(required = false) MultipartFile archivo, @RequestParam(required = false) String descripcion, 
-                            @RequestParam(required = false) String idServicio, @RequestParam(required = false) String idAdmin, ModelMap modelo ) {
+                            @RequestParam(required = false) String idServicio, HttpSession session, ModelMap modelo ) {
 
+      Usuario logueado = (Usuario) session.getAttribute("usuariosession");
       String detalle = "";
 
       try {
@@ -403,8 +391,7 @@ public class PortalControlador {
          return "actualizar-usuario.html";
       }
 
-      if (!idAdmin.isEmpty() || idAdmin != null) {
-         if (!idAdmin.equals(id)) {
+      if (logueado.getId().equals(id)) {
             List<Usuario> usuarios = usuarioServicio.listarUsuarios();
             String listado = "USUARIO";
 
@@ -414,7 +401,6 @@ public class PortalControlador {
 
             return "usuario-gestor.html";
          }
-      }
       return "redirect:/inicio";
    }   
 }
