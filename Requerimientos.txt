@@ -1,0 +1,25 @@
+*Requerimientos:
+
+-Obligatorios: 
+Registro y Login con Spring Security
+Crear al menos DOS roles distintos para los usuarios.
+Incluir tabla html en alguna vista
+Carga y actualización de imagen
+Crear una Query de búsqueda personalizada
+Crear un CRUD
+Que haya al menos un formulario.
+Crear al menos 3 vistas distintas.
+Diagrama UML de entidades
+
+*Optativos:
+ Motor de búsqueda
+ Tabla con opciones de agregar / modificar y eliminar registros
+ Utilizar atributos booleanos de alta y baja de usuarios (y poder
+ modificarlos).
+ Listado en tabla por filtro (por nombre, fechas, altas o bajas, etc)
+ Generar por lo menos 5 vistas distintas que implementen th:fragments.
+ Generar un dashboard de administración de la app (el rol
+ Administrador tendrá acceso a información que un rol User o Guest no
+ tendría)
+ Aplicar principios de código limpio y buenas prácticas.
+ Añadir diagrama de casos de uso en UML
