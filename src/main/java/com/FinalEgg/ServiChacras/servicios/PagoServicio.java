@@ -70,11 +70,23 @@ public class PagoServicio {
     public Pago getOne(String id) { return pagoRepositorio.getOne(id); }
 
     @Transactional(readOnly = true)
-    public List<Object> getPagoPorClientes(String id) { return pagoRepositorio.getPagoPorClientes(id); }
+    public String idPorPedido(String idPedido) { return pagoRepositorio.idPorPedido(idPedido); }
 
     @Transactional(readOnly = true)
-    public List<Object> getPagoPorProveedores(String id) { return pagoRepositorio.getPagoPorProveedores(id); }
+    public Pago getPagoPorPedido(String idPedido) { return pagoRepositorio.getPagoPorPedido(idPedido); }
 
     @Transactional(readOnly = true)
-    public List<Object> getPagosPendiente() { return pagoRepositorio.getPagosPendiente(); }
+    public List<Pago> getPagoPorClientes(String idCliente) { return pagoRepositorio.getPagoPorClientes(idCliente); }
+
+    @Transactional(readOnly = true)
+    public List<Pago> getPagoPorProveedores(String idProveedor) { return pagoRepositorio.getPagoPorProveedores(idProveedor); }
+
+    @Transactional(readOnly = true)
+    public List<Pago> getPagosPendiente() { return pagoRepositorio.getPagosPendiente(); }
+
+    @Transactional(readOnly = true)
+    public List<Pago> getPagosPendientePorCliente(String idCliente) { return pagoRepositorio.getPagosPendientePorCliente(idCliente); }
+
+    @Transactional(readOnly = true)
+    public List<Pago> getPagosPendientePorProveedor(String idProveedor) { return pagoRepositorio.getPagosPendientePorProveedor(idProveedor); }
 }

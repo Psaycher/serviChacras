@@ -2,7 +2,7 @@
     <div class="container-fluid">
         <a class="navbar-brand" href="#">
             <div id="logo-nav">
-                <img src="/img/barrios-cerrados-logo-nuevo.png" alt="Logo">
+                <img src="/img/barrios-cerrados-logo-nuevo.png" alt="Logo" style="width: 60px;">
             </div>            
         </a>
         
@@ -14,10 +14,10 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent" th:if="${session.usuariosession == null}">
             <ul class="navbar-nav ms-auto me-4 mb-1 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link navbarDropdown"  href="/registrar" role="button" aria-expanded="false">Registro</a>
+                    <a class="nav-link navbarDropdown"  href="/registrar" role="button" aria-expanded="false" style="color: #f5f5dc;">Registro</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link navbarDropdown" href="/login" role="button" aria-expanded="false">Login</a>
+                    <a class="nav-link navbarDropdown" href="/login" role="button" aria-expanded="false" style="color: #f5f5dc;">Login</a>
                 </li>
             </ul>
         </div>
@@ -33,7 +33,7 @@
                         <input type="hidden" th:value="'PROVEEDOR'" name="rolSession">
                     </div>
                     
-                    <button id="filtro" type="button" class="btn btn-secondary" style="margin-right: 5px; ">Filtro</button>
+                    <button id="filtro" type="button" class="btn btn-secondary" style="margin-right: 5px;" onclick="abrirFiltroBuscador()">Filtro</button>
                     <input class="form-control me-2" type="search" name="nombreUsuario" placeholder="Nombre Completo" th:value="${nombreUsuario}">
                     <button class="btn btn-outline-success" type="submit" style="display:flex; flex-direction:row;">
                         <i class="fas fa-search icono-lupa"></i>
@@ -97,7 +97,7 @@
                                 <optgroup label="Pedidos Vigentes">
                                     <option class="opcion" th:each="pedido : ${pedidos}"
                                         th:value="${pedido.id}"
-                                        th:text="${pedido.servicio.nombre}+ ' - '${pedido.cliente.usuario.nombre}">
+                                        th:text="${pedido.asunto} + ': ' + ${pedido.cliente.usuario.nombre}  + ' ' + ${pedido.cliente.usuario.apellido}">
                                         <span></span>
                                     </option>
                                 </optgroup>
@@ -109,13 +109,13 @@
                             <br>
                         </div>
                             
-                        <button id="buscar" class="btn btn-primary" type="submit">Buscar</button>
+                        <button id="buscar" class="btn btnFiltro btn-primary" type="submit">Buscar</button>
                     
                     </form>
                 </div>
 
                 <li class="nav-item">
-                    <a id="mensajes" class="nav-link">
+                    <a id="mensajes" class="nav-link" onclick="abrirNotificacionMensajes()">
                         <div class="notification-bell">
                             <img src="/img/mensaje-icono.png"
                             style="border-radius: 10px; width: 30px; height:30px; margin-left:5px; margin-right:5px;" alt="">
@@ -123,15 +123,23 @@
                         </div>
                     </a>
                     <div id="noti-mensajes">
-                        <ul class="list-group"th:each="mensaje : ${mensajes}">
-                            <li class="list-group-item"><button class="btn btn-outline-light" type="button" id="botonAbrirMensaje" onclick="abrir_mensajes()" th:text="${mensaje.remitente}"></button></li>
-                            <a class="nav-link navbarDropdown" th:href="@{/mensajeria/bandejaMensajes/__${mensaje.id}__}">Ver mensaje</a>
+                        <ul class="list-group" th:each="mensaje : ${mensajes}">
+                            <li class="list-group-item" style="border: 1px solid whitesmoke;" th:each="mj : ${mjs}">
+                                <p style="font-size: 14px;" th:text="${mj}"></p>
+                                <a class="nav-link navbarDropdown" th:href="@{/usuario/verMensaje/__${mensaje.id}__}">
+                                    <button class="btn btnFiltro btn-primary" type="button">Ver detalle</button>
+                                </a>
+                            </li>
+                            <br>                            
+                            <a class="nav-link navbarDropdown" th:href="@{/mensajeria/bandejaMensajes}">
+                                <button class="btn btnFiltro btn-primary" type="button">Ver todas</button>
+                            </a>
                         </ul>
                     </div>
                 </li>
 
                 <li class="nav-item">
-                    <a id="campana" class="nav-link">
+                    <a id="campana" class="nav-link" onclick="abrirCampanaNotificaciones()">
                         <div class="notification-bell">
                             <img src="/img/campana.jpg" style="border-radius: 10px; width: 30px; height:30px;" alt="">
                             <span class="notification-count" th:text="${notificacionNoVisto}"></span>
@@ -139,18 +147,26 @@
                     </a>
 
                     <div id="notification">
-                        <ul class="list-group" th:each="notificacion : ${notificaciones}">
-                            <span th:each="nota : ${notas}">
-                            <li class="list-group-item" style="border: 1px solid whitesmoke;" th:text="${nota}"></li>
-                            <a class="nav-link navbarDropdown" th:href="@{/mensajeria/bandejaNotificaciones/__${notificacion.id}__}">Ver detalle</a>
-                            </span> 
+                        <ul class="list-group" th:each="notificacion : ${notificaciones}">                           
+                            <li class="list-group-item" style="border: 1px solid whitesmoke;" th:each="nota : ${notas}">
+                                <p style="font-size: 14px;" th:text="${nota}"></p>
+                                <a class="nav-link navbarDropdown" th:href="@{/notificacion/verNotificacion/__${notificacion.id}__}">
+                                    <button class="btn btnFiltro btn-primary" type="button">Ver detalle</button>                                    
+                                </a>
+                            </li>
+                            <br>
+                            <a class="nav-link navbarDropdown" th:href="@{/notificacion/bandejaNotificaciones/__${rolSession}__}">
+                                <button class="btn btnFiltro btn-primary" type="button">Ver todas</button>                                
+                            </a>                            
                         </ul>
                     </div>
                 </li>
 
-                <li style="display: flex; flex-direction:row; align-items:center;" class="nav-item">
-                    <a id="usuario" class="nav-link active" style="display: flex; flex-direction:row; align-items:center;" href="#">
-                        <p th:text="${session.usuariosession.nombre}"></p>
+                <li class="nav-item">
+                    <a id="usuario" class="nav-link active" style="display: flex; flex-direction:row; align-items:center;" onclick="abrirUsuario()">
+                        <p th:text="${session.usuariosession.nombre}" style="display: flex;align-items:center; color: #f5f5dc; margin:0;">
+                            
+                        </p>
                         <img id="imagen_usuario" src="/img/icono-usuario.jpg" alt="" style="border-radius: 20px; width: 30px; height:30px; margin-left:7px;">
                     </a>
                 </li>
@@ -165,7 +181,7 @@
                         </li>
                         <li class="list-group-item">                      
                             <button type="button" class="btn btn-danger">
-                            <a class="nav-link navbarDropdown" th:href="@{/logout}">Cerrar Sesión</a>
+                                <a class="nav-link navbarDropdown" th:href="@{/logout}">Cerrar Sesión</a>
                             </button>                        
                         </li>
                     </ul>

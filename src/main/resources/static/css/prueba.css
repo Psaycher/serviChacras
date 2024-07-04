@@ -23,6 +23,10 @@ body::before {
     z-index: -1; /* Coloca la superposición detrás del contenido */
 }
 
+.container.contLogin { height: 900px !important; }
+
+.container.contUnicard { padding-top: 100px !important; }
+
 nav {
     position: fixed;
     z-index: 1000;
@@ -34,13 +38,23 @@ nav {
     border-bottom: 2px solid #6c5a4d; /* Borde inferior marrón */
 }
 
-footer{
-    background-color: #3e2c1f81; 
-    color: #f5f5dc;
+.card__error{
+    padding-left: 5vw;
+    padding-right: 5vw;
 }
 
 #fondo{
     background-color: rgba(245, 245, 220, 0.248);
+}
+
+.carousel-item {
+    border: 2px solid #ccc; /* Color y grosor del borde */
+    border-radius: 8px; /* Borde redondeado para suavizar esquinas */
+    overflow: hidden; /* Para evitar que el borde afecte el tamaño del contenido */
+}
+
+.carousel-image {
+    opacity: 0.9; /* Ajusta el valor de opacidad según lo necesites (0 = completamente transparente, 1 = completamente visible) */
 }
 
 /* Estilos para el fondo transparente */
@@ -57,7 +71,10 @@ footer{
 
 /* Estilos para el formulario */
 #serviceForm {
-    display: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
     position: fixed;
     top: 50%;
     left: 50%;
@@ -67,6 +84,7 @@ footer{
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     z-index: 1100;
     width: 400px;
+    height: 600px;
     background-color: #3e2c1f; /* Tono más oscuro de marrón */
     color: #ffffff; /* Color blanco para el texto en contraste */
 }
@@ -116,7 +134,7 @@ input[type="checkbox"] {
 }
 
 button[type="submit"] {
-    background-color: #6b4f37; 
+    background-color: #6b4f37;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -126,7 +144,20 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
-    background-color: #b3a68c; 
+    background-color: #b3a68c;
+}
+
+#Formulario-filtro {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+}
+
+.btn.btnFiltro { 
+    align-self: center;
+    text-align: center;
+    width: 80px;
 }
 
 /* Estilos para los mensajes de error */
@@ -237,7 +268,7 @@ ul li {
     color: #f5f5dc; /* Color beige para el texto */
     border-radius: 5px;
     width: 150px;
-    top: 80px;
+    top: 60px;
     right: 1px;
     height: 0px;
     overflow: hidden; /* Deshabilitar interacción */
@@ -255,7 +286,7 @@ ul li {
     color: #f5f5dc; /* Color beige para el texto */
     border-radius: 5px;
     width: 230px;
-    top: 80px;
+    top: 60px;
     right: 3px;
     height: 0px;
     overflow: hidden;
@@ -274,7 +305,7 @@ ul li {
     color: #f5f5dc; /* Color beige para el texto */
     border-radius: 5px;
     width: 150px;
-    top: 80px;
+    top: 60px;
     right: 130px;
     height: 0px;
     overflow: hidden;
@@ -292,8 +323,8 @@ ul li {
     background-color: #3e2c1f; /* Tono más oscuro de marrón */
     color: #f5f5dc; /* Color beige para el texto */
     border-radius: 5px;
-    width: 150px;
-    top: 80px;
+    width: 220px;
+    top: 60px;
     right: 30vw;
     height: 0px;
     overflow: hidden;
@@ -313,12 +344,12 @@ ul li {
     display: inline-block;
     cursor: pointer;
   }
-  
+
   .notification-bell i {
     font-size: 24px;
     color: #2f2117;
   }
-  
+
   .notification-count {
     position: absolute;
     top: -8px;
@@ -335,8 +366,8 @@ ul li {
     position: absolute;
     display: flex;
     align-items: center;
-    background: #2f2117; 
-    border: 1px solid #5D4037; 
+    background: #2f2117;
+    border: 1px solid #5D4037;
     width: 598px;
     top: 94px;
     right: 0;
@@ -354,8 +385,8 @@ ul li {
     position: absolute;
     display: flex;
     align-items: center;
-    background: #2f2117; 
-    border: 1px solid #5D4037; 
+    background: #2f2117;
+    border: 1px solid #5D4037;
     width: 959px;
     right: 144px;
     top: 144px;
@@ -756,6 +787,17 @@ ul li {
 }
 
 /* Footer */
+footer{
+    background-color: #3e2c1f81;
+    color: #f5f5dc;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
 .socials {
     display: flex;
     align-items: center;
@@ -868,4 +910,339 @@ footer div span {
     columns: #0dc92c;
     box-shadow: 0 0 15px #0ff135;
     text-shadow: 0 0 15px #0ff135;
+}
+
+/* cartas de expositor */
+#contenedor-tarjetas { 
+    display: flex;
+    justify-content:center;
+    align-content: space-around;
+}
+
+/* Divs de mensajes */
+.div__error {
+    height: auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent
+}
+
+.div__error .msj {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    overflow: hidden;
+    height: 200px;
+    width: 90%;
+}
+
+.div__error .msj div {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px;
+    padding-top: 30px;
+}
+
+.div__error .msj.msj__error {
+    background-color: rgb(255, 101, 101);
+    border: 0.3px solid rgb(160, 16, 16);
+}
+
+.div__error .msj.msj__exito { 
+    background-color: rgb(101, 255, 134); 
+    border: 0.3px solid rgb(3, 153, 36);
+}
+
+.div__error h5 { margin-bottom: 20px; }
+
+.msj__error .card__error { color: rgb(0, 0, 0); }
+
+.msj__exito .card__error { color: rgb(0, 0, 0); }
+
+.card__error h5 { font-size: 30px; }
+
+.msj__error h5 { text-shadow: 5px 10px 10px #ad0000; }
+
+.msj__exito h5 { text-shadow: 5px 10px 10px #1d7e00; }
+
+/*  Contenedor dentro del Header del error.html */
+.header { 
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 100px 150px 150px;
+}
+
+#contenedorError{
+    width: 100%;
+    height: 500px !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: black;
+    border-radius: 15px;
+    background-color: rgba(255, 150, 150, 0.281);
+    box-shadow: 15px 15px 5px #3a00006b;
+    text-shadow: 5px 10px 10px #ad0000;
+}
+
+.contenedortitulo {
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+.contenedorMsj {
+    margin: 80px 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+    font-weight: 500;
+    max-height: 700px;
+}
+
+/* para imagen de proveedores */
+.logo{
+    width: 40%;
+    margin: auto;
+}
+
+#foto-card {
+    width: 100%;
+    height: 200px;
+    border-radius: 15px;
+    margin-top: 12px;
+    position: relative;
+}
+
+#foto-card #img-card {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    overflow: hidden;
+    z-index: 2;
+}
+
+#foto-card #img-card img {
+    width: 100%;
+    height: auto;
+}
+
+#foto-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-conic-gradient(from var(--a), rgb(255, 126, 126), rgb(228, 153, 118), rgb(167, 53, 0), rgb(66, 8, 37), rgb(167, 53, 0), rgb(228, 153, 118), rgba(255, 126, 126));
+    border-radius: 15px;
+    animation: rotating 4s linear infinite;
+    filter: blur(5px);
+    opacity: 0.75;
+}
+
+#foto_card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-conic-gradient(from var(--a), rgb(255, 126, 126), rgb(228, 153, 118), rgb(167, 53, 0), rgb(66, 8, 37), rgb(167, 53, 0), rgb(228, 153, 118), rgba(255, 126, 126));
+    border-radius: 15px;
+    animation: rotating 4s linear infinite;
+    filter: blur(5px);
+    opacity: 0.75;
+}
+
+.imgUnicard {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    position: relative;
+    left: 1%;
+    top: 2%;
+    overflow: hidden;
+}
+
+.imgUnicard img {
+    width: auto;
+    height: 100%;
+}
+
+.divBtn {
+    display: flex;
+    justify-content: center;
+}
+
+/* ! FondoVarios*/
+
+/* Ajuste general de tamaño de los botones */
+.fondoVarios {
+    width: 250px; /* Ajusta el tamaño según sea necesario */
+    height: 35px; /* Ajusta el tamaño según sea necesario */
+    cursor: pointer;
+    position: relative;
+    border-radius: 15px;
+    transition: 0.7s ease;
+    margin: 10px;
+}
+
+.fondoVarios .botonInicio {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    text-align: center;
+    border-radius: 15px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    overflow: hidden;
+    z-index: 2;
+}
+
+.fondoVarios .botonInicio a {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: center;
+    justify-content: flex-start;
+}
+
+.fondoVarios .botonInicio h1 {
+    font-size: 20px; /* Ajusta el tamaño según sea necesario */
+    font-weight: 600;
+    margin: 5px 0;
+    text-transform: uppercase;
+    transition: 0.7s ease;
+    
+}
+
+
+
+/* Específicos para Notificaciones */
+#ini-notificaciones {
+    background-color: rgba(85, 130, 255, 0.733);
+    color: rgb(0, 0, 0); /* Cambia el color del texto a blanco */
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5); /* Agrega un sombreado al texto */
+}
+
+.containerVarios #fondoNotificaciones::before,
+.containerVarios #fondoNotificaciones::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-conic-gradient(from var(--a), rgb(190, 211, 250), rgba(118, 147, 228), rgb(0, 106, 167), rgb(8, 38, 66), rgb(0, 106, 167), rgb(118, 147, 228), rgba(190, 211, 250));
+    border-radius: 15px;
+    animation: rotating 4s linear infinite;
+    filter: blur(5px);
+    opacity: 0.75;
+}
+
+/* Específicos para Pedidos */
+#ini-pedidos {
+    background-color: rgba(245, 177, 50, 0.733);
+    color: rgb(0, 0, 0); /* Cambia el color del texto a blanco */
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5); /* Agrega un sombreado al texto */
+}
+
+.containerVarios #fondoPedidos::before,
+.containerVarios #fondoPedidos::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-conic-gradient(from var(--a), rgb(250, 236, 190), rgba(226, 228, 118), rgb(167, 150, 0), rgb(66, 51, 8), rgb(167, 150, 0), rgb(226, 228, 118), rgba(250, 236, 190));
+    border-radius: 15px;
+    animation: rotating 4s linear infinite;
+    filter: blur(5px);
+    opacity: 0.75;
+}
+
+/* Efectos de hover */
+.fondoVarios:hover {
+    width: 220px !important; /* Ajusta el tamaño según sea necesario */
+    height: 120px !important; /* Ajusta el tamaño según sea necesario */
+    box-shadow: 15px 15px 5px rgba(19, 2, 0, 0.664);
+    animation: none;
+    z-index: 10;
+}
+
+.fondoVarios:hover .infoVarios p {
+    font-size: 0.9rem !important; /* Ajusta el tamaño según sea necesario */
+    font-weight: 500;
+    transition: all 0.4s ease-in-out;
+}
+
+.fondoVarios:hover .botonInicio h1 {
+    font-size: 22px; /* Ajusta el tamaño según sea necesario */
+    font-weight: 550;
+    transition: all 0.4s ease-in-out;
+}
+
+.fondoVarios:hover .infoVarios {
+    text-shadow: 0 0 10px rgb(253, 240, 215), 0 0 25px burlywood, 0 0 40px rgb(99, 87, 80);
+    transition: all 0.3s ease-in-out;
+}
+
+#fondoPedidos:hover .infoVarios p {
+    text-shadow: 0 0 10px rgb(215, 231, 253), 0 0 25px rgb(135, 148, 222), 0 0 40px rgb(80, 84, 126);
+    transition: all 0.3s ease-in-out;
+}
+
+#fondoNotificaciones:hover .infoVarios p {
+    text-shadow: 0 0 10px rgb(215, 231, 253), 0 0 25px rgb(135, 148, 222), 0 0 40px rgb(80, 84, 126);
+    transition: all 0.3s ease-in-out;
+}
+
+/* Ajuste para las clases adicionales */
+.fondoVarios .infoVarios {
+    width: 90%;
+    position: relative;
+    left: -120%;
+    transition: all 0.7s ease;
+}
+
+.fondoVarios .ini-dcha .infoVarios {
+    left: 120%;
+}
+
+#ini-servicio .infoVarios {
+    bottom: -120%;
+}
+
+.infoVarios p {
+    font-size: 0.8rem; /* Ajusta el tamaño según sea necesario */
+    font-weight: 400;
+    text-align:center;
+    line-height: 20px;
+    transition: 0.7s ease;
+    color: rgba(0, 0, 0, 0.932); /* Cambia el color del texto a blanco */
+    text-shadow: 1px 1px 5px rgba(255, 255, 255, 0.5); /* Agrega un sombreado al texto */
+}
+
+@property --a {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+}
+
+@keyframes rotating {
+    0% { --a: 0deg; }
+    100% { --a: 360deg; }
 }

@@ -1,6 +1,17 @@
-/* NavBar Funciones */
+/*Funcion registro*/
+function abrirServicios(){
+    if(document.getElementById("tipoServicio").style = "display: none;"){
+        document.getElementById("tipoServicio").style = "display: block;";
+    }
+}
+function cerrarServicio(){
+    if(document.getElementById("tipoServicio").style = "display: block;"){
+        document.getElementById("tipoServicio").style = "display: none;";
+    }
+}
 
-document.getElementById("usuario").addEventListener('click', function() {
+/* NavBar Funciones */
+ function abrirUsuario() {
     let detallesUsuario = document.getElementById('detalles-usuario');
     let listItems = document.querySelectorAll('#detalles-usuario .list-group-item');
     
@@ -13,14 +24,11 @@ document.getElementById("usuario").addEventListener('click', function() {
     totalHeight += 8; // Puedes ajustar este valor según sea necesario
     if (detallesUsuario.style.height == '0px') {
         detallesUsuario.style.height = totalHeight + 'px';
-        notificationPopup.classList.add('show');
     } else {
         detallesUsuario.style.height = '0';
-        notificationPopup.classList.remove('show');
     }
-  });
-  
-  document.getElementById("campana").addEventListener('click', function() {
+  }
+  function abrirCampanaNotificaciones() {
     let notificationPopup = document.getElementById('notification');
     let listItems = document.querySelectorAll('#notification .list-group-item');
     
@@ -39,9 +47,9 @@ document.getElementById("usuario").addEventListener('click', function() {
         notificationPopup.style.height = '0';
         notificationPopup.classList.remove('show');
     }
-  });
+  }
   
-  document.getElementById("mensajes").addEventListener('click', function() {
+  function abrirNotificacionMensajes() {
     let notificationPopup = document.getElementById('noti-mensajes');
     
     let listItems = document.querySelectorAll('#noti-mensajes .list-group-item');  
@@ -59,27 +67,35 @@ document.getElementById("usuario").addEventListener('click', function() {
         notificationPopup.style.height = '0';
         notificationPopup.classList.remove('show');
     }
-  });
+  }
   
-  document.getElementById("filtro").addEventListener('click', function() {
+  function abrirFiltroBuscador() {
     let detallesFiltro = document.getElementById('detalles-filtro');
     let listItems = document.querySelectorAll('#detalles-filtro .list-group-item');
-    
+    let botonFiltro = document.getElementById('filtro');
+
     // Calcular la altura total de los elementos de la lista con un margen adicional
     let totalHeight = 0;
     listItems.forEach(item => {
         totalHeight += item.clientHeight;
     });
+
     // Agregar un margen adicional para asegurar que todos los elementos se muestren completamente
-    totalHeight += 8; // Puedes ajustar este valor según sea necesario
-    if (detallesFiltro.style.height == '0px') {
+    totalHeight += 80; // Puedes ajustar este valor según sea necesario
+
+    // Calcular la posición del botón y ajustar la posición del formulario
+    let rect = botonFiltro.getBoundingClientRect();
+    detallesFiltro.style.top = rect.bottom + 'px';
+    detallesFiltro.style.left = rect.left + 'px';
+
+    if (detallesFiltro.style.height == '0px' || detallesFiltro.style.height === '') {
         detallesFiltro.style.height = totalHeight + 'px';
-        notificationPopup.classList.add('show');
+        detallesFiltro.classList.add('show');
     } else {
         detallesFiltro.style.height = '0';
-        notificationPopup.classList.remove('show');
+        detallesFiltro.classList.remove('show');
     }
-  });
+  }
   
   function abrir_mensajes(){
       if(document.querySelector('.mensaje-container').style.display = 'none'){
@@ -264,8 +280,8 @@ document.getElementById("usuario").addEventListener('click', function() {
   }
   
   //Buscador de la mensajeria grande
-  document.getElementById('searchUsuarios').addEventListener('input', function() {
-      let filter = this.value.toLowerCase();
+  function searchUsuarios(filter) {
+      filter = filter.toLowerCase();
       let buttons = document.querySelectorAll('#chatsUsuarios .btn');
   
       buttons.forEach(button => {
@@ -276,7 +292,7 @@ document.getElementById("usuario").addEventListener('click', function() {
               button.style.display = 'none';
           }
       });
-  });
+  }
   /*Fin de Mensajeria*/
   
   /*Boton calificar*/

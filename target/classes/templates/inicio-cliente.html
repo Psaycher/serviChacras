@@ -8,12 +8,54 @@
   <nav th:replace="~{/fragments/navbar :: nav}"></nav>
 
   <!-- Contenido Principal -->
-  <div id="fondo" class="container mt-5">
+  <div id="fondo" class="container contUnicard mt-5">
     <div class="row">
       <div class="col-md-12 text-center">
         <h1 th:text="'Bienvenido ' + ${session.usuariosession.nombre}"></h1>
-        <p class="lead">Contacta con un proveedor u ofrécete como proveedor en tu barrio cerrado.</p>
+        <p class="lead" th:if="${rolSession == 'CLIENTE'}">Contacta con un proveedor, revisa tus notificaciones y sigue tus pedidos.</p>
+        <p class="lead" th:if="${rolSession == 'PROVEEDOR'}">Comunicate con tus clientes, controla tus pedidos y ofrece tus servicios en tu barrio cerrado.</p>
       </div>
+
+
+    </div>
+
+    <div class="row">
+      <div class="fondoVarios" id="fondoCliente">
+        <div class="botonInicio" id="ini-cliente"> 
+          <a class="nav-link navbarDropdown" th:href="@{/usuario/bandejaNotificaciones}" role="button" aria-expanded="false">
+            <h1>Notificaciones</h1>
+            <div class="infoVarios">                        
+                <p>Diríjase a su Bandeja de Notificaciones</p>
+                <p>Notificaciones no vistas: <span th:text="${notificacionNoVisto}"></span></p>
+            </div>
+          </a>                            
+        </div>
+      </div>
+      
+      <!-- <div class="fondoVarios" id="fondoCliente">
+        <div class="botonInicio" id="ini-cliente"> 
+            <a class="nav-link navbarDropdown" th:href="@{/usuario/bandejaMensajes}" role="button" aria-expanded="false">
+              <h1>Mensajeria</h1>
+              <div class="infoVarios">                        
+                  <p>Diríjase a su Bandeja de Mensajes</p>
+                  <p>Mensajes no vistos: <span th:text="{mensajeNoVisto}"></span></p>
+              </div>
+            </a>                            
+          </div>
+      </div> -->
+
+      <div class="fondoVarios" id="fondoCliente">
+        <div class="botonInicio" id="ini-cliente"> 
+            <a class="nav-link navbarDropdown" th:href="@{/usuario/bandejaPedidos}" role="button" aria-expanded="false">
+              <h1>Pedidos</h1>
+              <div class="infoVarios">                        
+                  <p>Ver todos mis pedidos</p>
+                  <p>Pedidos activos actualmente: <span th:text="${numeroPedidos}"></span></p>
+              </div>
+            </a>                            
+          </div>
+      </div>
+
     </div>
 
     <div class="row mt-4">
@@ -158,38 +200,10 @@
       </div>
     </div>
 
-
-
-    <!-- !Card -->
-    <!-- 
-      <div id="card-container" class="container mt-4">
-        <div class="card" style="width: 18rem;">
-          <img src="..." class="card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title">Nombre</h5>
-            <p class="card-text">Que servicio ofrece</p>
-          </div>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">An item</li>
-            <li class="list-group-item">A second item</li>
-            <li class="list-group-item">A third item</li>
-          </ul>
-          <div class="card-body">
-            <a href="#" class="card-link">+Info</a>
-            <a href="#" class="card-link">+Info</a>
-          </div>
-        </div>
-      </div> -->
-
-
-
     <div class="row mt-5">
-      <div class="col-md-12">
-        <h3>¿Dónde nos ubicamos?</h3>
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13387.47124529573!2d-68.88720044175409!3d-32.9808891773436!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x967e0af3dc0e8f1f%3A0x6b647646861df9cf!2sChacras%20de%20Coria%2C%20Mendoza!5e0!3m2!1ses-419!2sar!4v1717636946323!5m2!1ses-419!2sar"
-          style="width: 80vw; height: 40vh; border:0; margin-bottom: 2vw;" allowfullscreen="" loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <h3 style="display:flex; align-items:center; justify-content:center;">¿Dónde nos ubicamos?</h3>
+      <div class="col-md-12" style="display:flex; align-items:center; flex-direction:row; justify-content:center;">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d13387.47124529573!2d-68.88720044175409!3d-32.9808891773436!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x967e0af3dc0e8f1f%3A0x6b647646861df9cf!2sChacras%20de%20Coria%2C%20Mendoza!5e0!3m2!1ses-419!2sar!4v1717636946323!5m2!1ses-419!2sar" style="width: 80vw; height: 40vh; border:0; margin-bottom: 2vw;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
       </div>
     </div>
 
@@ -324,7 +338,7 @@
         <button id="notify-btn" type="button" class="btn btn-outline-success" onclick="hideModal()">Pago realizado</button>
     </div>
 
-
+  </div>
   <footer th:replace="~{/fragments/footer :: footer}"></footer>
 
   <!-- Scripts -->

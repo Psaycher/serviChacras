@@ -1,8 +1,10 @@
 package com.FinalEgg.ServiChacras.servicios;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +15,7 @@ import com.FinalEgg.ServiChacras.repositorios.UsuarioRepositorio;
 import com.FinalEgg.ServiChacras.repositorios.ProveedorRepositorio;
 import com.FinalEgg.ServiChacras.repositorios.NotificacionRepositorio;
 
+@Service
 public class NotificacionServicio {
     @Autowired
     private PagoServicio pagoServicio;
@@ -29,49 +32,59 @@ public class NotificacionServicio {
     
 
     @Transactional
-    public void crearNotificacion(String notaString, String idRemitente, String idDestinatario, String idCliente, String idProveedor, String idPago, String idPedido, String idDenuncia, Integer valor) throws MiExcepcion {
-        TipoDeNota nota = TipoDeNota.valueOf(notaString.toUpperCase());
-        Notificacion notificacion = new Notificacion();
-        String asunto = "";
+    public void crearNotificacion(String notaString, String idRemitente, String idDestinatario, String idCliente, String idProveedor, 
+                                  String idPago, String idPedido, String idDenuncia, String asunto, String detalle, Integer valor) throws MiExcepcion {
 
         Optional<Usuario> optionalRemitente = usuarioRepositorio.findById(idRemitente);
+        TipoDeNota nota = TipoDeNota.valueOf(notaString);
+        Notificacion notificacion = new Notificacion();      
         
         if (optionalRemitente.isPresent()) {
-            Usuario usuarioRemitente = optionalRemitente.get();
-            String remitente = usuarioRemitente.getNombre() + " " + usuarioRemitente.getApellido();
+            Usuario remitente = optionalRemitente.get();  
             notificacion.setRemitente(remitente);
-
+            
             Optional<Usuario> optionalDestinatario = usuarioRepositorio.findById(idDestinatario);
 
             if (optionalDestinatario.isPresent()) {
                 Usuario destinatario = optionalDestinatario.get();
                 notificacion.setDestinatario(destinatario);
                 notificacion.setVisto(Estado.PENDIENTE);
-                notificacion.setDenuncia(idDenuncia);
-                notificacion.setPedido(idPedido);
+                notificacion.setDenuncia(idDenuncia);                
+                notificacion.setFecha(new Date());
+                notificacion.setDetalle(detalle);                
+                notificacion.setPedido(idPedido);              
                 notificacion.setPago(idPago);
                 notificacion.setNota(nota); 
+
+                System.out.println("encontro a destinatario");
                 
                 switch (notaString) {
                     case "PEDIDOSolicitud" -> { 
-                        asunto = "Solicitud de Pedido";
+                        asunto = "Solicitud de Pedido"; }
+                    case "PEDIDOAceptado"-> {                          
                         String idServicio = proveedorRepositorio.getIdServicio(idProveedor);
-                        Pedido pedido = pedidoServicio.crearPedido(idCliente, idServicio, idProveedor);
-                        notificacion.setPedido(pedido.getId());  
+                        Pedido pedido = pedidoServicio.crearPedido(idCliente, idServicio, idProveedor, asunto, detalle, valor);
+                        asunto = "Se ha aceptado el Pedido";
+                        notificacion.setPedido(pedido.getId());
                     }
-                    case "PEDIDOAceptado"-> { asunto = "Se ha aceptado el Pedido"; }
                     case "PEDIDORechazado" -> { asunto = "Se ha rechazado el Pedido"; }
-                    case "PEDIDOCancelado" -> { asunto = "Se ha cancelado el Pedido"; }
+                    case "PEDIDOCancelado" -> { 
+                        asunto = "Se ha cancelado el Pedido";
+                        List<Notificacion> notificaciones = listarPorPedido(idPedido);
+                        notificaciones.removeIf(noti -> noti.getPedido().equals(idPedido));
+                        pedidoServicio.cancelarPedido(idPedido);
+                        notificacion.setPedido(idPedido);
+                    }
                     case "PEDIDOFinalizado" -> { 
+                        asunto = "El proveedor considera resuelto el pedido"; 
+                        notificacion.setPedido(idPedido);
+                    }
+                    case "CONFIRMARFinalizacion" -> { 
                         asunto = "Se ha concluido el Pedido"; 
                         List<Notificacion> notificaciones = listarPorPedido(idPedido);
                         notificaciones.removeIf(noti -> noti.getPedido().equals(idPedido));
+                        pedidoServicio.cancelarPedido(idPedido);
                         notificacion.setPedido(idPedido);
-                    }
-                    case "PAGOPendiente"-> { 
-                        asunto = "Pago Pendiente"; 
-                        Pago pago = pagoServicio.crearPago(idCliente, idProveedor, valor);
-                        notificacion.setPago(pago.getId());  
                     }
                     case "PAGODemandado" -> { asunto = "Pago Exigido"; }
                     case "PAGOEfectuado" -> { 
@@ -101,14 +114,9 @@ public class NotificacionServicio {
     }
 
     @Transactional
-    public void notificacionVisto(String id) throws MiExcepcion {
-        Optional<Notificacion> opcionalNotificacion = notificacionRepositorio.findById(id);
-
-        if(opcionalNotificacion.isPresent()) {
-            Notificacion notificacion = opcionalNotificacion.get();
-            notificacion.setVisto(Estado.EFECTUADO);
-            notificacionRepositorio.save(notificacion);
-        }
+    public void notificacionVisto(Notificacion notificacion) throws MiExcepcion {
+        notificacion.setVisto(Estado.EFECTUADO);
+        notificacionRepositorio.save(notificacion);
     }
 
     @Transactional
@@ -146,6 +154,9 @@ public class NotificacionServicio {
 
     @Transactional(readOnly = true)
     public List<Notificacion> getPorDenunciaNoVisto(String idDenuncia) { return notificacionRepositorio.getPorDenunciaNoVisto(idDenuncia); }
+
+    @Transactional(readOnly = true)
+    public List<Notificacion> getPorUsuario(String idUsuario) { return notificacionRepositorio.getPorUsuario(idUsuario); }
 
     @Transactional(readOnly = true)
     public List<Notificacion> getPorUsuarioNoVisto(String idUsuario) { return notificacionRepositorio.getPorUsuarioNoVisto(idUsuario); }

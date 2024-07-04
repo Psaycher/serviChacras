@@ -6,13 +6,14 @@
 <body>
     <!-- Navegador -->
     <nav th:replace="~{/fragments/navbar :: nav}"></nav>
+    <br>
     
     <div class="container mt-5 contLogin">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <div class="card" th:if="${session.usuariosession == null}">
-                    <div class="card-header text-center bg-dark text-white">
-                        <h3>Iniciar Sesión</h3>
+                <div class="card" th:if="${session.usuariosession == null}" style="background-color: #5d2d11c3; color: beige;">
+                    <div class="card-header text-center text-white" style="padding-top:10px;background-color: #5C383F">
+                        <h3 style="background-color: #5C383F ">Iniciar Sesión</h3>
                     </div>
 
                     <div th:replace= "~{/fragments/divError :: div}"> </div>
@@ -47,19 +48,17 @@
 
     <footer class="footer text-light text-center py-3">
         <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-            <div><img src="/img/logo-barrios-cerrados-1.jpg" alt="Logo"
-                    style="width: 5vw; margin-left:10px; margin-right:10px;"> ©️ BarriosCerrados Ltd. 2024</div>
+            <div><img src="/img/barrios-cerrados-logo-nuevo.png" alt="Logo"
+                    style="width: 5vw; margin-left:10px; margin-right:10px;">©️ 2024 BarriosCerrados SRL. Todos los derechos reservados.</div>
             <div style="margin-right: 10px;">
+                <div style="margin-bottom: 10px;"><strong>Contacto:</strong></div>
                 <ul class="socials">
                     <li id="face"><i class="ri-facebook-fill"></i></li>
                     <li id="tw"><i class="ri-twitter-fill"></i></li>
                     <li><i class="ri-instagram-line"></i></li>
                     <li><i class="ri-whatsapp-line"></i></li>
                 </ul>
-                <div><strong>Contacto:</strong>
-                    <p>011 0000 0001</p>
-                    <p></p>
-                </div>
+                <p><img src="/img/telefono.png" style="border-radius: 10px;width: 2vw; height:4vh;"> 0800 111 0800</p>
             </div>
         </div>
     </footer>

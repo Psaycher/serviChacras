@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,6 +23,8 @@ import com.FinalEgg.ServiChacras.repositorios.ProveedorRepositorio;
 @Service
 public class PedidoServicio {
     @Autowired
+    private PagoServicio pagoServicio;
+    @Autowired
     private MensajeServicio mensajeServicio;
     @Autowired
     private PedidoRepositorio pedidoRepositorio;
@@ -35,8 +38,11 @@ public class PedidoServicio {
     private ProveedorRepositorio proveedorRepositorio;
 
     @Transactional
-    public Pedido crearPedido(String idCliente, String idServicio, String idProveedor) throws MiExcepcion {
+    public Pedido crearPedido(String idCliente, String idServicio, String idProveedor, String asunto, String detalle, Integer valor) throws MiExcepcion {
         Pedido pedido = new Pedido();
+
+        pedido.setAsunto(asunto);
+        pedido.setDetalle(detalle);
 
         Optional<Cliente> opcionalCliente = clienteRepositorio.findById(idCliente);
         Cliente cliente = new Cliente();
@@ -59,6 +65,9 @@ public class PedidoServicio {
         pedido.setEstado(Estado.PENDIENTE);
         pedido.setAlta(true);
 
+        Pago pago = pagoServicio.crearPago(idCliente, idProveedor, valor);
+        pedido.setPago(pago);
+        
         pedidoRepositorio.save(pedido);
         return pedido;
     }
@@ -74,6 +83,8 @@ public class PedidoServicio {
             Estado estado = Estado.valueOf(estadoString.toUpperCase());
             pedido.setEstado(estado);
             pedido.setComentario(comentario);
+
+            
             pedidoRepositorio.save(pedido);
         });
     }
@@ -133,23 +144,32 @@ public class PedidoServicio {
     }
 
     @Transactional
-    public void deletearPedido(String id) { pedidoRepositorio.deleteById(id); }
+    public void eliminarPedido(String id) { pedidoRepositorio.deleteById(id); }
 
     @Transactional(readOnly = true)
     public Pedido getOne(String id) { return pedidoRepositorio.getOne(id); }
 
     @Transactional(readOnly = true)
-    public String getIdPedidoPorClientes(String id) { return pedidoRepositorio.getIdPedidoPorCliente(id); }
+    public Integer contarPorCliente(String idCliente) { return pedidoRepositorio.contarPorCliente(idCliente); }
 
     @Transactional(readOnly = true)
-    public List<Pedido> getPedidoPorClientes(String id) { return pedidoRepositorio.getPedidosPorClientes(id); }
+    public Integer contarPorProveedor(String idProveedor) { return pedidoRepositorio.contarPorProveedor(idProveedor); }
 
     @Transactional(readOnly = true)
-    public String getIdPedidoPorProveedores(String id) { return pedidoRepositorio.getIdPedidoPorProveedor(id); }
+    public String getIdPedidoPorClientes(String idCliente) { return pedidoRepositorio.getIdPedidoPorCliente(idCliente); }
+
+    @Transactional(readOnly = true)
+    public List<Pedido> getPedidosPorClientes(String idCliente) { return pedidoRepositorio.getPedidosPorClientes(idCliente); }
+
+    @Transactional(readOnly = true)
+    public String getIdPedidoPorProveedores(String idProveedor) { return pedidoRepositorio.getIdPedidoPorProveedor(idProveedor); }
 
     @Transactional(readOnly = true)
     public List<Pedido> getPedidoPorProveedores(String id) { return pedidoRepositorio.getPedidosPorProveedores(id); }
 
     @Transactional(readOnly = true)
     public List<Pedido> getPedidosPendiente() { return pedidoRepositorio.getPedidosPendiente(); }
+
+    @Transactional(readOnly = true)
+    public List<Pedido> getPedidosCompartidos(String idCliente, String idProveedor) { return pedidoRepositorio.getPedidosCompartidos(idCliente, idProveedor); }
 }

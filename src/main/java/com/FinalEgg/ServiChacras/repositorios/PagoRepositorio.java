@@ -11,19 +11,24 @@ import com.FinalEgg.ServiChacras.entidades.Pago;
 
 @Repository
 public interface PagoRepositorio extends JpaRepository<Pago, String> {
-    @Query("SELECT p.id AS pago, p.valor FROM Pago p WHERE p.id = :idPago")
-    public Integer puntuacionPorPago(@Param("idPago") String idPago);
+       @Query("SELECT p.id FROM Pago p WHERE p.pedido.id = :idPedido")
+       public String idPorPedido(@Param("idPedido") String idPedido);
 
-    @Query("SELECT p.id AS pago, CONCAT(p.cliente.usuario.nombre, ' ', p.cliente.usuario.apellido) AS cliente,"+
-           " p.estado, p.valor FROM Pago p WHERE p.cliente.id = :idCliente")
-    public List<Object> getPagoPorClientes(@Param("idCliente") String idCliente);
+       @Query("SELECT p FROM Pago p WHERE p.pedido.id = :idPedido")
+       public Pago getPagoPorPedido(@Param("idPedido") String idPedido);
 
-    @Query("SELECT p.id AS pago, CONCAT(p.proveedor.usuario.nombre, ' ', p.proveedor.usuario.apellido) AS proveedor,"+
-           " p.estado, p.valor FROM Pago p WHERE p.proveedor.id = :idProveedor")
-    public List<Object> getPagoPorProveedores(@Param("idProveedor") String idProveedor);
+       @Query("SELECT p FROM Pago p WHERE p.cliente.id = :idCliente")
+       public List<Pago> getPagoPorClientes(@Param("idCliente") String idCliente);
 
-    @Query("SELECT p.id AS pago, CONCAT(p.proveedor.usuario.nombre, ' ', p.proveedor.usuario.apellido) AS proveedor,"+
-           " CONCAT(p.cliente.usuario.nombre, ' ', p.cliente.usuario.apellido) AS cliente,"+
-           " p.cliente.usuario.email AS correo, p.valor FROM Pago p WHERE p.estado = 'PENDIENTE'")
-    public List<Object> getPagosPendiente();
+       @Query("SELECT p FROM Pago p WHERE p.proveedor.id = :idProveedor")
+       public List<Pago> getPagoPorProveedores(@Param("idProveedor") String idProveedor);
+
+       @Query("SELECT p FROM Pago p WHERE p.estado = 'PENDIENTE'")
+       public List<Pago> getPagosPendiente();
+
+       @Query("SELECT p FROM Pago p WHERE p.estado = 'PENDIENTE' AND p.cliente.id = :idCliente")
+       public List<Pago> getPagosPendientePorCliente(@Param("idCliente") String idCliente);
+
+       @Query("SELECT p FROM Pago p WHERE p.estado = 'PENDIENTE' AND p.proveedor.id = :idProveedor")
+       public List<Pago> getPagosPendientePorProveedor(@Param("idProveedor") String idProveedor);
 }

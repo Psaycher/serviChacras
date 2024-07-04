@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `cliente`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cliente` (
   `id` varchar(255) NOT NULL,
-  `promedio_puntuacion` int DEFAULT NULL,
+  `promedio_puntuacion` double DEFAULT NULL,
   `id_usuario` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_m1e6bw9cg5aydhk0rlylo5oom` (`id_usuario`),
@@ -155,8 +155,12 @@ CREATE TABLE `notificacion` (
   `id_destinatario` varchar(255) DEFAULT NULL,
   `nombre` varchar(255) DEFAULT NULL,
   `detalle` varchar(255) DEFAULT NULL,
+  `fecha` datetime(6) DEFAULT NULL,
+  `id_remitente` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `FKkflye6y9qqefsq01sy79lj9di` (`id_destinatario`),
+  KEY `FK21mr4yxcyqp79gh1vjnpqsnrp` (`id_remitente`),
+  CONSTRAINT `FK21mr4yxcyqp79gh1vjnpqsnrp` FOREIGN KEY (`id_remitente`) REFERENCES `usuario` (`id`),
   CONSTRAINT `FKkflye6y9qqefsq01sy79lj9di` FOREIGN KEY (`id_destinatario`) REFERENCES `usuario` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -167,6 +171,7 @@ CREATE TABLE `notificacion` (
 
 LOCK TABLES `notificacion` WRITE;
 /*!40000 ALTER TABLE `notificacion` DISABLE KEYS */;
+INSERT INTO `notificacion` VALUES ('12abb044-f45f-45e1-8793-ce6c10d4e255','Se ha rechazado el Pedido','','PEDIDORechazado','','',NULL,'PENDIENTE','0d5aa448-2509-4306-a18a-3ec7d44a5560',NULL,'Disponibilidad los días: miércoles\nhorarios disponibles de: 10:00 hasta las 11:00.\nSe requiere: Detalles2','2024-07-04 05:22:44.263000','946ef115-b455-4bc1-a56c-2ff5c36cdb38'),('7a48f1a7-3880-44bf-91b9-bf033a845d8c','Solicitud de Pedido','','PEDIDOSolicitud','','',NULL,'PENDIENTE','946ef115-b455-4bc1-a56c-2ff5c36cdb38',NULL,'Disponibilidad los días: miércoles\nhorarios disponibles de: 10:00 hasta las 11:00.\nSe requiere: Detalles2','2024-07-04 04:50:18.872000','0d5aa448-2509-4306-a18a-3ec7d44a5560'),('8aaf535a-b02f-49e1-94ba-80a6f1caf22b','Solicitud de Pedido','','PEDIDOSolicitud','','',NULL,'PENDIENTE','946ef115-b455-4bc1-a56c-2ff5c36cdb38',NULL,'Disponibilidad los días: jueves\nhorarios disponibles de: 10:00 hasta las 20:00.\nSe requiere: Detalles3','2024-07-04 04:57:39.172000','0d5aa448-2509-4306-a18a-3ec7d44a5560'),('8cc69bf5-325e-443b-9f78-418f777a1ad2','Solicitud de Pedido','','PEDIDOSolicitud','','','Cliente Cliente','PENDIENTE','946ef115-b455-4bc1-a56c-2ff5c36cdb38',NULL,'Asunto','2024-07-04 00:36:01.580000',NULL);
 /*!40000 ALTER TABLE `notificacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -187,11 +192,12 @@ CREATE TABLE `pago` (
   `id_proveedor` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_smd7sl0godm04hw83kdt6ebwf` (`id_pedido`),
-  KEY `FK2fmwlqws6jmrycdhkn2bl8m0p` (`id_cliente`),
   KEY `FK76a87xqfr7plhl1d5x0qo42y1` (`id_notificacion`),
   KEY `FKt68doobsq241tbtrtki8u1hhl` (`id_proveedor`),
+  KEY `FKkl01fccrd6up3emqf0ednbuc4` (`id_cliente`),
   CONSTRAINT `FK2fmwlqws6jmrycdhkn2bl8m0p` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id`),
   CONSTRAINT `FK76a87xqfr7plhl1d5x0qo42y1` FOREIGN KEY (`id_notificacion`) REFERENCES `notificacion` (`id`),
+  CONSTRAINT `FKkl01fccrd6up3emqf0ednbuc4` FOREIGN KEY (`id_cliente`) REFERENCES `usuario` (`id`),
   CONSTRAINT `FKpddca3nqitclyep51ognpka70` FOREIGN KEY (`id_pedido`) REFERENCES `pedido` (`id`),
   CONSTRAINT `FKt68doobsq241tbtrtki8u1hhl` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedor` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -223,11 +229,14 @@ CREATE TABLE `pedido` (
   `id_proveedor` varchar(255) DEFAULT NULL,
   `id_servicio` varchar(255) DEFAULT NULL,
   `id_pago` varchar(255) DEFAULT NULL,
+  `asunto` varchar(255) DEFAULT NULL,
+  `detalle` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UK_e0yvudb6ykrmvxma2ji6pv9aq` (`id_pago`),
-  KEY `FK9y4jnyp1hxqa386cnly0ay9uw` (`id_cliente`),
   KEY `FK8bidxaiy6ls8hvnjg35a0621v` (`id_proveedor`),
   KEY `FK60n5avbx3qemfhkac9ai44nff` (`id_servicio`),
+  KEY `FK48929k2o7euot8lws254925op` (`id_cliente`),
+  CONSTRAINT `FK48929k2o7euot8lws254925op` FOREIGN KEY (`id_cliente`) REFERENCES `usuario` (`id`),
   CONSTRAINT `FK60n5avbx3qemfhkac9ai44nff` FOREIGN KEY (`id_servicio`) REFERENCES `servicio` (`id`),
   CONSTRAINT `FK8bidxaiy6ls8hvnjg35a0621v` FOREIGN KEY (`id_proveedor`) REFERENCES `proveedor` (`id`),
   CONSTRAINT `FK9y4jnyp1hxqa386cnly0ay9uw` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id`),
@@ -354,8 +363,13 @@ CREATE TABLE `usuario` (
   `rol` enum('USER','ADMIN','CLIENTE','PROVEEDOR','MIXTO') DEFAULT NULL,
   `telefono` varchar(255) DEFAULT NULL,
   `barrio` varchar(255) DEFAULT NULL,
+  `dtype` varchar(31) NOT NULL,
+  `promedio_puntuacion` double DEFAULT NULL,
+  `id_usuario` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `UK_5171l57faosmj8myawaucatdw` (`email`)
+  UNIQUE KEY `UK_5171l57faosmj8myawaucatdw` (`email`),
+  UNIQUE KEY `UK_e9t8a4cbsnge36ij140n5h9h1` (`id_usuario`),
+  CONSTRAINT `FKcy000c5eikivuc3qxj3qsexqe` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -365,7 +379,7 @@ CREATE TABLE `usuario` (
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES ('0354ace5-b195-44e4-aca4-c6082b2651e2',_binary '','Pruebita','Pruebita 123','pruebita@pruebita.com','Pruebita','$2a$10$eyLz5cuJDl6Oemgisj8rJeWpvieBWQLJdV/XfXhpjzNjzAAlXm1iW','PROVEEDOR','1136025478','Los Robles'),('08651179-b38e-477e-a972-0e846ca0033b',_binary '','Flow','DireProveedor 123','proveedor@proveedor.com','Personal','$2a$10$0uuAailqclwK6xt1mCmJZuSxIb.2HuMfh9QEoo5dwsQHqGjgCXqcm','PROVEEDOR','08001116644','FORANEO'),('0d5aa448-2509-4306-a18a-3ec7d44a5560',_binary '','Cliente','Cliente 123','cliente@cliente.com','Cliente','$2a$10$TtiNJixI8v/0Z01LRzb2luCo733CopC6Xn4SFMVeSdYfx8TCEu4M.','CLIENTE','1136065544','Los Robles'),('44577e5c-610d-4476-9cdc-4a4db10869e8',_binary '','admin','Admin 123','admin@admin.com','admin','$2a$10$EGnRZCDUG.x8VyNvqkB3luDAGWyeC2r1kree.pJZOj6.gLZUOq7Su','ADMIN','1136024477','Los Robles'),('5ed7219e-00cb-4a49-a3c4-28ac2c577ae9',_binary '','Usuario','Calle falsa 123','usuario@usuario.com','Usuario','$2a$10$L3p6/wD3oBQ05RRzhf/UHOAXQW/X3ByDlHvjQbZGUUWVKs375DuTW','CLIENTE','1133664477','Los Tilos'),('9308a1f5-7d2d-4e19-b348-9515e9173080',_binary '','Pirulo','Leandro 123','leandro@pirulo.com','Leandro','$2a$10$NtZituLXFBipybAsve7mUe9PUySUojAq5IX.iATIvTB1l8Ecms3Dq','CLIENTE','113365478','FORANEO'),('946ef115-b455-4bc1-a56c-2ff5c36cdb38',_binary '','Pikachu','Pikachu 123','pikachu@pikachu.com','Proveedor','$2a$10$2c1ZZcTiftbUFF2pTPiijuEFVDs8Umzu0cALCedj4rTG9azWISgHC','PROVEEDOR','1136020666','Los Tilos'),('9653680d-c1ee-40ff-b9ad-4ac159be4c3e',_binary '','Energy Solutions','Avenida Siempre Viva 742','green_energy@gmail.com','Green','$2a$10$lm1tzPhLrBG6EekcTTMNAOW5HzzGyacyPj110seB1ZgblamX.7EZy','PROVEEDOR','08101114478','FORANEO'),('b46bc199-1da4-434c-8059-905a5df3a68b',_binary '','Ocean Technologies','Calle del Sol 456','blue@ocean.com','Blue','$2a$10$f21DxAbGviOHjFx0dO4grOs57do63P7/yd2P3YWFPvvysD5p.GJnO','PROVEEDOR','08003336464','FORANEO'),('c9a85d09-8975-4658-9fb2-8a77416dba5c',_binary '','Pruebita','Prueba123','pruebita@gmail.com','Pruebita','$2a$10$kUrEXiw16q6YE5MjDlMbLOf5ElnlHizPw5HgQkL.w5szclVDQVldG','CLIENTE','113322147','FORANEO'),('cb6d6878-7478-423b-8233-a4c046decdbc',_binary '','SRL','lalala 123','Proveedor5@gmail.com','Securitas','$2a$10$LxWfnzeBLr0yZnSrEpQ5f.AExnSbI3XEhhE9rG7zEeWJt1GZAcvSO','PROVEEDOR','08103331143','FORANEO'),('dbbd67f8-c005-4a1c-bd36-d67a4232855a',_binary '','Fast','Domicilio 123','proveedor1@gmail.com','Cleaner','$2a$10$2ThioLMARyBDcluc3EwYmeX9JNQNyt1u89imp8Q4VIeulTNhIi22.','PROVEEDOR','1133447788','FORANEO');
+INSERT INTO `usuario` VALUES ('0354ace5-b195-44e4-aca4-c6082b2651e2',_binary '','Pruebita','Pruebita 123','pruebita@pruebita.com','Pruebita','$2a$10$eyLz5cuJDl6Oemgisj8rJeWpvieBWQLJdV/XfXhpjzNjzAAlXm1iW','PROVEEDOR','1136025478','Los Robles','',NULL,NULL),('08651179-b38e-477e-a972-0e846ca0033b',_binary '','Flow','DireProveedor 123','proveedor@proveedor.com','Personal','$2a$10$0uuAailqclwK6xt1mCmJZuSxIb.2HuMfh9QEoo5dwsQHqGjgCXqcm','PROVEEDOR','08001116644','FORANEO','',NULL,NULL),('0d5aa448-2509-4306-a18a-3ec7d44a5560',_binary '','Cliente','Cliente 123','cliente@cliente.com','Cliente','$2a$10$TtiNJixI8v/0Z01LRzb2luCo733CopC6Xn4SFMVeSdYfx8TCEu4M.','CLIENTE','1136065544','Los Robles','',NULL,NULL),('44577e5c-610d-4476-9cdc-4a4db10869e8',_binary '','admin','Admin 123','admin@admin.com','admin','$2a$10$EGnRZCDUG.x8VyNvqkB3luDAGWyeC2r1kree.pJZOj6.gLZUOq7Su','ADMIN','1136024477','Los Robles','',NULL,NULL),('5ed7219e-00cb-4a49-a3c4-28ac2c577ae9',_binary '','Usuario','Calle falsa 123','usuario@usuario.com','Usuario','$2a$10$zCvCt9.qPtvueOOOTGtZX.WLG11VGblIy7hTNaYxlTf2.8aYejG.m','CLIENTE','1133664477','Los Tilos','',NULL,NULL),('9308a1f5-7d2d-4e19-b348-9515e9173080',_binary '','Pirulo','Leandro 123','leandro@pirulo.com','Leandro','$2a$10$NtZituLXFBipybAsve7mUe9PUySUojAq5IX.iATIvTB1l8Ecms3Dq','CLIENTE','113365478','FORANEO','',NULL,NULL),('946ef115-b455-4bc1-a56c-2ff5c36cdb38',_binary '','Pikachu','Pikachu 123','pikachu@pikachu.com','Proveedor','$2a$10$2c1ZZcTiftbUFF2pTPiijuEFVDs8Umzu0cALCedj4rTG9azWISgHC','PROVEEDOR','1136020666','Los Tilos','',NULL,NULL),('9653680d-c1ee-40ff-b9ad-4ac159be4c3e',_binary '','Energy Solutions','Avenida Siempre Viva 742','green_energy@gmail.com','Green','$2a$10$lm1tzPhLrBG6EekcTTMNAOW5HzzGyacyPj110seB1ZgblamX.7EZy','PROVEEDOR','08101114478','FORANEO','',NULL,NULL),('b46bc199-1da4-434c-8059-905a5df3a68b',_binary '','Ocean Technologies','Calle del Sol 456','blue@ocean.com','Blue','$2a$10$f21DxAbGviOHjFx0dO4grOs57do63P7/yd2P3YWFPvvysD5p.GJnO','PROVEEDOR','08003336464','FORANEO','',NULL,NULL),('c9a85d09-8975-4658-9fb2-8a77416dba5c',_binary '','Pruebita','Prueba123','pruebita@gmail.com','Pruebita','$2a$10$kUrEXiw16q6YE5MjDlMbLOf5ElnlHizPw5HgQkL.w5szclVDQVldG','CLIENTE','113322147','FORANEO','',NULL,NULL),('cb6d6878-7478-423b-8233-a4c046decdbc',_binary '','SRL','lalala 123','Proveedor5@gmail.com','Securitas','$2a$10$LxWfnzeBLr0yZnSrEpQ5f.AExnSbI3XEhhE9rG7zEeWJt1GZAcvSO','PROVEEDOR','08103331143','FORANEO','',NULL,NULL),('dbbd67f8-c005-4a1c-bd36-d67a4232855a',_binary '','Fast','Domicilio 123','proveedor1@gmail.com','Cleaner','$2a$10$2ThioLMARyBDcluc3EwYmeX9JNQNyt1u89imp8Q4VIeulTNhIi22.','PROVEEDOR','1133447788','FORANEO','',NULL,NULL);
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -378,4 +392,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-29  1:33:15
+-- Dump completed on 2024-07-04  8:06:25
