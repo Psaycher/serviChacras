@@ -14,6 +14,9 @@ public interface PagoRepositorio extends JpaRepository<Pago, String> {
        @Query("SELECT p.id FROM Pago p WHERE p.pedido.id = :idPedido")
        public String idPorPedido(@Param("idPedido") String idPedido);
 
+       @Query("SELECT n.pedido FROM Notificacion n WHERE n.id = :idNotificacion")
+       public String IdPedidoPorNotificacion(@Param("idNotificacion") String idNotificacion);
+
        @Query("SELECT p FROM Pago p WHERE p.pedido.id = :idPedido")
        public Pago getPagoPorPedido(@Param("idPedido") String idPedido);
 

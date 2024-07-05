@@ -12,8 +12,20 @@ import com.FinalEgg.ServiChacras.entidades.Pedido;
 
 @Repository
 public interface PedidoRepositorio extends JpaRepository<Pedido, String> {
+       @Query("SELECT p FROM Pedido p WHERE p.detalle = :detalle")
+       public Pedido getPorDetalle(@Param("detalle") String detalle);
+
+       @Query("SELECT p FROM Pedido p WHERE p.pago.id = :idPago")
+       public Pedido getPorPago(@Param("idPago") String idPago);
+       
        @Query("SELECT p.id FROM Pedido p WHERE p.cliente.id = :idCliente")
        public String getIdPedidoPorCliente(@Param("idCliente") String idCliente);
+
+       @Query("SELECT COUNT(p) FROM Pedido p WHERE p.cliente.id = :idCliente")
+       public Integer contarPorCliente(@Param("idCliente") String idCliente);
+
+       @Query("SELECT COUNT(p) FROM Pedido p WHERE p.proveedor.id = :idProveedor")
+       public Integer contarPorProveedor(@Param("idProveedor") String idProveedor);
 
        @Query("SELECT p FROM Pedido p WHERE p.cliente.id = :idCliente")
        public List<Pedido> getPedidosPorClientes(@Param("idCliente") String idCliente);       

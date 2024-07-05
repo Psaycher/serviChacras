@@ -16,6 +16,7 @@ public class Denuncia {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
     private String asunto;
+    private String detalle;
     
     @ManyToOne
     @JoinColumn(name = "id_remitente")

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -37,8 +38,11 @@ public class PedidoServicio {
     private ProveedorRepositorio proveedorRepositorio;
 
     @Transactional
-    public Pedido crearPedido(String idCliente, String idServicio, String idProveedor) throws MiExcepcion {
+    public Pedido crearPedido(String idCliente, String idServicio, String idProveedor, String asunto, String detalle, Integer valor) throws MiExcepcion {
         Pedido pedido = new Pedido();
+
+        pedido.setAsunto(asunto);
+        pedido.setDetalle(detalle);
 
         Optional<Cliente> opcionalCliente = clienteRepositorio.findById(idCliente);
         Cliente cliente = new Cliente();
@@ -61,7 +65,9 @@ public class PedidoServicio {
         pedido.setEstado(Estado.PENDIENTE);
         pedido.setAlta(true);
 
-        pagoServicio.crearPago(idCliente, idProveedor);
+        Pago pago = pagoServicio.crearPago(idCliente, idProveedor, valor);
+        pedido.setPago(pago);
+        
         pedidoRepositorio.save(pedido);
         return pedido;
     }
@@ -138,10 +144,22 @@ public class PedidoServicio {
     }
 
     @Transactional
-    public void deletearPedido(String id) { pedidoRepositorio.deleteById(id); }
+    public void eliminarPedido(String id) { pedidoRepositorio.deleteById(id); }
 
     @Transactional(readOnly = true)
     public Pedido getOne(String id) { return pedidoRepositorio.getOne(id); }
+
+    @Transactional(readOnly = true)
+    public Pedido getPorDetalle(String detalle)  { return pedidoRepositorio.getPorDetalle(detalle); }
+
+    @Transactional(readOnly = true)
+    public Pedido getPorPago(String idPago)  { return pedidoRepositorio.getPorPago(idPago); }
+
+    @Transactional(readOnly = true)
+    public Integer contarPorCliente(String idCliente) { return pedidoRepositorio.contarPorCliente(idCliente); }
+
+    @Transactional(readOnly = true)
+    public Integer contarPorProveedor(String idProveedor) { return pedidoRepositorio.contarPorProveedor(idProveedor); }
 
     @Transactional(readOnly = true)
     public String getIdPedidoPorClientes(String idCliente) { return pedidoRepositorio.getIdPedidoPorCliente(idCliente); }

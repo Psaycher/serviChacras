@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
+
+import java.util.Date;
+
 import org.hibernate.annotations.GenericGenerator;
 import com.FinalEgg.ServiChacras.enumeraciones.Estado;
 import com.FinalEgg.ServiChacras.enumeraciones.TipoDeNota;
@@ -18,14 +21,21 @@ public class Notificacion {
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
     private String asunto;
-    private String remitente;
     private String detalle;
-    
+    private String correspondencia;
+     
    @Enumerated(EnumType.STRING)
     private TipoDeNota nota;
 
     @Enumerated(EnumType.STRING)
     private Estado visto;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date fecha;
+
+    @ManyToOne
+    @JoinColumn(name = "id_remitente")
+    private Usuario remitente;
 
     @ManyToOne
     @JoinColumn(name = "id_destinatario")

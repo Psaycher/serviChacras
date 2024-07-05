@@ -18,7 +18,7 @@
             <div id="contenedor_de_tarjetas" style="width:100%;" th:if="${rolSession == 'CLIENTE'}">
 
                 <div id="contenedor-tarjetas" style="width:100%; margin-top:25px; margin-bottom:10px;" class="row">
-                    <div class="card mx-3 my-3 text-bg-dark col-md-5" style="width:250PX; height: 350px;" th:each="proveedor : ${proveedores}">
+                    <div class="card mx-3 my-3 text-bg-dark col-md-5" style="width:300px; height: 400px;" th:each="proveedor : ${proveedores}">
                         <div id="foto-card">
                             <div id="img-card" th:if="${proveedor.imagen != null}">
                                 <img th:src="@{/usuario/imagen/__${proveedor.id}__}">
@@ -47,15 +47,27 @@
 
             <div id="contenedor_de_tarjetas" th:if="${rolSession == 'PROVEEDOR'}">
 
-                <div id="contenedor-tarjetas" style="width:100%; margin-top:25px; margin-bottom:10px;" class="row">
+                <div class="row" th:if="${vacio}">
+                    <div class="col-md-12 text-center">
+                      <h1 th:text="'Bienvenido ' + ${session.usuariosession.nombre}"></h1>
+                      <p class="lead" th:text="${texto}"></p>
+                    </div>
+                  </div>
+
+                <div id="contenedor-tarjetas" style="width:100%; margin-top:25px; margin-bottom:10px;" class="row" th:if="${!vacio}">
                     <div class="card cardExpositor text-bg-dark col-md-5" th:each="cliente : ${clientes}">
+                        <div id="foto-card">
+                            <div id="img-card">
+                                <img src="/img/usuario-sin-foto.jpeg">
+                            </div>                             
+                        </div>      
                         <div class="card-body">
                             <h5 class="card-title" th:text="${cliente.usuario.nombre} + ' ' + ${cliente.usuario.apellido}"></h5>
                             <p class="card-text" th:text="${cliente.usuario.barrio}"></p>
                         </div>
-                        <!-- <ul class="list-group list-group-flush" th:if="${encargo == "ENCARGO"}" th:each="pedido : ${pedidos}">
+                        <ul class="list-group list-group-flush" th:if="${encargo == 'ENCARGO'}" th:each="pedido : ${pedidos}">
                             <li class="list-group-item" th:text="${pedido.asunto}"></li>
-                        </ul> -->
+                        </ul>
                         <div class="card-body">
                             <a href="#" class="card-link" th:href="@{/usuario/unicard/__${cliente.usuario.id}__(rolSession=PROVEEDOR)}">
                                 <button type="button" class="btn btn-outline-info">Más Info</button>

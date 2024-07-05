@@ -4,53 +4,74 @@
 <head th:replace="~{/fragments/head :: head}"></head>
 
 <body>
-<!-- Navegador -->
-<nav th:replace="~{/fragments/navbar :: nav}"></nav>
-<div>
-</div>
-<div class="container" style="background-color: #6e4e378b; color: beige; padding-left:20px; padding-top:10px; padding-bottom:10px; height:100%">
-    <div class="row">
-        <div class="col-12" style="overflow-y: auto; background-color: #543b29e9; border: 1px solid #2f2117; padding-top:10px;">
-            <div id="filtrar-notificaciones">
-                <div class="col-3" style="width: 100%;">
-                    <h3>Filtrar Notificaciones</h3>
-                    <form style="display: flex; flex-direction:row; align-items:baseline; justify-content:space-between; width:50%;">
-                        <div class="form-group">
-                            <label for="filterFecha">Ordenar por Fecha</label>
-                            <select class="form-control" id="filterFecha">
-                                <option value="">Seleccionar...</option>
-                                <option value="antigua">Más antigua</option>
-                                <option value="reciente">Más reciente</option>
-                            </select>
+    <!-- Navegador -->
+    <nav th:replace="~{/fragments/navbar :: nav}"></nav>
+
+    <div class="container contUnicard" style="background-color: #6e4e378b; color: black; padding-left:20px; padding-top:10px; padding-bottom:10px; height:100%">
+        <div class="row">
+            <div class="col-12" style="overflow-y: auto; background-color: #F3CA97; border: 1px solid #2f2117; padding-top:10px;">
+                <div id="filtrar-notificaciones">
+                    <div class="col-3" style="width: 100%;">
+                        <h1 class="my-4 text-center">Bandeja de Notificaciones</h1>
+                        <div class="list-group">
+                            <ul class="list-group">
+                                <li th:each="notificacion : ${notificaciones}" class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span class="fw-bold">Asunto:</span>
+                                        <span th:text="${notificacion.asunto}">Asunto</span>
+                                        <span class="mx-2">|</span>
+                                        <span class="fw-bold">Remitente:</span>
+                                        <span th:text="${notificacion.remitente.nombre} + ' ' + ${notificacion.remitente.apellido}">Remitente</span>
+                                    </div>
+                                    <a class="btn btn-primary btn-sm" th:href="@{/notificacion/verNotificacion/{id}(id=${notificacion.id})}">Ver</a>
+                                </li>
+                            </ul>
                         </div>
-                        <div class="form-group">
-                            <label for="filterCliente">Por Cliente</label>
-                            <select class="form-control" id="filterOrdenCalificacion">
-                                <option value="">Seleccionar...</option>
-                                <option value="nombre-cliente">Nombre cliente</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="filterPedido">Por Pedido</label>
-                            <select class="form-control" id="filterOrdenCalificacion">
-                                <option value="">Seleccionar...</option>
-                                <option value="pedido">Pedido</option>
-                            </select>
-                        </div>
-                        <button style="align-self: center;" type="submit" class="btn btn-primary">Buscar</button>
-                    </form>
+                        <br>
+                     
+                        <h3>Filtrar Notificaciones</h3>
+                        <form th:action="@{/buscar-notificaciones}" method="get" style="display: flex; flex-direction:row; align-items:baseline; justify-content:space-between; width:100%;">
+                            <div class="form-group text-center">
+                                <label for="filterFecha" class="text-center">Ordenar por Fecha</label>
+                                <select class="form-control" id="filterFecha" name="orderByFecha">
+                                    <option value="" th:selected="${orderByFecha == ''}">Seleccionar...</option>
+                                    <option value="antigua" th:selected="${orderByFecha == 'antigua'}">Más antigua</option>
+                                    <option value="reciente" th:selected="${orderByFecha == 'reciente'}">Más reciente</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="filterCliente" class="text-center">Por Cliente</label>
+                                <select class="form-control" id="filterCliente" name="orderByCliente">
+                                    <option value="" th:selected="${orderByCliente == ''}">Seleccionar...</option>
+                                    <option value="nombre-cliente" th:selected="${orderByCliente == 'nombre-cliente'}">Nombre cliente</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="filterPedido">Por Pedido</label>
+                                <select class="form-control" id="filterPedido" name="orderByPedido">
+                                    <option value="" th:selected="${orderByPedido == ''}">Seleccionar...</option>
+                                    <option value="pedido" th:selected="${orderByPedido == 'pedido'}">Pedido</option>
+                                </select>
+                            </div>
+                            
+                            <button style="align-self: center;" type="submit" class="btn btn-primary">Buscar</button>
+                        </form>
+                    </div>
                 </div>
             </div>
-            <div id="todasNotificaciones">
-                <ul class="list-group">
-                    <li class="list-group-item" style="border: 1px solid whitesmoke;">Notificación 1</li>
-                    <li class="list-group-item" style="border: 1px solid whitesmoke;">Notificación 2</li>
-                    <li class="list-group-item" style="border: 1px solid whitesmoke;">Notificación 3</li>
-                    <li class="list-group-item" style="border: 1px solid whitesmoke;">Notificación 4</li>
-                </ul>
-            </div>
+
+            <section class="text-center container">
+                <div class="row mt-3">
+                    <div class="divVolver">
+                        <a th:href="@{/inicio}" class="btn btn-secondary my-2 botonVolver botones">Volver</a>
+                    </div>
+                </div>
+            </section>
         </div>
     </div>
+    
     <div class="mensaje-container">
         <div class="mensaje-header">
             <span></span>
@@ -91,13 +112,13 @@
             <button class="send" onclick="enviarMensaje()">Enviar</button>
         </div>
     </div>
-
+    
     <div id="image-viewer" class="image-viewer" style="display: none;" onclick="handleImageViewerClick(event)">
         <span class="close-viewer">&times;</span>
         <a id="download-link" class="download-link" download>Descargar</a>
         <img id="viewer-image" src="" alt="Imagen">
     </div>
-
+    
     <div class="report-container">
         <div id="reportFormOverlay" class="overlay" style="display: none;" onclick="reportClose()"></div>
         <div id="reportForm" class="report-form" style="display: none; z-index:1000;">
@@ -122,7 +143,7 @@
             </form>
         </div>
     </div>
-
+    
     <div class="rating-container">
         <div id="overlayCalificacion" class="overlay" style="display: none;" onclick="cerrarFormularioCalificacion()"></div>
         <div id="formularioCalificacion" class="rating-form" style="display: none;">
@@ -151,7 +172,7 @@
             </form>
         </div>
     </div>
-
+    
     <div id="cerrarModal" class="cerrar-modal" style="display: none;" onclick="hideModal()"></div>
     <div id="modal" class="modal" style="display: none;">
         <button id="botonCerrarModal" class="close-btn-modal" onclick="hideModal()">&times;</button>
@@ -185,7 +206,7 @@
     <footer th:replace= "~{/fragments/footer :: footer}"></footer>
 
     <!-- Scripts -->
-    <script src="static/script/script.js"></script>
+    <script src="/js/script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
 </body>

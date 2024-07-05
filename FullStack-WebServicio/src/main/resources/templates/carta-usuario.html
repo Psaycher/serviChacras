@@ -15,7 +15,7 @@
 
                 <div class="card mb-3" style="max-width: 100%; background: #6e4e378b; border: 1px solid #adadad; color: whitesmoke;">
                     <div class="row g-0">
-                        <div class="col-md-4 imgUnicard" style="height: 80%;" th:if="${rolSession == 'CLIENTE'}">                           
+                        <div class="col-md-4" th:if="${rolSession == 'CLIENTE'}">                           
                            <div style="width:100%; height: 100%;" class="img-fluid rounded-start"  th:if="${proveedor.imagen != null}">
                                 <img class="card-img-top" th:src="@{/usuario/imagen/__${proveedor.id}__}">
                             </div>
@@ -36,9 +36,6 @@
                                     <li class="list-group-item" th:text="${usuario.direccion}  + ', ' + ${usuario.barrio}">Direccion y barrio</li>
                                     <li class="list-group-item" th:text="${usuario.email}">Email</li>                        
                                     <li class="list-group-item" th:text="${usuario.telefono}">Telefono</li>
-                                    <li class="list-group-item" th:if="${rolSession == 'USUARIO'}">
-                                        <p>Rol: <span th:text="${usuario.rol}"></span></p>
-                                    </li>
                                     <li class="list-group-item" th:if="${rolSession == 'CLIENTE'}">
                                         <h5 th:text="${proveedor.servicio.nombre} + ': '"></h5>
                                         <p th:text="${proveedor.descripcion}"></p>
@@ -55,29 +52,6 @@
                                     <div class="card-body" th:if="${rolSession == 'USUARIO'}">
                                       <a href="#" class="card-link"><button type="button" id="cambiar-datos-usuario" class="btn btn-outline-primary">Cambiar Datos</button></a>
                                     </div>
-                                    <div th:if="${rolSession == 'PROVEEDOR'}">
-                                        <a href="#" class="card-link" th:href="@{/pedido/notificarPedido/__${cliente.usuario.id}__}">
-                                            <button id="solicitar-servicio" type="button" class="btn btn-outline-success">Aceptar Pedido</button>
-                                        </a>
-                                        <div th:if="${hayPedido == 'HAY'}">
-                                            <button id="notificar-trabajo-completo" type="button" class="btn btn-outline-success">Notificar trabajo completo</button>
-                                            <button id="pedir-pago" type="button" class="btn btn-outline-warning">Pedir pago</button>
-                                            <button id="pago-recibido" type="button" class="btn btn-outline-success">Pago recibido</button>
-                                            <button type="button" class="btn btn-outline-success calificarBtn" onclick="calificar()">Calificar</button>
-                                            <button type="button" class="btn btn-outline-danger" onclick="reportar()">Reportar</button>
-                                        </div>                                                                       
-                                    </div>
-                                    <div th:if="${rolSession == 'CLIENTE'}">
-                                        <a href="#" class="card-link" th:href="@{/usuario/solicitarPedido/__${proveedor.usuario.id}__}">
-                                            <button id="solicitar-servicio" type="button" class="btn btn-outline-success">Solicitar Servicio</button>
-                                        </a>
-                                        <div th:if="${hayPedido == 'HAY'}">                                            
-                                            <button type="button" class="btn btn-outline-success">Trabajo completo</button>
-                                            <button type="button" class="btn btn-outline-warning" onclick="showModal()">Pagar</button>
-                                            <button type="button" class="btn btn-outline-success calificarBtn" onclick="calificar()">Calificar</button>
-                                            <button type="button" class="btn btn-outline-danger" onclick="reportar()">Reportar</button>
-                                        </div>                                                                           
-                                    </div>
                                 </ul>
                             </div>
                         </div>
@@ -85,40 +59,40 @@
                 </div>
 
                 <!--Calificaciones-->
-                <div id="filtrar-calificaciones" th:if="${rolSession != 'USUARIO'}">
+                <div id="filtrar-calificaciones">
                     <div class="col-3" style="max-height: 450px;">
                         <h3>Filtrar Calificaciones</h3>
                         <form>
                             <div class="form-group">
                                 <label for="filterCalificacion">Por Calificación</label>
                                 <select class="form-control" id="filterCalificacion">
-                                    <option value="">Seleccionar...</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                    <option value="6">6</option>
-                                    <option value="7">7</option>
-                                    <option value="8">8</option>
-                                    <option value="9">9</option>
-                                    <option value="10">10</option>
+                                <option value="">Seleccionar...</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="filterFecha">Por Fecha</label>
                                 <select class="form-control" id="filterFecha">
-                                    <option value="">Seleccionar...</option>
-                                    <option value="antigua">Más antigua</option>
-                                    <option value="reciente">Más reciente</option>
+                                <option value="">Seleccionar...</option>
+                                <option value="antigua">Más antigua</option>
+                                <option value="reciente">Más reciente</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label for="filterOrdenCalificacion">Por Orden de Calificación</label>
                                 <select class="form-control" id="filterOrdenCalificacion">
-                                    <option value="">Seleccionar...</option>
-                                    <option value="mayor">Desde mayor calificación</option>
-                                    <option value="menor">Desde menor calificación</option>
+                                <option value="">Seleccionar...</option>
+                                <option value="mayor">Desde mayor calificación</option>
+                                <option value="menor">Desde menor calificación</option>
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-primary">Buscar</button>
@@ -126,18 +100,18 @@
                         <br>
                     </div>
                 </div>
-                <div class="row" id="calificaciones-contenedor" style="margin-bottom:10px;" th:if="${hayPedido == 'HAY'}">
+                <div class="row" id="calificaciones-contenedor" style="margin-bottom:10px;">
                     <div class="col-4">
-                        <div class="card mb-3" style="max-width: 540px;" th:each="pedido : ${pedidoss}">
-                            <div class="row g-0">                                
+                        <div class="card mb-3" style="max-width: 540px;">
+                            <div class="row g-0">
+                                <div class="col-md-4">
+                                    <img src="..." class="img-fluid rounded-start" alt="...">
+                                </div>
                                 <div class="col-md-8">
                                     <div class="card-body">
-                                    <h5 th:text="${pedido.asunto}"></h5>
-                                    <p class="card-text">fecha: <span th:text="${pedido.fecha}"></span></p>
-                                    <p class="card-text">Estado: <span th:text="${pedido.estado}"></span></p>
-                                    <a th:href="@{/pedido/verPedido/__${pedido.id}__}">
-                                        <button type="button" class="btn btn-outline-info">Ir al detalle del Pedido</button>
-                                    </a>
+                                    <h5 class="card-title">Nombre cliente</h5>
+                                    <p class="card-text">Descripcion</p>
+                                    <p class="card-text">Calificacion: <span>0</span></p>
                                     </div>
                                 </div>
                             </div>
@@ -149,7 +123,7 @@
                 <div id="overlay" onclick="closeForm()"></div>
                 
                 <!-- Este es el formulario principal -->
-                <div id="serviceForm" style="display:none;" th:if="${rolSession != 'USUARIO'}">
+                <div id="serviceForm">
                     <div class="form-header">
                         <div class="form-title">Da más detalles de tu pedido</div>
                         <span class="close-btn" onclick="closeForm()">&times;</span>
@@ -178,7 +152,7 @@
                     </form>
                 </div>
 
-                <div class="mensaje-container" th:if="${rolSession != 'USUARIO'}">
+                <div class="mensaje-container">
                     <div class="mensaje-header">
                         <span></span>
                         <div class="controls">
@@ -223,13 +197,13 @@
                     </div>
                 </div>
     
-                <div id="image-viewer" class="image-viewer" style="display: none;" onclick="handleImageViewerClick(event)" th:if="${rolSession != 'USUARIO'}">
+                <div id="image-viewer" class="image-viewer" style="display: none;" onclick="handleImageViewerClick(event)">
                     <span class="close-viewer">&times;</span>
                     <a id="download-link" class="download-link" download>Descargar</a>
                     <img id="viewer-image" src="" alt="Imagen">
                 </div>
   
-                <div class="report-container" th:if="${rolSession != 'USUARIO'}">
+                <div class="report-container">
                     <div id="reportFormOverlay" class="overlay" style="display: none;" onclick="reportClose()"></div>
                     <div id="reportForm" class="report-form" style="display: none; z-index:1000;">
                         <div class="report-header">
@@ -254,7 +228,7 @@
                     </div>
                 </div>
   
-                <div class="rating-container" th:if="${rolSession != 'USUARIO'}">
+                <div class="rating-container">
                     <div id="overlayCalificacion" class="overlay" style="display: none;" onclick="cerrarFormularioCalificacion()"></div>
                     <div id="formularioCalificacion" class="rating-form" style="display: none;">
                         <div class="rating-header">
@@ -283,8 +257,8 @@
                     </div>
                 </div>
   
-                <div id="cerrarModal" class="cerrar-modal" style="display: none;" onclick="hideModal()" th:if="${rolSession != 'USUARIO'}"></div>
-                <div id="modal" class="modal" style="display: none;" th:if="${rolSession != 'USUARIO'}">
+                <div id="cerrarModal" class="cerrar-modal" style="display: none;" onclick="hideModal()"></div>
+                <div id="modal" class="modal" style="display: none;">
                     <button id="botonCerrarModal" class="close-btn-modal" onclick="hideModal()">&times;</button>
                     <h2>Detalles de la cuenta bancaria</h2>
                     <table>

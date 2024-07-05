@@ -6,7 +6,7 @@ public enum TipoDeNota {
     PEDIDORechazado,
     PEDIDOCancelado,
     PEDIDOFinalizado,
-    PAGOPendiente,
+    CONFIRMARFinalizacion,
     PAGODemandado,
     PAGOEfectuado,
     DENUNCIA,

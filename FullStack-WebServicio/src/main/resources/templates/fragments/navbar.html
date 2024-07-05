@@ -97,7 +97,7 @@
                                 <optgroup label="Pedidos Vigentes">
                                     <option class="opcion" th:each="pedido : ${pedidos}"
                                         th:value="${pedido.id}"
-                                        th:text="${pedido.servicio.nombre}+ ' - '${pedido.cliente.usuario.nombre}">
+                                        th:text="${pedido.asunto} + ': ' + ${pedido.cliente.usuario.nombre}  + ' ' + ${pedido.cliente.usuario.apellido}">
                                         <span></span>
                                     </option>
                                 </optgroup>
@@ -114,7 +114,7 @@
                     </form>
                 </div>
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a id="mensajes" class="nav-link" onclick="abrirNotificacionMensajes()">
                         <div class="notification-bell">
                             <img src="/img/mensaje-icono.png"
@@ -123,16 +123,20 @@
                         </div>
                     </a>
                     <div id="noti-mensajes">
-                        <ul class="list-group"th:each="mensaje : ${mensajes}">
+                        <ul class="list-group" th:each="mensaje : ${mensajes}">
                             <li class="list-group-item" style="border: 1px solid whitesmoke;" th:each="mj : ${mjs}">
                                 <p style="font-size: 14px;" th:text="${mj}"></p>
-                                <a class="nav-link navbarDropdown" th:href="@{/usuario/verMensaje/__${mensaje.id}__}">Ver detalle</a>
+                                <a class="nav-link navbarDropdown" th:href="@{/usuario/verMensaje/__${mensaje.id}__}">
+                                    <button class="btn btnFiltro btn-primary" type="button">Ver detalle</button>
+                                </a>
                             </li>
                             <br>                            
-                            <a class="nav-link navbarDropdown" th:href="@{/mensajeria/bandejaMensajes}">Ver todos</a>
+                            <a class="nav-link navbarDropdown" th:href="@{/mensajeria/bandejaMensajes}">
+                                <button class="btn btnFiltro btn-primary" type="button">Ver todas</button>
+                            </a>
                         </ul>
                     </div>
-                </li>
+                </li> -->
 
                 <li class="nav-item">
                     <a id="campana" class="nav-link" onclick="abrirCampanaNotificaciones()">
@@ -146,10 +150,14 @@
                         <ul class="list-group" th:each="notificacion : ${notificaciones}">                           
                             <li class="list-group-item" style="border: 1px solid whitesmoke;" th:each="nota : ${notas}">
                                 <p style="font-size: 14px;" th:text="${nota}"></p>
-                                <a class="nav-link navbarDropdown" th:href="@{/usuario/verNotificacion/__${notificacion.id}__}">Ver detalle</a>
+                                <a class="nav-link navbarDropdown" th:href="@{/notificacion/verNotificacion/__${notificacion.id}__}">
+                                    <button class="btn btnFiltro btn-primary" type="button">Ver detalle</button>                                    
+                                </a>
                             </li>
                             <br>
-                            <a class="nav-link navbarDropdown" th:href="@{/usuario/bandejaNotificaciones}">Ver todas</a>                            
+                            <a class="nav-link navbarDropdown" th:href="@{/notificacion/bandejaNotificaciones/__${rolSession}__}">
+                                <button class="btn btnFiltro btn-primary" type="button">Ver todas</button>                                
+                            </a>                            
                         </ul>
                     </div>
                 </li>
@@ -173,7 +181,7 @@
                         </li>
                         <li class="list-group-item">                      
                             <button type="button" class="btn btn-danger">
-                            <a class="nav-link navbarDropdown" th:href="@{/logout}">Cerrar Sesión</a>
+                                <a class="nav-link navbarDropdown" th:href="@{/logout}">Cerrar Sesión</a>
                             </button>                        
                         </li>
                     </ul>

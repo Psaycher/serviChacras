@@ -14,32 +14,22 @@
             <div id="">
 
                 <div class="card mb-3" style="max-width: 100%; background: #6e4e378b; border: 1px solid #adadad; color: whitesmoke;">
-                    <div class="row g-0">
-                        <div class="col-md-4 imgUnicard" style="height: 80%;" th:if="${rolSession == 'CLIENTE'}">                           
-                           <div style="width:100%; height: 100%;" class="img-fluid rounded-start"  th:if="${proveedor.imagen != null}">
-                                <img class="card-img-top" th:src="@{/usuario/imagen/__${proveedor.id}__}">
-                            </div>
-                            <div style="width:100%; height: 100%;" class="img-fluid rounded-start"  th:if="${proveedor.imagen == null}">
-                                <img class="card-img-top" src="/img/usuario-sin-foto.jpeg">
-                            </div>     
-                        </div>
-                        <div class="col-md-4" th:if="${rolSession == 'PROVEEDOR'}">                                                   
-                             <div style="width:100%; height: 100%;" class="img-fluid rounded-start">
-                                 <img class="card-img-top" src="/img/usuario-sin-foto.jpeg">
-                             </div>     
-                         </div>
+                    <div class="row g-0">                        
                         <div class="col-md-8">
                             <div class="card-body">
                                 <h5 class="card-title" style="border-bottom: 1px beige solid; color: beige;">Tus Datos</h5>
                                 <ul class="list-group">
-                                    <li class="list-group-item" th:text="${notificacion.remitente}"></li>
+                                    <li class="list-group-item" th:text="${notificacion.remitente.nombre} + ' ' + ${notificacion.remitente.apellido}"></li>
                                     <li class="list-group-item" th:text="${notificacion.asunto}"></li>
                                     <li class="list-group-item" th:text="${notificacion.fecha}"></li>                                     
                                     <li class="list-group-item" th:if="${hayDenuncia == 'HAY'}" th:text="${notificacion.denuncia.asunto}"></li>
+                                    <li class="list-group-item" th:if="${hayPago == 'HAY'}" th:text="'Valor: ' + ${notificacion.pago.valor}"></li>
                                 
                                     <li class="list-group-item" th:if="${hayPedido == 'HAY'}">
-                                        <h5 th:text="${notificacion.pedido.asunto} + ': '"></h5>
-                                        <p th:text="${pedido.detalle}"></p>
+                                        <h5 th:text="${notificacion.asunto} + ': '"></h5>
+                                        <p th:text="${notificacion.detalle}"></p>
+                                        <p>Valor Propuesto por el Proveedor:</p>
+                                        <p th:text="${valor}"></p>
                                         <br>
                                         <th:block th:if="${rolSession == 'CLIENTE'}">
                                             <p>Proveedor:</p>
@@ -50,27 +40,66 @@
                                             <p>Cliente:</p>
                                             <p th:text="${pedido.cliente.nombre} + ' ' + ${pedido.cliente.apellido}"></p>
                                         </th:block>
-
                                     </li>
 
                                     <div class="card-body" >
-                                        <th:block th:if="${notificacion.nota == 'PEDIDOSolicitud'}">
-                                            <a href="#" class="card-link" th:href="@{/pedido/aceptarPedido/__${notificacion.id}__}">
-                                                <button id="solicitar-servicio" type="button" class="btn btn-outline-success">Aceptar Pedido</button>
-                                            </a>
-                                            <a href="#" class="card-link" th:href="@{/pedido/rechazarPedido/__${notificacion.id}__}">
-                                                <button id="solicitar-servicio" type="button" class="btn btn-outline-success">Rechazar Pedido</button>
-                                            </a>
+                                        <th:block th:if="${nota == 'PEDIDOSolicitud'}">
+                                            <th:block th:if="${!autoMiradaBoton}">
+                                                <form th:action="@{/pedido/aceptarPedido}" method="post">
+                                                    <input type="hidden" name="id" th:value="${notificacion.id}" />
+                                                    <input type="number" name="valor" class="form-control" placeholder="Ingrese el valor estimado del Servicio" required />
+    
+                                                    <div class="card-body" >
+                                                        <span class="card-link">
+                                                            <button type="submit" class="btn btn-outline-success">Aceptar Pedido</button>
+                                                        </span>
+    
+                                                        <a class="card-link" th:href="@{/pedido/rechazarPedido/__${notificacion.id}__}">
+                                                            <button type="button" class="btn btn-outline-success">Rechazar Pedido</button>
+                                                        </a>
+                                                    </div>        
+                                                </form>       
+                                            </th:block>
+
+                                            <th:block th:if="${autoMiradaBoton}">
+                                                <div class="card-body" >
+                                                    <span class="card-link">
+                                                        <button type="button" class="btn btn-outline-success" th:text="${textoAutoMirada}"></button>
+                                                    </span>
+
+                                                    <span class="card-link">
+                                                        <button type="button" class="btn btn-outline-success" th:text="${textoAutoMirada}"></button>
+                                                    </span>
+                                                </div>      
+                                            </th:block>                                                                                                               
                                         </th:block>
 
                                         <th:block th:if="${hayPedido == 'HAY'}">
-                                            <th:block th:if="${notificacion.nota == 'PEDIDOaceptado'}">
-                                                <a href="#" class="card-link" th:href="@{/pedido/cancelarPedido/__${notificacion.id}__}">
-                                                    <button id="solicitar-servicio" type="button" class="btn btn-outline-success">Cancelar Pedido</button>
-                                                </a>
-                                                <a href="#" class="card-link" th:href="@{/pedido/finalizarPedido/__${notificacion.id}__}">
+                                            <th:block th:if="${nota == 'PEDIDOaceptado'}">
+                                                <th:block th:if="${!autoMiradaBoton}">
+                                                    <a class="card-link" th:href="@{/pedido/cancelarPedido/__${notificacion.id}__}">
+                                                        <button id="solicitar-servicio" type="button" class="btn btn-outline-success">Cancelar Pedido</button>
+                                                    </a> 
+                                                </th:block>
+
+                                                <th:block th:if="${autoMiradaBoton}">
+                                                    <span class="card-link">
+                                                        <button type="button" class="btn btn-outline-success" th:text="${textoAutoMirada}"></button>
+                                                    </span>
+                                                </th:block>                                                                                                        
+                                            </th:block>
+
+                                            <th:block th:if="${nota == 'PEDIDOaceptado'}">
+                                                <a class="card-link" th:href="@{/pedido/finalizarPedido/__${notificacion.id}__}">
                                                     <button id="solicitar-servicio" type="button" class="btn btn-outline-success">Dar por Finalizado</button>
-                                                </a>
+                                                </a> 
+                                            </th:block>
+                                            <th:block th:if="${rolSession == 'CLIENTE'}">
+                                                <th:block th:if="${nota == 'PEDIDOFinalizado'}">
+                                                    <a class="card-link" th:href="@{/pedido/confirmarFinPedido/__${notificacion.id}__}">
+                                                        <button id="solicitar-servicio" type="button" class="btn btn-outline-success">Confirmar conformidad</button>
+                                                    </a>
+                                                </th:block>
                                             </th:block>
                                         </th:block>
                                     </div>                                                                   
@@ -80,6 +109,13 @@
                     </div>
                 </div>
             </div>
+            <section class="text-center container">
+                <div class="row mt-3">
+                    <div class="divVolver">
+                        <a th:href="@{/bandejaNotificaciones}" class="btn btn-secondary my-2 botonVolver botones">Volver</a>
+                    </div>
+                </div>
+            </section>
         </div>            
 
         <footer th:replace= "~{/fragments/footer :: footer}"></footer>

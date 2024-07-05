@@ -26,9 +26,11 @@ import com.FinalEgg.ServiChacras.repositorios.NotificacionRepositorio;
 
 @Controller
 @RequestMapping("/")
-public class PortalControlador {
+public class PortalControlador {   
    @Autowired
    private PedidoServicio pedidoServicio;
+   @Autowired
+   private ClienteServicio clienteServicio;
    @Autowired
    private UsuarioServicio usuarioServicio;
    @Autowired
@@ -90,8 +92,11 @@ public class PortalControlador {
 
    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER', 'ROLE_CLIENTE', 'ROLE_PROVEEDOR', 'ROLE_MIXTO')")
    @GetMapping("/inicio")
-   public String inicio( ModelMap modelo, HttpSession session) {
+   public String inicio(@RequestParam(required = false, defaultValue = "") String rolSession, ModelMap modelo, HttpSession session) {
       Usuario logueado = (Usuario) session.getAttribute("usuariosession");
+
+      if (rolSession == null || rolSession.isEmpty()) { rolSession = String.valueOf(logueado.getRol()); }
+      modelo.addAttribute("rolSession", rolSession);
 
       //Conteo e indicaciones de Notificaciones en Navegador----------------------->
       Integer mensajeNoVisto = mensajeRepositorio.contarPorUsuarioNoVisto(logueado.getId());
@@ -102,10 +107,11 @@ public class PortalControlador {
       List<Notificacion> notificaciones = notificacionRepositorio.getPorUsuarioNoVisto(logueado.getId());
       List<String> notas = new ArrayList<>();
       String navBlock = "buscadores";
+      Integer numeroPedidos = 0;
       String nota = "";
 
       for (Notificacion notificacion : notificaciones) {
-         nota = notificacion.getRemitente() + " - " + notificacion.getAsunto();
+         nota = notificacion.getAsunto() + ": " + notificacion.getRemitente();
          notas.add(nota);
       }
 
@@ -118,11 +124,11 @@ public class PortalControlador {
       modelo.put("mensajes", mensajes);
       //--------------------------------------------------------------------------//
 
-      if ( logueado.getRol().toString().equalsIgnoreCase("ADMIN") ) { return "redirect:/admin/dashboard"; }
+      if ( rolSession.equalsIgnoreCase("ADMIN") ) { return "redirect:/admin/dashboard"; }
 
-      if ( logueado.getRol().toString().equalsIgnoreCase("CLIENTE") ) {
+      if ( rolSession.equalsIgnoreCase("CLIENTE") ) {
          //Opciones del Filtro avanzado en Navegador para Clientes-------------------->
-         String rolSession = "CLIENTE";
+         numeroPedidos = pedidoServicio.contarPorCliente(clienteServicio.idUsuario(logueado.getId()));
 
          List<Servicio> limpieza = servicioServicio.listarPorCategoria("Servicios de limpieza");
          List<Servicio> mantenimiento = servicioServicio.listarPorCategoria("Servicios de mantenimiento y reparaciones");
@@ -132,7 +138,6 @@ public class PortalControlador {
          List<Servicio> logistica = servicioServicio.listarPorCategoria("Servicios de entrega y logistica");
    
          modelo.addAttribute("barrios", usuarioServicio.obtenerListaDeBarrios());
-         modelo.addAttribute("rolSession", rolSession);
          modelo.addAttribute("navBlock", navBlock);
 
          modelo.addAttribute("limpieza", limpieza);
@@ -140,34 +145,25 @@ public class PortalControlador {
          modelo.addAttribute("seguridad", seguridad);
          modelo.addAttribute("tecnologia", tecnologia);
          modelo.addAttribute("cuidado", cuidado);
-         modelo.addAttribute("logistica", logistica);
-         //--------------------------------------------------------------------------//
-                  
-         return "inicio-cliente.html";
+         modelo.addAttribute("logistica", logistica);        
       }
 
-      if ( logueado.getRol().toString().equalsIgnoreCase("PROVEEDOR") ) { 
+      if ( rolSession.equalsIgnoreCase("PROVEEDOR") ) { 
          //Opciones del Filtro avanzado en Navegador para proveedores----------------->
-         String rolSession = "PROVEEDOR";       
-
          String idProveedor = proveedorServicio.idUsuario(logueado.getId());
          List<Pedido> pedidos = pedidoServicio.getPedidoPorProveedores(idProveedor);
 
+         numeroPedidos = pedidoServicio.contarPorProveedor(idProveedor);
+
          modelo.addAttribute("barrios", usuarioServicio.obtenerListaDeBarrios());
-         modelo.addAttribute("rolSession", rolSession);
          modelo.addAttribute("navBlock", navBlock);
-         modelo.addAttribute("pedidos", pedidos);
-         //--------------------------------------------------------------------------//
-
-         return "inicio-proveedor.html"; 
+         modelo.addAttribute("pedidos", pedidos);  
       }
 
-      if ( logueado.getRol().toString().equalsIgnoreCase("MIXTO") ) { 
-         String rolSession = "MIXTO";     
+      if ( rolSession.equalsIgnoreCase("MIXTO") ) { return "inicio-varios.html"; }
 
-         modelo.addAttribute("rolSession", rolSession);   
-         return "inicio-varios.html"; 
-      }
+      modelo.addAttribute("numeroPedidos", numeroPedidos);      
+      modelo.addAttribute("logueado", logueado);
       return "inicio.html";
    }
 
@@ -189,15 +185,9 @@ public class PortalControlador {
          }
       }
 
-      if (rolSession.equals("CLIENTE")) {
-         modelo.addAttribute("rolSession", rolSession);
-         return "inicio-cliente.html";
-      }
+      if (rolSession.equals("CLIENTE")) { return "redirect:/inicio?rolSession=" + rolSession; }
 
-      if (rolSession.equals("PROVEEDOR")) {
-         modelo.addAttribute("rolSession", rolSession);
-         return "inicio-proveedor.html";
-      }
+      if (rolSession.equals("PROVEEDOR")) { return "redirect:/inicio?rolSession=" + rolSession; }
 
       return "redirect:/inicio";
    }

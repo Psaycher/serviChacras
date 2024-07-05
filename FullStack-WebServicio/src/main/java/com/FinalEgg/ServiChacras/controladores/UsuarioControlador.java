@@ -59,7 +59,7 @@ public class UsuarioControlador {
         String nota = "";
 
         for (Notificacion notificacion : notificaciones) {
-            nota = notificacion.getRemitente() + " - " + notificacion.getAsunto();
+            nota = notificacion.getAsunto() + ": " + notificacion.getRemitente();
             notas.add(nota);
         }
 
@@ -104,7 +104,8 @@ public class UsuarioControlador {
             System.out.println("entro en condicional del session:" + rolSession);
             String idProveedor = proveedorServicio.idUsuario(logueado.getId());
             boolean pedidoHay = false;
-            boolean vacio = false;            
+            boolean vacio = false; 
+            String texto = "";           
 
             if (barrio == null) {
                 if (idPedido == null) {
@@ -138,9 +139,12 @@ public class UsuarioControlador {
                 modelo.addAttribute("clientes", clientes);
             }
 
-            System.out.println("clientes está vacio: "+ vacio);
-            modelo.addAttribute("pedidoHay", pedidoHay);            
-            modelo.addAttribute("vacio", vacio);
+           if (vacio == true) { 
+                texto = "No tiene contacto con ningún cliente.";
+                modelo.addAttribute("texto", texto);
+            }            
+            modelo.addAttribute("pedidoHay", pedidoHay); 
+            modelo.addAttribute("vacio", vacio);                       
         }       
         modelo.addAttribute("rolSession", rolSession);
         modelo.addAttribute("logueado", logueado);
@@ -177,7 +181,7 @@ public class UsuarioControlador {
         String nota = "";
 
         for (Notificacion notificacion : notificaciones) {
-            nota = notificacion.getRemitente() + " - " + notificacion.getAsunto();
+            nota = notificacion.getAsunto() + ": " + notificacion.getRemitente();
             notas.add(nota);
         }
 
@@ -278,7 +282,7 @@ public class UsuarioControlador {
         String nota = "";
 
         for (Notificacion notificacion : notificaciones) {
-            nota = notificacion.getRemitente() + " - " + notificacion.getAsunto();
+            nota = notificacion.getAsunto() + ": " + notificacion.getRemitente();
             notas.add(nota);
         }
 

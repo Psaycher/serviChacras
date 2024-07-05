@@ -41,6 +41,9 @@ public interface NotificacionRepositorio extends JpaRepository<Notificacion, Str
     @Query("SELECT n FROM Notificacion n WHERE n.denuncia = :idDenuncia AND n.visto LIKE 'PENDIENTE'")
     public List<Notificacion> getPorDenunciaNoVisto( @Param("idDenuncia") String idDenuncia);  
 
+    @Query("SELECT n FROM Notificacion n WHERE n.destinatario.id = :idUsuario")
+    public List<Notificacion> getPorUsuario( @Param("idUsuario") String idUsuario);
+
     @Query("SELECT n FROM Notificacion n WHERE n.destinatario.id = :idUsuario AND n.visto LIKE 'PENDIENTE'")
     public List<Notificacion> getPorUsuarioNoVisto( @Param("idUsuario") String idUsuario);
 
